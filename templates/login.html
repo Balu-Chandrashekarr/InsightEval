@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Login - InsightEval{% endblock %}
+{% block content %}
+<div class="login-page">
+    <div class="left-half">
+        <div class="app-branding">
+            <h1>InsightEval</h1>
+            <img src="{{ url_for('static', filename='images/login.jpg') }}" alt="InsightEval Logo" class="app-logo">
+        </div>
+    </div>
+    <div class="right-half">
+        <div class="login-form">
+            <h2>Login</h2>
+            <form method="POST" action="{{ url_for('login') }}">
+                {{ form.hidden_tag() }}
+                <div class="input-group">
+                    {{ form.email.label }}
+                    {{ form.email(class="input-field", placeholder="Enter your email") }}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="input-group">
+                    {{ form.password.label }}
+                    {{ form.password(class="input-field", placeholder="Enter your password") }}
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+            <p class="register-link">New User? <a href="{{ url_for('register') }}">Register</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

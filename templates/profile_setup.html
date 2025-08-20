@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Setup - InsightEval</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="profile-page">
+        <div class="left-half">
+        <div class="app-branding">
+            <h1>InsightEval</h1>
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="InsightEval Logo" class="app-logoo">
+        </div>
+    </div>
+        <div class="right-half">
+            <div class="profile-form">
+                <h2>Profile Setup</h2>
+                
+                <form method="POST" action="{{ url_for('profile_setup') }}" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div class="input-group">
+                        <div class="profile-pic-container">
+                            <img src="{{ url_for('static', filename='images/default_profile.jpg') }}" alt="Profile Picture" class="profile-pic-preview" id="preview" onclick="document.getElementById('profile_pic').click()">
+                            {{ form.profile_pic(id="profile_pic", accept="image/*", onchange="previewImage(event)") }}
+                            {% if form.profile_pic.errors %}
+                                {% for error in form.profile_pic.errors %}
+                                    <span class="error-text">{{ error }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        {{ form.name.label }}
+                        {{ form.name(class="input-field", placeholder="Enter your name") }}
+                        {% if form.name.errors %}
+                            {% for error in form.name.errors %}
+                                <span class="error-text">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="input-group">
+                        {{ form.bio.label }}
+                        {{ form.bio(class="input-field textarea", placeholder="Tell us about yourself", style="height: 3cm;") }}
+                        {% if form.bio.errors %}
+                        {% for error in form.bio.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="input-group">
+                        <button type="submit" class="login-button">{{ form.submit.label.text }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function previewImage(event) {
+            const preview = document.getElementById('preview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>

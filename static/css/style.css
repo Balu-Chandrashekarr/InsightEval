@@ -1,0 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.profile-page, .login-page {
+    display: flex;
+    min-height: 100vh;
+}
+
+.left-half {
+    flex: 1;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.app-branding {
+    text-align: left;
+}
+
+.app-branding h1 {
+    color: #1f2937;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 3rem;
+    margin-bottom: 3.5rem;
+}
+
+.app-logo {
+    max-width: 700px;
+    height: auto;
+}
+
+.app-logoo {
+    width: 400px;
+    height: 400px;
+}
+
+.right-half {
+    flex: 1;
+    background: #2583f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.login-form, .profile-form {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-form h2, .profile-form h2 {
+    text-align: center;
+    color: #1f2937;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.input-group {
+    margin-bottom: 1.25rem;
+}
+
+.input-group label {
+    display: block;
+    color: #374151;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.profile-pic-container {
+    text-align: center;
+    margin-bottom: 1.25rem;
+    position: relative;
+}
+
+.profile-pic-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #d1d5db;
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+input[type="file"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute;
+    left: -9999px;
+}
+
+.login-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    color: #ffffff;
+    background: #2563eb;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.login-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.error-text {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.flash {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.flash.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.register-link {
+    text-align: center;
+    color: #374151;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+}
+
+.register-link a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.register-link a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .profile-page, .login-page {
+        flex-direction: column;
+    }
+    .left-half, .right-half {
+        flex: none;
+        width: 100%;
+        min-height: 50vh;
+        padding: 1.5rem;
+    }
+    .app-logo {
+        max-width: 120px;
+    }
+    .login-form, .profile-form {
+        padding: 1.5rem;
+    }
+}
