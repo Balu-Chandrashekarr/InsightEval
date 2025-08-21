@@ -13,7 +13,7 @@ body {
     overflow-x: hidden;
 }
 
-.profile-page, .login-page {
+.login-page {
     display: flex;
     min-height: 100vh;
 }
@@ -43,11 +43,6 @@ body {
     height: auto;
 }
 
-.app-logoo {
-    width: 400px;
-    height: 400px;
-}
-
 .right-half {
     flex: 1;
     background: #2583f5;
@@ -57,7 +52,7 @@ body {
     padding: 2rem;
 }
 
-.login-form, .profile-form {
+.login-form {
     background: #ffffff;
     padding: 2rem;
     border-radius: 12px;
@@ -66,7 +61,7 @@ body {
     max-width: 400px;
 }
 
-.login-form h2, .profile-form h2 {
+.login-form h2 {
     text-align: center;
     color: #1f2937;
     font-size: 1.8rem;
@@ -99,31 +94,6 @@ body {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.profile-pic-container {
-    text-align: center;
-    margin-bottom: 1.25rem;
-    position: relative;
-}
-
-.profile-pic-preview {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #d1d5db;
-    display: block;
-    margin: 0 auto;
-    cursor: pointer;
-}
-
-input[type="file"] {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    position: absolute;
-    left: -9999px;
 }
 
 .login-button {
@@ -165,6 +135,12 @@ input[type="file"] {
     border: 1px solid #bbf7d0;
 }
 
+.flash.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #f87171;
+}
+
 .register-link {
     text-align: center;
     color: #374151;
@@ -184,7 +160,7 @@ input[type="file"] {
 }
 
 @media (max-width: 768px) {
-    .profile-page, .login-page {
+    .login-page {
         flex-direction: column;
     }
     .left-half, .right-half {
@@ -196,7 +172,7 @@ input[type="file"] {
     .app-logo {
         max-width: 120px;
     }
-    .login-form, .profile-form {
+    .login-form {
         padding: 1.5rem;
     }
 }
