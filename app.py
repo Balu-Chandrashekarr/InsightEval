@@ -19,12 +19,32 @@ def home():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        session['email'] = form.email.data
-        session['logged_in'] = True
-        logger.info(f"User {form.email.data} logged in")
-        flash(f'Welcome, {form.email.data}!', 'success')
-        return redirect(url_for('dashboard'))
+        email = form.email.data
+        password = form.password.data
+
+        # Hardcoded accounts
+        teacher_email = "teacher@insighteval.com"
+        student_email = "student@insighteval.com"
+        dummy_password = "111111"  # For testing
+
+        if email == teacher_email and password == dummy_password:
+            return redirect(url_for('teacher_dashboard'))
+        elif email == student_email and password == dummy_password:
+            return redirect(url_for('student_dashboard'))
+        else:
+            flash("Invalid email or password", "error")
+
     return render_template('login.html', form=form)
+
+
+@app.route('/teacher/dashboard')
+def teacher_dashboard():
+    return render_template('teacher_dashboard.html')
+
+
+@app.route('/student/dashboard')
+def student_dashboard():
+    return render_template('student_dashboard.html')
 
 @app.route('/dashboard')
 def dashboard():

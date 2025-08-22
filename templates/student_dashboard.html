@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard - InsightEval{% endblock %}
+{% block content %}
+
+<nav class="navbar">
+    <div class="logo">InsightEval</div>
+    <ul class="nav-links">
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</nav>
+
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Welcome, Student!</h1>
+    <p class="dashboard-subtitle">Access your tests, results, and progress all in one place.</p>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>Take Test</h3>
+            <p>Attempt the available tests assigned by your teachers.</p>
+            <a href="#" class="card-btn">Start</a>
+        </div>
+        <div class="card">
+            <h3>My Results</h3>
+            <p>Check your past scores and detailed feedback.</p>
+            <a href="#" class="card-btn">View</a>
+        </div>
+        <div class="card">
+            <h3>Progress Tracker</h3>
+            <p>Monitor your performance and improve weak areas.</p>
+            <a href="#" class="card-btn">Track</a>
+        </div>
+        <div class="card">
+            <h3>Learning Resources</h3>
+            <p>Get AI-recommended study materials based on your performance.</p>
+            <a href="#" class="card-btn">Explore</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
