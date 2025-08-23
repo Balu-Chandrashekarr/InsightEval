@@ -1,15 +1,29 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, session
-from forms import LoginForm
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, Length
 import logging
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '1a2b3c4d5e6f7g8h9i0j'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['SESSION_PERMANENT'] = True
 
 # Setup logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+# =============================================================================
+#  Forms
+# =============================================================================
+class LoginForm(FlaskForm):
+    """Form for user login."""
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    submit = SubmitField('Login')
+
+# =============================================================================
+#  Routes
+# =============================================================================
 
 @app.route('/')
 def home():
@@ -18,46 +32,51 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    
     if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-
-        # Hardcoded accounts
-        teacher_email = "teacher@insighteval.com"
-        student_email = "student@insighteval.com"
-        dummy_password = "111111"  # For testing
-
-        if email == teacher_email and password == dummy_password:
-            return redirect(url_for('teacher_dashboard'))
-        elif email == student_email and password == dummy_password:
-            return redirect(url_for('student_dashboard'))
+        # Using dummy credentials for testing without a database
+        if form.email.data == 'student@insighteval.com' and form.password.data == '111111':
+            session['user_role'] = 'student'
+            session['user_name'] = 'Adarsht'
+            session['user_email'] = form.email.data # Added for profile page
+            return redirect(url_for('dashboard'))
+            
+        elif form.email.data == 'teacher@insighteval.com' and form.password.data == '111111':
+            session['user_role'] = 'teacher'
+            session['user_name'] = 'Ms. Anandhi'
+            session['user_email'] = form.email.data # Added for profile page
+            return redirect(url_for('dashboard'))
         else:
             flash("Invalid email or password", "error")
 
     return render_template('login.html', form=form)
 
 
-@app.route('/teacher/dashboard')
-def teacher_dashboard():
-    return render_template('teacher_dashboard.html')
-
-
-@app.route('/student/dashboard')
-def student_dashboard():
-    return render_template('student_dashboard.html')
-
 @app.route('/dashboard')
 def dashboard():
-    if 'logged_in' not in session or not session['logged_in']:
-        logger.info("Unauthorized dashboard access, redirecting to login")
-        flash('Please log in to access the dashboard.', 'error')
+    """ Renders the main dashboard for any logged-in user. """
+    # Protect the route: ensure a user is logged in
+    if 'user_role' not in session:
+        flash('You must be logged in to view the dashboard.', 'error')
         return redirect(url_for('login'))
+    
+    # Renders the new unified dashboard with inline CSS
     return render_template('dashboard.html')
+
+
+@app.route('/profile')
+def profile():
+    """ Renders the user profile page. """
+    if 'user_role' not in session:
+        flash('You must be logged in to view your profile.', 'error')
+        return redirect(url_for('login'))
+        
+    return render_template('profile.html')
+
 
 @app.route('/logout')
 def logout():
     session.clear()
-    logger.info("Session cleared via logout")
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 

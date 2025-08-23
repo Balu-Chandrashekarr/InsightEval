@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - InsightEval</title>
+</head>
+<body style="margin: 0; font-family: Arial, sans-serif; background-color: #f0f2f5;">
+
+    <!-- Header Section -->
+    <header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background-color: white; border-bottom: 1px solid #ddd; border-top: 4px solid #0d6efd;">
+        <!-- Logo -->
+        <div style="font-size: 24px; font-weight: bold; color: #0d6efd;">InsightEval</div>
+        
+        <!-- Search Bar -->
+        <div style="flex-grow: 1; margin: 0 50px;">
+            <input type="text" style="width: 100%; padding: 8px 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav>
+            <a href="#" style="margin-left: 20px; text-decoration: none; color: #333; font-size: 16px;">home</a>
+            <a href="#" style="margin-left: 20px; text-decoration: none; color: #333; font-size: 16px;">courses</a>
+            <a href="{{ url_for('profile') }}" style="margin-left: 20px; text-decoration: none; color: #333; font-size: 16px;">profile</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main style="display: flex; padding: 20px; gap: 20px;">
+        
+        <!-- Left Column -->
+        <div style="width: 35%; display: flex; flex-direction: column; gap: 20px;">
+            <!-- Reminder Card -->
+            <div style="background-color: white; border: 1px solid #ccc; padding: 15px; min-height: 250px;">
+                <h2 style="margin: 0 0 10px 0; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #555;">Reminder</h2>
+                <!-- Content for the reminder card goes here -->
+            </div>
+            
+            <!-- Post Card -->
+            <div style="background-color: white; border: 1px solid #ccc; padding: 15px; min-height: 250px;">
+                <h2 style="margin: 0 0 10px 0; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #555;">Post</h2>
+                <!-- Content for the post card goes here -->
+            </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div style="width: 65%;">
+            <!-- Classrooms Card -->
+            <div style="background-color: white; border: 1px solid #ccc; padding: 15px; height: calc(100% - 32px);">
+                <h2 style="margin: 0 0 10px 0; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #555;">Class rooms</h2>
+                <!-- Content for the classrooms card goes here -->
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

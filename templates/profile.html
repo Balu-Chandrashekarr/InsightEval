@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - InsightEval</title>
+</head>
+<body style="margin: 0; font-family: Arial, sans-serif; background-color: #f0f2f5;">
+
+    <!-- Main Content -->
+    <main style="padding: 20px;">
+        <h1 style="font-size: 28px; color: #333; margin-bottom: 20px;">Profile</h1>
+        <div style="display: flex; gap: 20px;">
+            
+            <!-- Left Column: Profile Info -->
+            <div style="width: 35%; background-color: white; border: 1px solid #ccc; padding: 25px;">
+                <!-- Profile Picture -->
+                <div style="width: 150px; height: 150px; border-radius: 50%; background-color: #f0c400; margin: 0 auto 20px auto;"></div>
+                
+                <!-- User Details -->
+                <div style="margin-bottom: 15px;">
+                    <strong style="display: block; margin-bottom: 5px;">Name</strong>
+                    <span>{{ session.user_name or 'User Name' }}</span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong style="display: block; margin-bottom: 5px;">Id</strong>
+                    <span>{{ session.user_email or 'user@example.com' }}</span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong style="display: block; margin-bottom: 5px;">Dept</strong>
+                    <span>Computer Science</span>
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <strong style="display: block; margin-bottom: 5px;">Bio</strong>
+                    <span>Student at New Horizon College of Engineering.</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <button style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; background-color: #f8f9fa; font-size: 16px; cursor: pointer;">Reset pass</button>
+                <a href="{{ url_for('logout') }}" style="display: block; width: 100%; padding: 10px; border: 1px solid #ccc; background-color: #f8f9fa; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; color: black;">Logout</a>
+            </div>
+            
+            <!-- Right Column: Posts and Classrooms -->
+            <div style="width: 65%; background-color: white; border: 1px solid #ccc; padding: 25px;">
+                <!-- Tabs -->
+                <div style="display: flex; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+                    <div style="padding: 10px 20px; font-weight: bold; border-bottom: 2px solid #0d6efd; color: #0d6efd;">Post</div>
+                    <div style="padding: 10px 20px; color: #555;">ClassRoom</div>
+                </div>
+                
+                <!-- Content Area -->
+                <div style="min-height: 400px;">
+                    <!-- Content for posts/classrooms goes here -->
+                </div>
+
+                <!-- Add Button -->
+                <div style="text-align: right;">
+                    <button style="padding: 10px 30px; border: 1px solid #ccc; background-color: #ffc107; font-size: 16px; cursor: pointer; border-radius: 4px;">ADD</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
