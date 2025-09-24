@@ -184,7 +184,7 @@
                                 <div class="w-full md:w-2/5 bg-white p-6 rounded-lg shadow-md">
                                     <div class="mb-4">
                                         <div class="profile-pic-container">
-                                            <img src="https://via.placeholder.com/128x128" alt="Profile Picture" class="profile-pic-preview" id="preview" onclick="document.getElementById('profile_pic').click()">
+                                            <img src="{{ url_for('static', filename='images/defaultprofilepic.jpg') }}" alt="Profile Picture" class="profile-pic-preview" id="preview" onclick="document.getElementById('profile_pic').click()">
                                             <input type="file" id="profile_pic" accept="image/*" class="input-field" onchange="previewImage(event)">
                                         </div>
                                     </div>
