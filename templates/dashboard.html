@@ -155,16 +155,58 @@
                         <header class="flex justify-between items-center mb-6">
                             <h1 class="text-3xl font-bold text-gray-800">Classrooms</h1>
                             <div class="flex space-x-4">
-                                <button class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2">
+                                <button id="add-classroom-btn" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2">
                                     <i class="fas fa-plus"></i>
                                     <span>Add</span>
                                 </button>
-                                <button class="bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 flex items-center space-x-2">
+                                <button id="join-classroom-btn" class="bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 flex items-center space-x-2">
                                     <i class="fas fa-sign-in-alt"></i>
                                     <span>Join</span>
                                 </button>
                             </div>
                         </header>
+                         <div id="add-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+            <h2 class="text-2xl font-bold mb-4 border-b pb-3">Create Classroom</h2>
+            <form class="space-y-4">
+                <div>
+                    <label for="new-classroom-name" class="block text-sm font-medium text-gray-700">Classroom Name</label>
+                    <input type="text" id="new-classroom-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="new-classroom-subject" class="block text-sm font-medium text-gray-700">Subject Code</label>
+                    <input type="text" id="new-classroom-subject" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="new-classroom-desc" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="new-classroom-desc" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <div class="flex justify-end pt-4">
+                    <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======== Join Classroom Modal ======== -->
+    <div id="join-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
+            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+            <h2 class="text-2xl font-bold mb-4 border-b pb-3">Join Classroom</h2>
+            <form class="space-y-4">
+                <div>
+                    <label for="join-classroom-code" class="block text-sm font-medium text-gray-700">Classroom Code</label>
+                    <input type="text" id="join-classroom-code" placeholder="Enter the code provided by your teacher" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="flex justify-end pt-4">
+                    <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Join</button>
+                </div>
+            </form>
+        </div>
+    </div>
                         <!-- List of joined classrooms -->
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <!-- Sample Classroom Card 1 -->
@@ -177,7 +219,7 @@
                                         <span>CS-404</span>
                                     </div>
                                 </div>
-                                <a href="#" class="block bg-gray-50 text-center font-semibold text-blue-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                                <a href="{{ url_for('classroom', classroom_id=1) }}" class="block bg-gray-50 text-center font-semibold text-blue-600 p-3 hover:bg-gray-100">Enter Classroom</a>
                             </div>
                              <!-- Sample Classroom Card 2 -->
                              <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
@@ -388,67 +430,164 @@
     </div>
 
     <script>
-        // Navigation functionality for dashboard
-        const navItems = document.querySelectorAll('.nav-item');
-        const contentSections = document.querySelectorAll('.content-section');
-        const homeNavItem = document.querySelector('.nav-item[data-section="home"]');
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Navigation Functionality ---
+            const navItems = document.querySelectorAll('.nav-item');
+            const contentSections = document.querySelectorAll('.content-section');
+            const homeNavItem = document.querySelector('.nav-item[data-section="home"]');
 
-        function showSection(sectionId) {
-             contentSections.forEach(section => section.classList.add('hidden'));
-             const targetSection = document.getElementById(sectionId);
-             if (targetSection) {
-                 targetSection.classList.remove('hidden');
-             }
-        }
-
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                navItems.forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                item.classList.add('active');
-                const sectionId = item.getAttribute('data-section') + '-content';
-                showSection(sectionId);
-            });
-        });
-        
-        // Default to home section on page load
-        if(homeNavItem) {
-            homeNavItem.classList.add('active');
-            showSection('home-content');
-        }
-
-
-        // Like button functionality
-        document.querySelectorAll('.fa-heart').forEach(heart => {
-            heart.addEventListener('click', () => {
-                heart.classList.toggle('text-red-500');
-            });
-        });
-
-        // Course interaction functionality
-        const courses = document.querySelectorAll('.course');
-        courses.forEach(course => {
-            course.addEventListener('click', () => {
-                const courseName = course.querySelector('h2').textContent;
-                if (course.classList.contains('unlocked')) {
-                    alert(`Accessing course: ${courseName}`);
-                } else {
-                    alert(`Course ${courseName} is locked. Complete the previous course to unlock.`);
+            function showSection(sectionId) {
+                contentSections.forEach(section => section.classList.add('hidden'));
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
                 }
-            });
-        });
+            }
 
-        // Profile-specific JavaScript
-        const inputs = document.querySelectorAll('#profile_pic, #name, #id, #department, #bio');
-        const saveButton = document.getElementById('save');
-        if (saveButton) {
-            inputs.forEach(input => {
-                input.addEventListener('change', () => {
-                    saveButton.classList.remove('hidden');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    const sectionId = item.getAttribute('data-section') + '-content';
+                    showSection(sectionId);
                 });
             });
-        }
+
+            // Default to home section on page load
+            if(homeNavItem) {
+                homeNavItem.classList.add('active');
+                showSection('home-content');
+            }
+
+            // --- Add/Join Classroom Modal Functionality ---
+            const addClassroomBtn = document.getElementById('add-classroom-btn');
+            const joinClassroomBtn = document.getElementById('join-classroom-btn');
+            const addModal = document.getElementById('add-classroom-modal');
+            const joinModal = document.getElementById('join-classroom-modal');
+            const closeButtons = document.querySelectorAll('.close-modal-btn');
+
+            const openModal = (modal) => {
+                if (modal) modal.classList.remove('hidden');
+            }
+
+            const closeModal = (modal) => {
+                if (modal) modal.classList.add('hidden');
+            }
+
+            if(addClassroomBtn) addClassroomBtn.addEventListener('click', () => openModal(addModal));
+            if(joinClassroomBtn) joinClassroomBtn.addEventListener('click', () => openModal(joinModal));
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    closeModal(addModal);
+                    closeModal(joinModal);
+                });
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target === addModal) closeModal(addModal);
+                if (event.target === joinModal) closeModal(joinModal);
+            });
+
+            // --- Other Page Interactions ---
+            
+            // Like button functionality
+            document.querySelectorAll('.fa-heart').forEach(heart => {
+                heart.addEventListener('click', () => {
+                    heart.classList.toggle('text-red-500');
+                });
+            });
+
+            // Course interaction functionality
+            const courses = document.querySelectorAll('.course');
+            courses.forEach(course => {
+                course.addEventListener('click', () => {
+                    const courseName = course.querySelector('h2').textContent;
+                    if (course.classList.contains('unlocked')) {
+                        alert(`Accessing course: ${courseName}`);
+                    } else {
+                        alert(`Course ${courseName} is locked. Complete the previous course to unlock.`);
+                    }
+                });
+            });
+
+            // Profile-specific JavaScript
+            const inputs = document.querySelectorAll('#profile_pic, #name, #id, #department, #bio');
+            const saveButton = document.getElementById('save');
+            if (saveButton) {
+                inputs.forEach(input => {
+                    input.addEventListener('change', () => {
+                        saveButton.classList.remove('hidden');
+                    });
+                });
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const addButton = document.getElementById('addButton');
+
+            if (addButton) {
+                navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+
+                        const tab = link.getAttribute('data-tab');
+                        tabContents.forEach(content => {
+                            if(content.id !== 'posts' && content.id !== 'classrooms' && content.id !== 'addPostForm' && content.id !== 'addClassroomForm'){
+                               // don't hide main sections
+                            } else {
+                               content.classList.add('hidden');
+                            }
+                        });
+
+                        const targetTab = document.getElementById(tab);
+                        if (targetTab) {
+                            targetTab.classList.remove('hidden');
+                        }
+                        const addPostForm = document.getElementById('addPostForm');
+                        const addClassroomForm = document.getElementById('addClassroomForm');
+                        if (addPostForm) addPostForm.classList.add('hidden');
+                        if (addClassroomForm) addClassroomForm.classList.add('hidden');
+                    });
+                });
+
+                addButton.addEventListener('click', () => {
+                    const activeTab = document.querySelector('.nav-link.active')?.getAttribute('data-tab');
+                    if (activeTab) {
+                        tabContents.forEach(content => {
+                             if(content.id !== 'posts' && content.id !== 'classrooms' && content.id !== 'addPostForm' && content.id !== 'addClassroomForm'){
+                               // don't hide main sections
+                            } else {
+                               content.classList.add('hidden');
+                            }
+                        });
+                        if (activeTab === 'posts') {
+                            const addPostForm = document.getElementById('addPostForm');
+                            if (addPostForm) addPostForm.classList.remove('hidden');
+                        } else if (activeTab === 'classrooms') {
+                            const addClassroomForm = document.getElementById('addClassroomForm');
+                            if (addClassroomForm) addClassroomForm.classList.remove('hidden');
+                        }
+                    }
+                });
+            }
+
+            const submitPostButton = document.getElementById('submitPost');
+            if (submitPostButton) {
+                submitPostButton.addEventListener('click', () => {
+                    // ... (rest of the script)
+                });
+            }
+            
+            const logoutButton = document.getElementById('headerLogout');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    window.location.href = '{{ url_for("logout") }}';
+                });
+            }
+        });
 
         function previewImage(event) {
             const file = event.target.files[0];
@@ -462,72 +601,6 @@
                 };
                 reader.readAsDataURL(file);
             }
-        }
-
-        const navLinks = document.querySelectorAll('.nav-link');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const addButton = document.getElementById('addButton');
-
-        if (addButton) {
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-
-                    const tab = link.getAttribute('data-tab');
-                    tabContents.forEach(content => {
-                        if(content.id !== 'posts' && content.id !== 'classrooms' && content.id !== 'addPostForm' && content.id !== 'addClassroomForm'){
-                           // don't hide main sections
-                        } else {
-                           content.classList.add('hidden');
-                        }
-                    });
-
-                    const targetTab = document.getElementById(tab);
-                    if (targetTab) {
-                        targetTab.classList.remove('hidden');
-                    }
-                     const addPostForm = document.getElementById('addPostForm');
-                    const addClassroomForm = document.getElementById('addClassroomForm');
-                    if (addPostForm) addPostForm.classList.add('hidden');
-                    if (addClassroomForm) addClassroomForm.classList.add('hidden');
-                });
-            });
-
-            addButton.addEventListener('click', () => {
-                const activeTab = document.querySelector('.nav-link.active')?.getAttribute('data-tab');
-                if (activeTab) {
-                    tabContents.forEach(content => {
-                         if(content.id !== 'posts' && content.id !== 'classrooms' && content.id !== 'addPostForm' && content.id !== 'addClassroomForm'){
-                           // don't hide main sections
-                        } else {
-                           content.classList.add('hidden');
-                        }
-                    });
-                    if (activeTab === 'posts') {
-                        const addPostForm = document.getElementById('addPostForm');
-                        if (addPostForm) addPostForm.classList.remove('hidden');
-                    } else if (activeTab === 'classrooms') {
-                        const addClassroomForm = document.getElementById('addClassroomForm');
-                        if (addClassroomForm) addClassroomForm.classList.remove('hidden');
-                    }
-                }
-            });
-        }
-
-        const submitPostButton = document.getElementById('submitPost');
-        if (submitPostButton) {
-            submitPostButton.addEventListener('click', () => {
-                // ... (rest of the script)
-            });
-        }
-        
-        const logoutButton = document.getElementById('headerLogout');
-        if (logoutButton) {
-            logoutButton.addEventListener('click', () => {
-                window.location.href = '{{ url_for("logout") }}';
-            });
         }
     </script>
 </body>

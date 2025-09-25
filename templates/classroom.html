@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightEval - Classroom View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    
+    <!-- Main Content -->
+    <main class="p-8 w-full h-screen overflow-y-auto">
+        <!-- Classroom Header with Back Arrow -->
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Advanced Algorithms</h1>
+                <p class="text-md text-gray-600">CS-404 | Dr. Evelyn Reed</p>
+            </div>
+            <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-2 text-sm font-semibold text-blue-600 hover:underline">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Dashboard</span>
+            </a>
+        </header>
+
+        <!-- Two-column Layout -->
+        <div class="flex gap-8">
+            
+            <!-- Left Column: Classroom Feed/Materials -->
+            <div class="w-2/3">
+                <div class="space-y-6">
+                 <!-- New Post Box -->
+                    <div class="bg-white rounded-lg shadow p-4 flex items-center space-x-4">
+                         <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg">
+                            A
+                         </div>
+                         <div class="flex-1 bg-gray-100 hover:bg-gray-200 transition-colors rounded-full text-left p-3 cursor-pointer text-gray-500">
+                             Share something with the class...
+                         </div>
+                    </div>
+
+                    <!-- Assignment Card -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="p-5 flex items-start space-x-4">
+                            <div class="bg-red-100 p-3 rounded-full">
+                                <i class="fas fa-clipboard-list text-xl text-red-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-800">Assignment 3: Dynamic Programming</h3>
+                                <p class="text-sm text-gray-500">Posted on: Sep 24, 2025</p>
+                                <p class="mt-2 text-gray-700">
+                                    This assignment covers the core concepts of dynamic programming. Please solve the attached problems and submit your solutions before the deadline.
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                 <p class="font-semibold text-red-600">Due: Oct 1, 2025</p>
+                                 <button class="mt-4 bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 text-sm">Submit Work</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Announcement Card -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                         <div class="p-5 flex items-start space-x-4">
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-bullhorn text-xl text-blue-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-800">Midterm Exam Schedule</h3>
+                                 <p class="text-sm text-gray-500">Posted on: Sep 22, 2025</p>
+                                <p class="mt-2 text-gray-700">
+                                   Just a reminder that the midterm exam for this course will be held on October 15th. The syllabus includes all topics covered up to week 5.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Material Card -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                         <div class="p-5 flex items-start space-x-4">
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-book text-xl text-green-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-800">Lecture Notes: Greedy Algorithms</h3>
+                                 <p class="text-sm text-gray-500">Posted on: Sep 20, 2025</p>
+                            </div>
+                             <a href="#" class="mt-4 bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 text-sm flex items-center space-x-2">
+                                 <i class="fas fa-download"></i>
+                                 <span>Download PDF</span>
+                             </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Right Column: Members Canvas -->
+            <div class="w-1/3">
+                <div class="bg-white rounded-lg shadow-md p-5 sticky top-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-5 border-b pb-3">Members (28)</h2>
+                    <div class="space-y-4">
+                        <!-- Teacher Section -->
+                        <div>
+                            <h3 class="font-semibold text-purple-700 mb-3">TEACHER</h3>
+                            <div class="flex items-center space-x-3 student-entry">
+                                <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                <span class="student-name font-semibold text-gray-700">Ms. Senthil Anandhi</span>
+                            </div>
+                        </div>
+
+                        <!-- Students Section -->
+                        <div>
+                            <h3 class="font-semibold text-blue-700 mb-3 mt-5">STUDENTS</h3>
+                            
+                            <!-- Short Student List (Visible by default) -->
+                            <div id="short-student-list" class="space-y-3">
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">Adarsh T Nambiar</span>
+                                </div>
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">Balu Chandrashekar</span>
+                                </div>
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">Eric Alexander Varghese</span>
+                                </div>
+                                 <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">K Nandan</span>
+                                </div>
+                                <a href="#" id="view-all-link" class="text-sm text-blue-600 hover:underline pt-2 inline-block">View all...</a>
+                            </div>
+
+                            <!-- Full Student List (Hidden by default) -->
+                            <div id="full-student-list" class="hidden space-y-3 max-h-80 overflow-y-auto pr-2">
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">Adarsh T Nambiar</span>
+                                </div>
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">Balu Chandrashekar</span>
+                                </div>
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">Eric Alexander Varghese</span>
+                                </div>
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">K Nandan</span>
+                                </div>
+                                <!-- Add more students to demonstrate scrolling -->
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">John</span>
+                                </div>
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">David</span>
+                                </div>
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">Johnny</span>
+                                </div>
+                                <div class="flex items-center space-x-3 student-entry">
+                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="student-name text-gray-700">Cyril</span>
+                                </div>
+                                <a href="#" id="show-less-link" class="text-sm text-blue-600 hover:underline pt-2 inline-block">Show less...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Get the elements for toggling student lists
+        const viewAllLink = document.getElementById('view-all-link');
+        const showLessLink = document.getElementById('show-less-link');
+        const shortList = document.getElementById('short-student-list');
+        const fullList = document.getElementById('full-student-list');
+
+        // Show the full list when "View all..." is clicked
+        viewAllLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            shortList.classList.add('hidden');
+            fullList.classList.remove('hidden');
+        });
+
+        // Show the short list when "Show less..." is clicked
+        showLessLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            fullList.classList.add('hidden');
+            shortList.classList.remove('hidden');
+        });
+
+        // --- DYNAMIC INITIALS SCRIPT ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to generate a consistent color from a string (e.g., a name)
+            function generateHslColor(name) {
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) {
+                    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const h = hash % 360;
+                return `hsl(${h}, 60%, 50%)`;
+            }
+
+            // Find all student entries
+            const studentEntries = document.querySelectorAll('.student-entry');
+
+            studentEntries.forEach(entry => {
+                const nameSpan = entry.querySelector('.student-name');
+                const initialDiv = entry.querySelector('.student-initial');
+
+                if (nameSpan && initialDiv) {
+                    const name = nameSpan.textContent.trim();
+                    if (name) {
+                        // Get the first letter
+                        const initial = name.charAt(0).toUpperCase();
+                        
+                        // Set the initial text
+                        initialDiv.textContent = initial;
+
+                        // Set a consistent background color based on the name
+                        initialDiv.style.backgroundColor = generateHslColor(name);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

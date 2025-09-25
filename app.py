@@ -60,8 +60,20 @@ def dashboard():
         flash('You must be logged in to view the dashboard.', 'error')
         return redirect(url_for('login'))
     
-    # Renders the new unified dashboard with inline CSS
+    # Renders the new unified dashboard
     return render_template('dashboard.html')
+
+# ========== NEW ROUTE FOR THE CLASSROOM PAGE ==========
+@app.route('/classroom/<int:classroom_id>')
+def classroom(classroom_id):
+    """ Renders the view for a specific classroom. """
+    if 'user_role' not in session:
+        flash('You must be logged in to view a classroom.', 'error')
+        return redirect(url_for('login'))
+    
+    # The classroom_id can be used later to fetch data for that specific class.
+    # For now, we just render the template you provided.
+    return render_template('classroom.html', classroom_id=classroom_id)
 
 
 @app.route('/profile')
@@ -82,3 +94,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
