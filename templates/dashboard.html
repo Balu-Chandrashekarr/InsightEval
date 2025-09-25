@@ -506,7 +506,8 @@
         const logoutButton = document.getElementById('headerLogout');
         if (logoutButton) {
             logoutButton.addEventListener('click', () => {
-                alert('Logout functionality would redirect to a logout route.');
+                //alert('Logout functionality would redirect to a logout route.');
+                window.location.href = '{{ url_for("logout") }}';
             });
         }
     </script>
