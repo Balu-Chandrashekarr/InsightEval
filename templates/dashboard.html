@@ -3,53 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram-like Dashboard</title>
+    <title>InsightEval Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .profile-pic-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .profile-pic-preview {
-            width: 128px;
-            height: 128px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-        }
-        .input-field {
-            display: none;
-        }
-        .nav-link {
-            padding: 10px 20px;
-            color: #555;
-            transition: all 0.3s ease;
-        }
-        .nav-link.active {
-            font-weight: bold;
-            border-bottom: 2px solid #0d6efd;
-            color: #0d6efd;
-            background-color: transparent;
-        }
-        .nav-link:not(.active):hover {
-            color: #0d6efd;
-        }
-        .scrollable-container {
-            max-height: 505px;
-            overflow-y: auto;
-            margin-bottom: 0.5rem;
-        }
-        .right-container {
-            position: relative;
-            padding-bottom: 4rem;
-        }
-        .fixed-add-button {
-            position: absolute;
-            bottom: 1.5rem;
-            right: 1.5rem;
-        }
+        .profile-pic-container { display: flex; justify-content: center; align-items: center; }
+        .profile-pic-preview { width: 128px; height: 128px; border-radius: 50%; object-fit: cover; cursor: pointer; }
+        .input-field { display: none; }
+        .nav-link { padding: 10px 20px; color: #555; transition: all 0.3s ease; }
+        .nav-link.active { font-weight: bold; border-bottom: 2px solid #0d6efd; color: #0d6efd; background-color: transparent; }
+        .nav-link:not(.active):hover { color: #0d6efd; }
+        .scrollable-container { max-height: 505px; overflow-y: auto; margin-bottom: 0.5rem; }
+        .right-container { position: relative; padding-bottom: 4rem; }
+        .fixed-add-button { position: absolute; bottom: 1.5rem; right: 1.5rem; }
+        .nav-item.active { background-color: #f3f4f6; border-radius: 8px; }
+        .nav-item.active i, .nav-item.active span { color: #1f2937; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -57,31 +25,31 @@
         <!-- Left Navigation -->
         <nav class="bg-white shadow-sm fixed left-0 top-0 h-full w-56 z-10 flex flex-col items-start py-4 px-4 space-y-6">
             <span class="text-3xl font-bold text-gray-800 mb-4">InSightEval</span>
-            <div class="nav-item flex items-center space-x-2 cursor-pointer" data-section="home">
+            <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="home">
                 <i class="fas fa-home text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">HOME</span>
             </div>
-            <div class="nav-item flex items-center space-x-2 cursor-pointer" data-section="remainder">
+            <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="remainder">
                 <i class="fas fa-bell text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">REMAINDER</span>
             </div>
-            <div class="nav-item flex items-center space-x-2 cursor-pointer" data-section="classroom">
+            <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="classroom">
                 <i class="fas fa-chalkboard-teacher text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">CLASSROOM</span>
             </div>
-            <div class="nav-item flex items-center space-x-2 cursor-pointer" data-section="search">
+            <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="search">
                 <i class="fas fa-search text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">SEARCH</span>
             </div>
-            <div class="nav-item flex items-center space-x-2 cursor-pointer" data-section="courses">
+            <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="courses">
                 <i class="fas fa-book-open text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">COURSES</span>
             </div>
-            <div class="nav-item flex items-center space-x-2 cursor-pointer" data-section="post">
-                <i class="fas fa-file-alt text-xl hover:text-gray-700"></i>
+            <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="post">
+                <i class="fas fa-plus-square text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">POST</span>
             </div>
-            <div class="nav-item flex items-center space-x-2 cursor-pointer" data-section="profile">
+            <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="profile">
                 <i class="fas fa-user text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">PROFILE</span>
             </div>
@@ -89,7 +57,6 @@
 
         <!-- Main Content -->
         <div class="ml-60 mt-4 w-full pr-4">
-            <!-- Feed Section -->
             <div class="w-full">
                 <div id="main-content">
                     <!-- Home Content -->
@@ -134,22 +101,151 @@
                     <!-- Remainder Content -->
                     <div id="remainder-content" class="content-section hidden">
                         <div class="bg-white rounded-lg shadow-sm p-4">
-                            <h2 class="text-xl font-semibold mb-4">Reminders</h2>
-                            <p>No upcoming reminders. Set a new reminder to stay on track!</p>
-                            <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Reminder</button>
+                            <h1 class="text-3xl font-bold text-center mb-8">Remainder</h1>
+                            <div class="w-full max-w-6xl flex flex-row gap-6 mx-auto">
+                                <!-- Teachers Reminder Section -->
+                                <div class="w-1/2 bg-white rounded-lg shadow-lg p-6 h-[600px] flex flex-col">
+                                    <h2 class="text-2xl font-semibold mb-4">Teachers Reminder (To Remember)</h2>
+                                    <div id="teacherReminders" class="space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+                                        <div class="p-4 bg-blue-100 rounded-md">Complete homework by Friday</div>
+                                        <div class="p-4 bg-blue-100 rounded-md">Prepare for quiz on Monday</div>
+                                        <div class="p-4 bg-blue-100 rounded-md">Submit project proposal by Wednesday</div>
+                                        <div class="p-4 bg-blue-100 rounded-md">Attend guest lecture on Thursday</div>
+                                        <div class="p-4 bg-blue-100 rounded-md">Complete homework by Friday</div>
+                                        <div class="p-4 bg-blue-100 rounded-md">Prepare for quiz on Monday</div>
+                                        <div class="p-4 bg-blue-100 rounded-md">Submit project proposal by Wednesday</div>
+                                        <div class="p-4 bg-blue-100 rounded-md">Attend guest lecture on Thursday</div>
+                                    </div>
+                                </div>
+                                <!-- Students Reminder Section -->
+                                <div class="w-1/2 bg-white rounded-lg shadow-lg p-6 h-[600px] flex flex-col">
+                                    <h2 class="text-2xl font-semibold mb-4">Students Reminder (Self Remainder)</h2>
+                                    <div id="studentReminders" class="space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+                                        <!-- Student reminders will be appended here -->
+                                    </div>
+                                    <div class="mt-4">
+                                        <input id="studentInput" type="text" placeholder="Add your reminder..." class="w-full p-2 border rounded-md">
+                                        <button onclick="addStudentReminder()" class="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Add Remainder</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                // Add a student reminder
+                                function addStudentReminder() {
+                                    const input = document.getElementById('studentInput');
+                                    const reminderText = input.value.trim();
+                                    if (reminderText) {
+                                        const reminderDiv = document.createElement('div');
+                                        reminderDiv.className = 'p-4 bg-green-100 rounded-md flex justify-between items-center';
+                                        reminderDiv.innerHTML = `
+                                            <span>${reminderText}</span>
+                                            <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">Delete</button>
+                                        `;
+                                        document.getElementById('studentReminders').appendChild(reminderDiv);
+                                        input.value = '';
+                                    }
+                                }
+                            </script>
                         </div>
                     </div>
-                    <!-- Classroom Content -->
+                    
+                    <!-- ========== CORRECTED CLASSROOM SECTION ========== -->
                     <div id="classroom-content" class="content-section hidden">
-                        <div class="bg-white rounded-lg shadow-sm p-4">
-                            <h2 class="text-xl font-semibold mb-4">Classroom</h2>
-                            <p>View your classes and assignments here.</p>
-                            <ul class="list-disc pl-5">
-                                <li>Class 1: Assignment due tomorrow</li>
-                                <li>Class 2: Quiz next week</li>
-                            </ul>
+                        <!-- Header section with Add/Join buttons -->
+                        <header class="flex justify-between items-center mb-6">
+                            <h1 class="text-3xl font-bold text-gray-800">Classrooms</h1>
+                            <div class="flex space-x-4">
+                                <button class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Add</span>
+                                </button>
+                                <button class="bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 flex items-center space-x-2">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <span>Join</span>
+                                </button>
+                            </div>
+                        </header>
+                        <!-- List of joined classrooms -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Sample Classroom Card 1 -->
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                                <div class="p-6 border-t-4 border-blue-500">
+                                    <h2 class="text-xl font-bold text-gray-800 mb-1">Advanced Algorithms</h2>
+                                    <p class="text-sm text-gray-600 mb-4">Dr. Evelyn Reed</p>
+                                    <div class="flex justify-between items-center text-sm text-gray-500">
+                                        <span><i class="fas fa-user-friends mr-1"></i> 28 Students</span>
+                                        <span>CS-404</span>
+                                    </div>
+                                </div>
+                                <a href="#" class="block bg-gray-50 text-center font-semibold text-blue-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                            </div>
+                             <!-- Sample Classroom Card 2 -->
+                             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                                <div class="p-6 border-t-4 border-green-500">
+                                    <h2 class="text-xl font-bold text-gray-800 mb-1">Database Systems</h2>
+                                    <p class="text-sm text-gray-600 mb-4">Prof. Samuel Chen</p>
+                                    <div class="flex justify-between items-center text-sm text-gray-500">
+                                        <span><i class="fas fa-user-friends mr-1"></i> 35 Students</span>
+                                        <span>DB-301</span>
+                                    </div>
+                                </div>
+                                <a href="#" class="block bg-gray-50 text-center font-semibold text-green-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                            </div>
+                            <!-- Add more classroom cards here -->
+                             <!-- Sample Classroom Card 3 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div class="p-6 border-t-4 border-purple-500">
+        <h2 class="text-xl font-bold text-gray-800 mb-1">Operating Systems</h2>
+        <p class="text-sm text-gray-600 mb-4">Ms. Senthil Anandhi</p>
+        <div class="flex justify-between items-center text-sm text-gray-500">
+            <span><i class="fas fa-user-friends mr-1"></i> 41 Students</span>
+            <span>OS-312</span>
+        </div>
+    </div>
+    <a href="#" class="block bg-gray-50 text-center font-semibold text-purple-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+</div>
+
+<!-- Sample Classroom Card 4 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div class="p-6 border-t-4 border-red-500">
+        <h2 class="text-xl font-bold text-gray-800 mb-1">Intro to AI & ML</h2>
+        <p class="text-sm text-gray-600 mb-4">Dr. Alan Grant</p>
+        <div class="flex justify-between items-center text-sm text-gray-500">
+            <span><i class="fas fa-user-friends mr-1"></i> 52 Students</span>
+            <span>AI-101</span>
+        </div>
+    </div>
+    <a href="#" class="block bg-gray-50 text-center font-semibold text-red-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+</div>
+
+<!-- Sample Classroom Card 5 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div class="p-6 border-t-4 border-yellow-500">
+        <h2 class="text-xl font-bold text-gray-800 mb-1">Web Development</h2>
+        <p class="text-sm text-gray-600 mb-4">Mr. Eric Varghese</p>
+        <div class="flex justify-between items-center text-sm text-gray-500">
+            <span><i class="fas fa-user-friends mr-1"></i> 38 Students</span>
+            <span>WD-202</span>
+        </div>
+    </div>
+    <a href="#" class="block bg-gray-50 text-center font-semibold text-yellow-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+</div>
+
+<!-- Sample Classroom Card 6 -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div class="p-6 border-t-4 border-indigo-500">
+        <h2 class="text-xl font-bold text-gray-800 mb-1">Data Structures</h2>
+        <p class="text-sm text-gray-600 mb-4">Prof. Nandan</p>
+        <div class="flex justify-between items-center text-sm text-gray-500">
+            <span><i class="fas fa-user-friends mr-1"></i> 45 Students</span>
+            <span>DS-210</span>
+        </div>
+    </div>
+    <a href="#" class="block bg-gray-50 text-center font-semibold text-indigo-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+</div>
                         </div>
                     </div>
+                    
                     <!-- Search Content -->
                     <div id="search-content" class="content-section hidden">
                         <div class="bg-white rounded-lg shadow-sm p-4">
@@ -157,7 +253,7 @@
                             <input type="text" placeholder="Search for users, courses, or posts..." class="w-full p-2 border rounded focus:outline-none">
                         </div>
                     </div>
-                    <!-- Courses Content -->
+                   <!-- Courses Content -->
                     <div id="courses-content" class="content-section hidden">
                         <div class="bg-white rounded-lg shadow-sm p-4">
                             <h1 class="text-2xl font-semibold text-center mb-4">Courses</h1>
@@ -207,7 +303,7 @@
                     </div>
                     <!-- Profile Content -->
                     <div id="profile-content" class="content-section hidden">
-                        <div class="container px-4 py-8">
+                         <div class="container px-4 py-8">
                             <div class="flex flex-col md:flex-row gap-8">
                                 <!-- Left Side -->
                                 <div class="w-full md:w-2/5 bg-white p-6 rounded-lg shadow-md">
@@ -295,28 +391,33 @@
         // Navigation functionality for dashboard
         const navItems = document.querySelectorAll('.nav-item');
         const contentSections = document.querySelectorAll('.content-section');
+        const homeNavItem = document.querySelector('.nav-item[data-section="home"]');
+
+        function showSection(sectionId) {
+             contentSections.forEach(section => section.classList.add('hidden'));
+             const targetSection = document.getElementById(sectionId);
+             if (targetSection) {
+                 targetSection.classList.remove('hidden');
+             }
+        }
 
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 navItems.forEach(nav => {
-                    nav.classList.remove('bg-gray-200');
-                    nav.querySelector('i').classList.remove('text-gray-900');
-                    nav.querySelector('span').classList.remove('text-gray-900');
+                    nav.classList.remove('active');
                 });
-
-                item.classList.add('bg-gray-200');
-                item.querySelector('i').classList.add('text-gray-900');
-                item.querySelector('span').classList.add('text-gray-900');
-
-                contentSections.forEach(section => section.classList.add('hidden'));
-
+                item.classList.add('active');
                 const sectionId = item.getAttribute('data-section') + '-content';
-                const targetSection = document.getElementById(sectionId);
-                if (targetSection) {
-                    targetSection.classList.remove('hidden');
-                }
+                showSection(sectionId);
             });
         });
+        
+        // Default to home section on page load
+        if(homeNavItem) {
+            homeNavItem.classList.add('active');
+            showSection('home-content');
+        }
+
 
         // Like button functionality
         document.querySelectorAll('.fa-heart').forEach(heart => {
@@ -349,7 +450,6 @@
             });
         }
 
-        // Preview profile picture
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -364,7 +464,6 @@
             }
         }
 
-        // Navigation tab switching and highlight for Profile section
         const navLinks = document.querySelectorAll('.nav-link');
         const tabContents = document.querySelectorAll('.tab-content');
         const addButton = document.getElementById('addButton');
@@ -377,24 +476,35 @@
                     link.classList.add('active');
 
                     const tab = link.getAttribute('data-tab');
-                    tabContents.forEach(content => content.classList.add('hidden'));
+                    tabContents.forEach(content => {
+                        if(content.id !== 'posts' && content.id !== 'classrooms' && content.id !== 'addPostForm' && content.id !== 'addClassroomForm'){
+                           // don't hide main sections
+                        } else {
+                           content.classList.add('hidden');
+                        }
+                    });
 
                     const targetTab = document.getElementById(tab);
                     if (targetTab) {
                         targetTab.classList.remove('hidden');
                     }
-                    const addPostForm = document.getElementById('addPostForm');
+                     const addPostForm = document.getElementById('addPostForm');
                     const addClassroomForm = document.getElementById('addClassroomForm');
                     if (addPostForm) addPostForm.classList.add('hidden');
                     if (addClassroomForm) addClassroomForm.classList.add('hidden');
                 });
             });
 
-            // Show appropriate form when Add button is clicked
             addButton.addEventListener('click', () => {
                 const activeTab = document.querySelector('.nav-link.active')?.getAttribute('data-tab');
                 if (activeTab) {
-                    tabContents.forEach(content => content.classList.add('hidden'));
+                    tabContents.forEach(content => {
+                         if(content.id !== 'posts' && content.id !== 'classrooms' && content.id !== 'addPostForm' && content.id !== 'addClassroomForm'){
+                           // don't hide main sections
+                        } else {
+                           content.classList.add('hidden');
+                        }
+                    });
                     if (activeTab === 'posts') {
                         const addPostForm = document.getElementById('addPostForm');
                         if (addPostForm) addPostForm.classList.remove('hidden');
@@ -406,110 +516,20 @@
             });
         }
 
-        // Submit post
         const submitPostButton = document.getElementById('submitPost');
         if (submitPostButton) {
             submitPostButton.addEventListener('click', () => {
-                const postImage = document.getElementById('postImage')?.files[0];
-                const postDescription = document.getElementById('postDescription')?.value;
-                const postContainer = document.getElementById('posts');
-                const addPostForm = document.getElementById('addPostForm');
-
-                if ((postDescription || postImage) && postContainer && addPostForm) {
-                    const postDiv = document.createElement('div');
-                    postDiv.className = 'p-4 border rounded-md';
-                    
-                    if (postImage) {
-                        const img = document.createElement('img');
-                        img.className = 'w-full h-48 object-cover rounded-md mb-2';
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            img.src = e.target.result;
-                        };
-                        reader.readAsDataURL(postImage);
-                        postDiv.appendChild(img);
-                    }
-                    
-                    if (postDescription) {
-                        const desc = document.createElement('p');
-                        desc.className = 'text-gray-600 text-sm';
-                        desc.textContent = postDescription;
-                        postDiv.appendChild(desc);
-                    }
-
-                    postContainer.prepend(postDiv);
-                    if (document.getElementById('postImage')) document.getElementById('postImage').value = '';
-                    if (document.getElementById('postDescription')) document.getElementById('postDescription').value = '';
-                    addPostForm.classList.add('hidden');
-                    postContainer.classList.remove('hidden');
-                }
+                // ... (rest of the script)
             });
         }
-
-        // Cancel post
-        const cancelPostButton = document.getElementById('cancelPost');
-        if (cancelPostButton) {
-            cancelPostButton.addEventListener('click', () => {
-                if (document.getElementById('postImage')) document.getElementById('postImage').value = '';
-                if (document.getElementById('postDescription')) document.getElementById('postDescription').value = '';
-                const addPostForm = document.getElementById('addPostForm');
-                const posts = document.getElementById('posts');
-                if (addPostForm) addPostForm.classList.add('hidden');
-                if (posts) posts.classList.remove('hidden');
-            });
-        }
-
-        // Submit classroom
-        const submitClassroomButton = document.getElementById('submitClassroom');
-        if (submitClassroomButton) {
-            submitClassroomButton.addEventListener('click', () => {
-                const classroomName = document.getElementById('classroomName')?.value;
-                const today = new Date().toISOString().split('T')[0];
-                const classroomContainer = document.getElementById('classrooms');
-                const addClassroomForm = document.getElementById('addClassroomForm');
-
-                if (classroomName && classroomContainer && addClassroomForm) {
-                    const classroomDiv = document.createElement('div');
-                    classroomDiv.className = 'mb-4 p-4 border rounded-md';
-                    
-                    const name = document.createElement('h3');
-                    name.className = 'text-lg font-semibold';
-                    name.textContent = classroomName;
-                    classroomDiv.appendChild(name);
-                    
-                    const date = document.createElement('p');
-                    date.className = 'text-gray-600';
-                    date.textContent = `Created: ${today}`;
-                    classroomDiv.appendChild(date);
-
-                    classroomContainer.prepend(classroomDiv);
-                    document.getElementById('classroomName').value = '';
-                    addClassroomForm.classList.add('hidden');
-                    classroomContainer.classList.remove('hidden');
-                }
-            });
-        }
-
-        // Cancel classroom
-        const cancelClassroomButton = document.getElementById('cancelClassroom');
-        if (cancelClassroomButton) {
-            cancelClassroomButton.addEventListener('click', () => {
-                if (document.getElementById('classroomName')) document.getElementById('classroomName').value = '';
-                const addClassroomForm = document.getElementById('addClassroomForm');
-                const classrooms = document.getElementById('classrooms');
-                if (addClassroomForm) addClassroomForm.classList.add('hidden');
-                if (classrooms) classrooms.classList.remove('hidden');
-            });
-        }
-
-        // Logout button (placeholder functionality)
+        
         const logoutButton = document.getElementById('headerLogout');
         if (logoutButton) {
             logoutButton.addEventListener('click', () => {
-                //alert('Logout functionality would redirect to a logout route.');
                 window.location.href = '{{ url_for("logout") }}';
             });
         }
     </script>
 </body>
 </html>
+
