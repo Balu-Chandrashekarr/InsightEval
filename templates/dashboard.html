@@ -88,7 +88,7 @@
         </nav>
 
         <!-- Main Content -->
-        <div class="ml-56 mt-4 w-full pr-4">
+        <div class="ml-60 mt-4 w-full pr-4">
             <!-- Feed Section -->
             <div class="w-full">
                 <div id="main-content">
@@ -160,12 +160,41 @@
                     <!-- Courses Content -->
                     <div id="courses-content" class="content-section hidden">
                         <div class="bg-white rounded-lg shadow-sm p-4">
-                            <h2 class="text-xl font-semibold mb-4">Courses</h2>
-                            <p>Explore your enrolled courses.</p>
-                            <ul class="list-disc pl-5">
-                                <li>Course 1: Introduction to Programming</li>
-                                <li>Course 2: Data Science Basics</li>
-                            </ul>
+                            <h1 class="text-2xl font-semibold text-center mb-4">Courses</h1>
+                            <div class="course-container flex flex-wrap justify-center">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">DSA</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                </div>
+                                <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">OOPS</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                    <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                                </div>
+                                <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">DBMS</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                    <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                                </div>
+                                <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">OS</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                    <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                                </div>
+                                <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">DMML</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                    <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                                </div>
+                            </div>
+                            <footer class="text-center mt-5 text-xs text-gray-500">
+                                <p>InsightEval adopts a hierarchical learning approach, allowing you to progress to the next course only after completing the previous one.</p>
+                            </footer>
                         </div>
                     </div>
                     <!-- Post Content -->
@@ -184,7 +213,7 @@
                                 <div class="w-full md:w-2/5 bg-white p-6 rounded-lg shadow-md">
                                     <div class="mb-4">
                                         <div class="profile-pic-container">
-                                            <img src="{{ url_for('static', filename='images/defaultprofilepic.jpg') }}" alt="Profile Picture" class="profile-pic-preview" id="preview" onclick="document.getElementById('profile_pic').click()">
+                                            <img src="https://via.placeholder.com/128x128" alt="Profile Picture" class="profile-pic-preview" id="preview" onclick="document.getElementById('profile_pic').click()">
                                             <input type="file" id="profile_pic" accept="image/*" class="input-field" onchange="previewImage(event)">
                                         </div>
                                     </div>
@@ -269,24 +298,23 @@
 
         navItems.forEach(item => {
             item.addEventListener('click', () => {
-                // Remove active class from all nav items
                 navItems.forEach(nav => {
                     nav.classList.remove('bg-gray-200');
                     nav.querySelector('i').classList.remove('text-gray-900');
                     nav.querySelector('span').classList.remove('text-gray-900');
                 });
 
-                // Add active class to clicked nav item
                 item.classList.add('bg-gray-200');
                 item.querySelector('i').classList.add('text-gray-900');
                 item.querySelector('span').classList.add('text-gray-900');
 
-                // Hide all content sections
                 contentSections.forEach(section => section.classList.add('hidden'));
 
-                // Show the corresponding content section
                 const sectionId = item.getAttribute('data-section') + '-content';
-                document.getElementById(sectionId).classList.remove('hidden');
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                }
             });
         });
 
@@ -297,16 +325,29 @@
             });
         });
 
-        // Profile-specific JavaScript
-        // Detect changes to show Save button (profile)
-        const inputs = document.querySelectorAll('#profile_pic, #name, #id, #department, #bio');
-        const saveButton = document.getElementById('save');
-
-        inputs.forEach(input => {
-            input.addEventListener('change', () => {
-                saveButton.classList.remove('hidden');
+        // Course interaction functionality
+        const courses = document.querySelectorAll('.course');
+        courses.forEach(course => {
+            course.addEventListener('click', () => {
+                const courseName = course.querySelector('h2').textContent;
+                if (course.classList.contains('unlocked')) {
+                    alert(`Accessing course: ${courseName}`);
+                } else {
+                    alert(`Course ${courseName} is locked. Complete the previous course to unlock.`);
+                }
             });
         });
+
+        // Profile-specific JavaScript
+        const inputs = document.querySelectorAll('#profile_pic, #name, #id, #department, #bio');
+        const saveButton = document.getElementById('save');
+        if (saveButton) {
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    saveButton.classList.remove('hidden');
+                });
+            });
+        }
 
         // Preview profile picture
         function previewImage(event) {
@@ -314,7 +355,10 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    document.getElementById('preview').src = e.target.result;
+                    const preview = document.getElementById('preview');
+                    if (preview) {
+                        preview.src = e.target.result;
+                    }
                 };
                 reader.readAsDataURL(file);
             }
@@ -325,113 +369,146 @@
         const tabContents = document.querySelectorAll('.tab-content');
         const addButton = document.getElementById('addButton');
 
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+        if (addButton) {
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
 
-                const tab = link.getAttribute('data-tab');
-                tabContents.forEach(content => content.classList.add('hidden'));
-                document.getElementById(tab).classList.remove('hidden');
-                document.getElementById('addPostForm').classList.add('hidden');
-                document.getElementById('addClassroomForm').classList.add('hidden');
+                    const tab = link.getAttribute('data-tab');
+                    tabContents.forEach(content => content.classList.add('hidden'));
+
+                    const targetTab = document.getElementById(tab);
+                    if (targetTab) {
+                        targetTab.classList.remove('hidden');
+                    }
+                    const addPostForm = document.getElementById('addPostForm');
+                    const addClassroomForm = document.getElementById('addClassroomForm');
+                    if (addPostForm) addPostForm.classList.add('hidden');
+                    if (addClassroomForm) addClassroomForm.classList.add('hidden');
+                });
             });
-        });
 
-        // Show appropriate form when Add button is clicked
-        addButton.addEventListener('click', () => {
-            const activeTab = document.querySelector('.nav-link.active').getAttribute('data-tab');
-            tabContents.forEach(content => content.classList.add('hidden'));
-            if (activeTab === 'posts') {
-                document.getElementById('addPostForm').classList.remove('hidden');
-            } else if (activeTab === 'classrooms') {
-                document.getElementById('addClassroomForm').classList.remove('hidden');
-            }
-        });
+            // Show appropriate form when Add button is clicked
+            addButton.addEventListener('click', () => {
+                const activeTab = document.querySelector('.nav-link.active')?.getAttribute('data-tab');
+                if (activeTab) {
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    if (activeTab === 'posts') {
+                        const addPostForm = document.getElementById('addPostForm');
+                        if (addPostForm) addPostForm.classList.remove('hidden');
+                    } else if (activeTab === 'classrooms') {
+                        const addClassroomForm = document.getElementById('addClassroomForm');
+                        if (addClassroomForm) addClassroomForm.classList.remove('hidden');
+                    }
+                }
+            });
+        }
 
         // Submit post
-        document.getElementById('submitPost').addEventListener('click', () => {
-            const postImage = document.getElementById('postImage').files[0];
-            const postDescription = document.getElementById('postDescription').value;
-
-            if (postDescription || postImage) {
+        const submitPostButton = document.getElementById('submitPost');
+        if (submitPostButton) {
+            submitPostButton.addEventListener('click', () => {
+                const postImage = document.getElementById('postImage')?.files[0];
+                const postDescription = document.getElementById('postDescription')?.value;
                 const postContainer = document.getElementById('posts');
-                const postDiv = document.createElement('div');
-                postDiv.className = 'p-4 border rounded-md';
-                
-                if (postImage) {
-                    const img = document.createElement('img');
-                    img.className = 'w-full h-48 object-cover rounded-md mb-2';
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(postImage);
-                    postDiv.appendChild(img);
-                }
-                
-                if (postDescription) {
-                    const desc = document.createElement('p');
-                    desc.className = 'text-gray-600 text-sm';
-                    desc.textContent = postDescription;
-                    postDiv.appendChild(desc);
-                }
+                const addPostForm = document.getElementById('addPostForm');
 
-                postContainer.prepend(postDiv);
-                document.getElementById('postImage').value = '';
-                document.getElementById('postDescription').value = '';
-                document.getElementById('addPostForm').classList.add('hidden');
-                document.getElementById('posts').classList.remove('hidden');
-            }
-        });
+                if ((postDescription || postImage) && postContainer && addPostForm) {
+                    const postDiv = document.createElement('div');
+                    postDiv.className = 'p-4 border rounded-md';
+                    
+                    if (postImage) {
+                        const img = document.createElement('img');
+                        img.className = 'w-full h-48 object-cover rounded-md mb-2';
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(postImage);
+                        postDiv.appendChild(img);
+                    }
+                    
+                    if (postDescription) {
+                        const desc = document.createElement('p');
+                        desc.className = 'text-gray-600 text-sm';
+                        desc.textContent = postDescription;
+                        postDiv.appendChild(desc);
+                    }
+
+                    postContainer.prepend(postDiv);
+                    if (document.getElementById('postImage')) document.getElementById('postImage').value = '';
+                    if (document.getElementById('postDescription')) document.getElementById('postDescription').value = '';
+                    addPostForm.classList.add('hidden');
+                    postContainer.classList.remove('hidden');
+                }
+            });
+        }
 
         // Cancel post
-        document.getElementById('cancelPost').addEventListener('click', () => {
-            document.getElementById('postImage').value = '';
-            document.getElementById('postDescription').value = '';
-            document.getElementById('addPostForm').classList.add('hidden');
-            document.getElementById('posts').classList.remove('hidden');
-        });
+        const cancelPostButton = document.getElementById('cancelPost');
+        if (cancelPostButton) {
+            cancelPostButton.addEventListener('click', () => {
+                if (document.getElementById('postImage')) document.getElementById('postImage').value = '';
+                if (document.getElementById('postDescription')) document.getElementById('postDescription').value = '';
+                const addPostForm = document.getElementById('addPostForm');
+                const posts = document.getElementById('posts');
+                if (addPostForm) addPostForm.classList.add('hidden');
+                if (posts) posts.classList.remove('hidden');
+            });
+        }
 
         // Submit classroom
-        document.getElementById('submitClassroom').addEventListener('click', () => {
-            const classroomName = document.getElementById('classroomName').value;
-            const today = new Date().toISOString().split('T')[0];
-
-            if (classroomName) {
+        const submitClassroomButton = document.getElementById('submitClassroom');
+        if (submitClassroomButton) {
+            submitClassroomButton.addEventListener('click', () => {
+                const classroomName = document.getElementById('classroomName')?.value;
+                const today = new Date().toISOString().split('T')[0];
                 const classroomContainer = document.getElementById('classrooms');
-                const classroomDiv = document.createElement('div');
-                classroomDiv.className = 'mb-4 p-4 border rounded-md';
-                
-                const name = document.createElement('h3');
-                name.className = 'text-lg font-semibold';
-                name.textContent = classroomName;
-                classroomDiv.appendChild(name);
-                
-                const date = document.createElement('p');
-                date.className = 'text-gray-600';
-                date.textContent = `Created: ${today}`;
-                classroomDiv.appendChild(date);
+                const addClassroomForm = document.getElementById('addClassroomForm');
 
-                classroomContainer.prepend(classroomDiv);
-                document.getElementById('classroomName').value = '';
-                document.getElementById('addClassroomForm').classList.add('hidden');
-                document.getElementById('classrooms').classList.remove('hidden');
-            }
-        });
+                if (classroomName && classroomContainer && addClassroomForm) {
+                    const classroomDiv = document.createElement('div');
+                    classroomDiv.className = 'mb-4 p-4 border rounded-md';
+                    
+                    const name = document.createElement('h3');
+                    name.className = 'text-lg font-semibold';
+                    name.textContent = classroomName;
+                    classroomDiv.appendChild(name);
+                    
+                    const date = document.createElement('p');
+                    date.className = 'text-gray-600';
+                    date.textContent = `Created: ${today}`;
+                    classroomDiv.appendChild(date);
+
+                    classroomContainer.prepend(classroomDiv);
+                    document.getElementById('classroomName').value = '';
+                    addClassroomForm.classList.add('hidden');
+                    classroomContainer.classList.remove('hidden');
+                }
+            });
+        }
 
         // Cancel classroom
-        document.getElementById('cancelClassroom').addEventListener('click', () => {
-            document.getElementById('classroomName').value = '';
-            document.getElementById('addClassroomForm').classList.add('hidden');
-            document.getElementById('classrooms').classList.remove('hidden');
-        });
+        const cancelClassroomButton = document.getElementById('cancelClassroom');
+        if (cancelClassroomButton) {
+            cancelClassroomButton.addEventListener('click', () => {
+                if (document.getElementById('classroomName')) document.getElementById('classroomName').value = '';
+                const addClassroomForm = document.getElementById('addClassroomForm');
+                const classrooms = document.getElementById('classrooms');
+                if (addClassroomForm) addClassroomForm.classList.add('hidden');
+                if (classrooms) classrooms.classList.remove('hidden');
+            });
+        }
 
         // Logout button (placeholder functionality)
-        document.getElementById('headerLogout').addEventListener('click', () => {
-            alert('Logout functionality would redirect to a logout route.');
-        });
+        const logoutButton = document.getElementById('headerLogout');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                alert('Logout functionality would redirect to a logout route.');
+            });
+        }
     </script>
 </body>
 </html>
