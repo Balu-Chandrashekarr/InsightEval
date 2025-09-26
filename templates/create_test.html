@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Test - InsightEval</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .option-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <main class="p-8 max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Create a New Test</h1>
+                <p class="text-md text-gray-600">Design an assessment for your class.</p>
+            </div>
+            <a href="{{ url_for('classroom', classroom_id=1) }}" class="flex items-center space-x-2 text-sm font-semibold text-blue-600 hover:underline">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Classroom</span>
+            </a>
+        </header>
+
+        <div class="bg-white rounded-lg shadow-lg p-8 space-y-6">
+            <!-- Test Details -->
+            <div class="space-y-4">
+                <div>
+                    <label for="test-title" class="block text-lg font-semibold text-gray-700">Test Title</label>
+                    <input type="text" id="test-title" placeholder="e.g., Midterm Exam on Data Structures" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="test-description" class="block text-lg font-semibold text-gray-700">Description / Instructions</label>
+                    <textarea id="test-description" rows="3" placeholder="Instructions for students..." class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Questions Section -->
+            <div class="space-y-6">
+                <h2 class="text-2xl font-bold text-gray-800">Questions</h2>
+                <div id="questions-container" class="space-y-6">
+                    <!-- Questions will be added here dynamically -->
+                </div>
+                
+                <!-- Add Question Buttons -->
+                <div class="flex items-center gap-4 pt-4 border-t">
+                    <span class="font-semibold">Add New Question:</span>
+                    <button id="add-mcq-btn" class="bg-blue-100 text-blue-800 font-semibold px-4 py-2 rounded-lg hover:bg-blue-200 flex items-center gap-2">
+                        <i class="fas fa-check-circle"></i> Multiple Choice
+                    </button>
+                    <button id="add-short-answer-btn" class="bg-green-100 text-green-800 font-semibold px-4 py-2 rounded-lg hover:bg-green-200 flex items-center gap-2">
+                        <i class="fas fa-paragraph"></i> Short Answer
+                    </button>
+                    <button id="add-code-btn" class="bg-gray-800 text-white font-semibold px-4 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2">
+                        <i class="fas fa-code"></i> Coding
+                    </button>
+                </div>
+            </div>
+
+             <hr>
+
+            <!-- Final Actions -->
+            <div class="flex justify-end gap-4 pt-4">
+                 <button class="bg-gray-200 text-gray-800 font-semibold px-6 py-2 rounded-lg hover:bg-gray-300">Save Draft</button>
+                 <button class="bg-blue-500 text-white font-bold px-6 py-2 rounded-lg hover:bg-blue-600">Publish Test</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const questionsContainer = document.getElementById('questions-container');
+            let questionCounter = 0;
+
+            document.getElementById('add-mcq-btn').addEventListener('click', () => addQuestion('mcq'));
+            document.getElementById('add-short-answer-btn').addEventListener('click', () => addQuestion('short_answer'));
+            document.getElementById('add-code-btn').addEventListener('click', () => addQuestion('code'));
+
+            function addQuestion(type) {
+                questionCounter++;
+                const questionId = `question-${questionCounter}`;
+                let questionHTML = '';
+
+                switch (type) {
+                    case 'mcq':
+                        questionHTML = `
+                            <div class="p-4 border rounded-lg bg-gray-50 relative">
+                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
+                                <label class="block text-md font-semibold text-gray-700 mb-2">Question ${questionCounter} (Multiple Choice)</label>
+                                <input type="text" placeholder="Enter the question..." class="w-full p-2 border rounded-md mb-3">
+                                <div class="space-y-2 pl-4">
+                                    ${[...Array(4)].map((_, i) => `
+                                        <div class="option-input-group">
+                                            <input type="radio" name="${questionId}-correct" class="form-radio text-blue-500">
+                                            <input type="text" placeholder="Option ${i + 1}" class="w-full p-2 border rounded-md">
+                                            <button class="text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <button class="text-sm text-blue-500 hover:underline mt-2" onclick="addOption(this, '${questionId}')">+ Add Option</button>
+                            </div>`;
+                        break;
+                    case 'short_answer':
+                         questionHTML = `
+                            <div class="p-4 border rounded-lg bg-gray-50 relative">
+                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
+                                <label class="block text-md font-semibold text-gray-700 mb-2">Question ${questionCounter} (Short Answer)</label>
+                                <textarea placeholder="Enter the question..." rows="2" class="w-full p-2 border rounded-md"></textarea>
+                            </div>`;
+                        break;
+                    case 'code':
+                         questionHTML = `
+                            <div class="p-4 border rounded-lg bg-gray-50 relative">
+                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
+                                <label class="block text-md font-semibold text-gray-700 mb-2">Question ${questionCounter} (Coding Challenge)</label>
+                                <textarea placeholder="Describe the coding problem..." rows="4" class="w-full p-2 border rounded-md font-mono text-sm"></textarea>
+                            </div>`;
+                        break;
+                }
+                questionsContainer.insertAdjacentHTML('beforeend', questionHTML);
+            }
+
+            window.addOption = function(button, questionId) {
+                const optionsContainer = button.previousElementSibling;
+                const optionCount = optionsContainer.children.length;
+                const newOptionHTML = `
+                    <div class="option-input-group">
+                        <input type="radio" name="${questionId}-correct" class="form-radio text-blue-500">
+                        <input type="text" placeholder="Option ${optionCount + 1}" class="w-full p-2 border rounded-md">
+                        <button class="text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                    </div>`;
+                optionsContainer.insertAdjacentHTML('beforeend', newOptionHTML);
+            }
+        });
+    </script>
+</body>
+</html>
+

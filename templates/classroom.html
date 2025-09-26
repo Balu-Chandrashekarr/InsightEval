@@ -6,12 +6,22 @@
     <title>InsightEval - Classroom View</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .message-box-popup {
+            transition: all 0.3s ease-out;
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .message-box-popup.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans">
-    
-    <!-- Main Content -->
-    <main class="p-8 w-full h-screen overflow-y-auto">
-        <!-- Classroom Header with Back Arrow -->
+    <main class="p-8 w-full h-screen flex flex-col">
         <header class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800">Advanced Algorithms</h1>
@@ -23,214 +33,214 @@
             </a>
         </header>
 
-        <!-- Two-column Layout -->
-        <div class="flex gap-8">
-            
-            <!-- Left Column: Classroom Feed/Materials -->
-            <div class="w-2/3">
-                <div class="space-y-6">
-                 <!-- New Post Box -->
-                    <div class="bg-white rounded-lg shadow p-4 flex items-center space-x-4">
-                         <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg">
-                            A
-                         </div>
-                         <div class="flex-1 bg-gray-100 hover:bg-gray-200 transition-colors rounded-full text-left p-3 cursor-pointer text-gray-500">
-                             Share something with the class...
-                         </div>
-                    </div>
+        <div class="flex gap-8 flex-1 overflow-hidden">
+            <!-- Left Column: Classroom Feed -->
+            <div class="w-2/3 flex flex-col">
+                <div id="classroom-feed" class="space-y-6 overflow-y-auto flex-1 pr-4">
+                    <!-- Posts will appear here -->
+                </div>
 
-                    <!-- Assignment Card -->
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div class="p-5 flex items-start space-x-4">
-                            <div class="bg-red-100 p-3 rounded-full">
-                                <i class="fas fa-clipboard-list text-xl text-red-600"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="text-lg font-bold text-gray-800">Assignment 3: Dynamic Programming</h3>
-                                <p class="text-sm text-gray-500">Posted on: Sep 24, 2025</p>
-                                <p class="mt-2 text-gray-700">
-                                    This assignment covers the core concepts of dynamic programming. Please solve the attached problems and submit your solutions before the deadline.
-                                </p>
-                            </div>
-                            <div class="text-right">
-                                 <p class="font-semibold text-red-600">Due: Oct 1, 2025</p>
-                                 <button class="mt-4 bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 text-sm">Submit Work</button>
+                <!-- Gemini-style Message Box -->
+                <div class="mt-6 relative">
+                    <div class="bg-white rounded-full shadow-lg p-2 flex items-center gap-2">
+                        <!-- Plus Button & Popup Menu -->
+                        <div class="relative">
+                            <button id="plus-btn" class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors">
+                                <i class="fas fa-plus text-gray-600"></i>
+                            </button>
+                            <div id="plus-popup" class="message-box-popup absolute bottom-14 left-0 bg-white rounded-lg shadow-xl p-2 w-48 hidden">
+                                <a href="{{ url_for('create_test') }}" class="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100">
+                                    <i class="fas fa-file-alt text-blue-500"></i>
+                                    <span class="font-semibold">Create Test</span>
+                                </a>
+                                <label class="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 cursor-pointer">
+                                    <i class="fas fa-paperclip text-green-500"></i>
+                                    <span class="font-semibold">Study Material</span>
+                                    <input type="file" id="material-upload" class="hidden">
+                                </label>
                             </div>
                         </div>
+                        
+                        <textarea id="message-input" placeholder="Enter a message..." rows="1" class="flex-1 bg-transparent p-2 resize-none focus:outline-none text-gray-800"></textarea>
+                        
+                        <button id="send-btn" class="h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                            <i class="fas fa-arrow-up text-white"></i>
+                        </button>
                     </div>
-
-                    <!-- Announcement Card -->
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                         <div class="p-5 flex items-start space-x-4">
-                            <div class="bg-blue-100 p-3 rounded-full">
-                                <i class="fas fa-bullhorn text-xl text-blue-600"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="text-lg font-bold text-gray-800">Midterm Exam Schedule</h3>
-                                 <p class="text-sm text-gray-500">Posted on: Sep 22, 2025</p>
-                                <p class="mt-2 text-gray-700">
-                                   Just a reminder that the midterm exam for this course will be held on October 15th. The syllabus includes all topics covered up to week 5.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Material Card -->
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                         <div class="p-5 flex items-start space-x-4">
-                            <div class="bg-green-100 p-3 rounded-full">
-                                <i class="fas fa-book text-xl text-green-600"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="text-lg font-bold text-gray-800">Lecture Notes: Greedy Algorithms</h3>
-                                 <p class="text-sm text-gray-500">Posted on: Sep 20, 2025</p>
-                            </div>
-                             <a href="#" class="mt-4 bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 text-sm flex items-center space-x-2">
-                                 <i class="fas fa-download"></i>
-                                 <span>Download PDF</span>
-                             </a>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
             <!-- Right Column: Members Canvas -->
             <div class="w-1/3">
-                <div class="bg-white rounded-lg shadow-md p-5 sticky top-8">
-                    <h2 class="text-xl font-bold text-gray-800 mb-5 border-b pb-3">Members (28)</h2>
+                 <div class="bg-white rounded-lg shadow-md p-5 sticky top-0 h-full overflow-y-auto">
+                    <h2 class="text-xl font-bold text-gray-800 mb-5 border-b pb-3">Members</h2>
                     <div class="space-y-4">
                         <!-- Teacher Section -->
                         <div>
                             <h3 class="font-semibold text-purple-700 mb-3">TEACHER</h3>
-                            <div class="flex items-center space-x-3 student-entry">
-                                <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                <span class="student-name font-semibold text-gray-700">Ms. Senthil Anandhi</span>
+                            <div class="flex items-center space-x-3 member-entry">
+                                <div class="member-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                <span class="member-name font-semibold text-gray-700">Ms. Senthil Anandhi</span>
                             </div>
                         </div>
 
                         <!-- Students Section -->
                         <div>
                             <h3 class="font-semibold text-blue-700 mb-3 mt-5">STUDENTS</h3>
-                            
-                            <!-- Short Student List (Visible by default) -->
                             <div id="short-student-list" class="space-y-3">
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">Adarsh T Nambiar</span>
-                                </div>
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">Balu Chandrashekar</span>
-                                </div>
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">Eric Alexander Varghese</span>
-                                </div>
-                                 <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">K Nandan</span>
-                                </div>
-                                <a href="#" id="view-all-link" class="text-sm text-blue-600 hover:underline pt-2 inline-block">View all...</a>
+                                <!-- Student items will be dynamically generated by script -->
                             </div>
-
-                            <!-- Full Student List (Hidden by default) -->
                             <div id="full-student-list" class="hidden space-y-3 max-h-80 overflow-y-auto pr-2">
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">Adarsh T Nambiar</span>
-                                </div>
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">Balu Chandrashekar</span>
-                                </div>
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">Eric Alexander Varghese</span>
-                                </div>
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">K Nandan</span>
-                                </div>
-                                <!-- Add more students to demonstrate scrolling -->
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">John</span>
-                                </div>
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">David</span>
-                                </div>
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">Johnny</span>
-                                </div>
-                                <div class="flex items-center space-x-3 student-entry">
-                                    <div class="student-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="student-name text-gray-700">Cyril</span>
-                                </div>
-                                <a href="#" id="show-less-link" class="text-sm text-blue-600 hover:underline pt-2 inline-block">Show less...</a>
+                                 <!-- Full student list will be dynamically generated by script -->
                             </div>
                         </div>
                     </div>
-                </div>
+                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        // Get the elements for toggling student lists
-        const viewAllLink = document.getElementById('view-all-link');
-        const showLessLink = document.getElementById('show-less-link');
-        const shortList = document.getElementById('short-student-list');
-        const fullList = document.getElementById('full-student-list');
-
-        // Show the full list when "View all..." is clicked
-        viewAllLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            shortList.classList.add('hidden');
-            fullList.classList.remove('hidden');
-        });
-
-        // Show the short list when "Show less..." is clicked
-        showLessLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            fullList.classList.add('hidden');
-            shortList.classList.remove('hidden');
-        });
-
-        // --- DYNAMIC INITIALS SCRIPT ---
         document.addEventListener('DOMContentLoaded', function() {
-            // Function to generate a consistent color from a string (e.g., a name)
-            function generateHslColor(name) {
-                let hash = 0;
-                for (let i = 0; i < name.length; i++) {
-                    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            // --- Gemini Message Box Logic ---
+            const plusBtn = document.getElementById('plus-btn');
+            const plusPopup = document.getElementById('plus-popup');
+            const messageInput = document.getElementById('message-input');
+            const sendBtn = document.getElementById('send-btn');
+            const materialUpload = document.getElementById('material-upload');
+            const classroomFeed = document.getElementById('classroom-feed');
+
+            // Toggle popup menu
+            plusBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                plusPopup.classList.toggle('hidden');
+                setTimeout(() => plusPopup.classList.toggle('show'), 10); // Delay for transition
+            });
+
+            // Close popup if clicking outside
+            window.addEventListener('click', () => {
+                if (!plusPopup.classList.contains('hidden')) {
+                    plusPopup.classList.remove('show');
+                    setTimeout(() => plusPopup.classList.add('hidden'), 300); // Allow transition to finish
                 }
-                const h = hash % 360;
-                return `hsl(${h}, 60%, 50%)`;
+            });
+
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Handle sending a message (as announcement)
+            sendBtn.addEventListener('click', () => {
+                const content = messageInput.value.trim();
+                if (content) {
+                    const newPost = createPostCard('announcement', content);
+                    classroomFeed.insertAdjacentHTML('beforeend', newPost);
+                    classroomFeed.scrollTop = classroomFeed.scrollHeight;
+                    messageInput.value = '';
+                    messageInput.style.height = 'auto';
+                }
+            });
+            
+            // Handle sending on Enter key press
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendBtn.click();
+                }
+            });
+
+            // Handle uploading study material
+            materialUpload.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const newPost = createPostCard('material', `Shared a new file: ${file.name}`, null, file);
+                    classroomFeed.insertAdjacentHTML('beforeend', newPost);
+                    classroomFeed.scrollTop = classroomFeed.scrollHeight;
+                }
+            });
+            
+            // --- Post Card Creation Function ---
+            function createPostCard(type, content, dueDate, file) {
+                const postDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                let iconClass, colorClass, title, actionButton = '';
+
+                switch (type) {
+                    case 'assignment':
+                        iconClass = 'fas fa-clipboard-list'; colorClass = 'red'; title = 'New Assignment';
+                        if (dueDate) actionButton = `<div class="text-right"><p class="font-semibold text-red-600">Due: ${dueDate}</p><button class="mt-4 bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 text-sm">Submit Work</button></div>`;
+                        break;
+                    case 'material':
+                        iconClass = 'fas fa-book'; colorClass = 'green'; title = 'New Study Material';
+                        if (file) actionButton = `<a href="#" class="mt-4 bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 text-sm flex items-center space-x-2"><i class="fas fa-download"></i><span>${file.name}</span></a>`;
+                        break;
+                    default:
+                        iconClass = 'fas fa-bullhorn'; colorClass = 'blue'; title = 'Announcement';
+                        break;
+                }
+
+                return `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden animate-fade-in">
+                    <div class="p-5 flex items-start space-x-4">
+                        <div class="bg-${colorClass}-100 p-3 rounded-full"><i class="${iconClass} text-xl text-${colorClass}-600"></i></div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800">${title}</h3>
+                            <p class="text-sm text-gray-500">Posted on: ${postDate}</p>
+                            <p class="mt-2 text-gray-700 whitespace-pre-wrap">${content}</p>
+                        </div>
+                        ${actionButton}
+                    </div>
+                </div>`;
             }
 
-            // Find all student entries
-            const studentEntries = document.querySelectorAll('.student-entry');
+            // --- Student List & Initials Logic ---
+            const memberEntries = document.querySelectorAll('.member-entry');
+            const studentNames = ["Adarsh T Nambiar", "Balu Chandrashekar", "Eric Alexander Varghese", "K Nandan", "Student Five", "Student Six", "Student Seven"];
+            const shortListContainer = document.getElementById('short-student-list');
+            const fullListContainer = document.getElementById('full-student-list');
+            
+            function generateHslColor(name) {
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
+                return `hsl(${hash % 360}, 60%, 50%)`;
+            }
 
-            studentEntries.forEach(entry => {
-                const nameSpan = entry.querySelector('.student-name');
-                const initialDiv = entry.querySelector('.student-initial');
+            const createStudentHTML = (name) => `
+                <div class="flex items-center space-x-3 member-entry">
+                    <div class="member-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                    <span class="member-name text-gray-700">${name}</span>
+                </div>`;
 
-                if (nameSpan && initialDiv) {
-                    const name = nameSpan.textContent.trim();
-                    if (name) {
-                        // Get the first letter
-                        const initial = name.charAt(0).toUpperCase();
-                        
-                        // Set the initial text
-                        initialDiv.textContent = initial;
-
-                        // Set a consistent background color based on the name
-                        initialDiv.style.backgroundColor = generateHslColor(name);
-                    }
+            studentNames.forEach(name => {
+                const studentHTML = createStudentHTML(name);
+                if (shortListContainer.children.length < 4) {
+                     shortListContainer.innerHTML += studentHTML;
                 }
+                fullListContainer.innerHTML += studentHTML;
+            });
+
+            shortListContainer.innerHTML += `<a href="#" id="view-all-link" class="text-sm text-blue-600 hover:underline pt-2 inline-block">View all...</a>`;
+            fullListContainer.innerHTML += `<a href="#" id="show-less-link" class="text-sm text-blue-600 hover:underline pt-2 inline-block">Show less...</a>`;
+            
+             document.querySelectorAll('.member-entry').forEach(entry => {
+                const nameSpan = entry.querySelector('.member-name');
+                const initialDiv = entry.querySelector('.member-initial');
+                const name = nameSpan.textContent.trim();
+                initialDiv.textContent = name.charAt(0).toUpperCase();
+                initialDiv.style.backgroundColor = generateHslColor(name);
+            });
+            
+            document.getElementById('view-all-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                shortListContainer.classList.add('hidden');
+                fullListContainer.classList.remove('hidden');
+            });
+            
+            document.getElementById('show-less-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                fullListContainer.classList.add('hidden');
+                shortListContainer.classList.remove('hidden');
             });
         });
     </script>
