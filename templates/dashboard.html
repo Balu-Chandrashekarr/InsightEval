@@ -61,42 +61,79 @@
                 <div id="main-content">
                     <!-- Home Content -->
                     <div id="home-content" class="content-section">
-                        <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-                            <div class="flex space-x-4 overflow-x-auto">
-                                <div class="flex flex-col items-center">
-                                    <img src="https://via.placeholder.com/60x60" alt="Story" class="h-16 w-16 rounded-full border-2 border-pink-500 p-0.5">
-                                    <span class="text-xs mt-1">Your Story</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <img src="https://via.placeholder.com/60x60" alt="Story" class="h-16 w-16 rounded-full border-2 border-gray-300 p-0.5">
-                                    <span class="text-xs mt-1">user1</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <img src="https://via.placeholder.com/60x60" alt="Story" class="h-16 w-16 rounded-full border-2 border-gray-300 p-0.5">
-                                    <span class="text-xs mt-1">user2</span>
-                                </div>
+                        <!-- 1. Resume Section -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h2 class="text-lg font-semibold mb-3">Resume Where You Left Off</h2>
+                    <div class="bg-gray-50 p-4 rounded-lg flex items-center justify-between hover:bg-gray-100 transition-colors cursor-pointer">
+                        <div class="flex items-center space-x-4">
+                            <div class="bg-red-100 p-3 rounded-lg">
+                                <i class="fas fa-clipboard-list text-xl text-red-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Assignment 3: Dynamic Programming</p>
+                                <p class="text-sm text-gray-500">Advanced Algorithms - Due: Oct 1, 2025</p>
                             </div>
                         </div>
-                        <div class="space-y-4">
-                            <div class="bg-white rounded-lg shadow-sm">
-                                <div class="p-4 flex items-center">
-                                    <img src="https://via.placeholder.com/32x32" alt="User" class="h-8 w-8 rounded-full">
-                                    <span class="ml-3 font-semibold">username</span>
-                                </div>
-                                <img src="https://via.placeholder.com/600x600" alt="Post" class="w-full">
-                                <div class="p-4">
-                                    <div class="flex space-x-4 mb-2">
-                                        <i class="fas fa-heart text-xl cursor-pointer hover:text-red-500"></i>
-                                        <i class="fas fa-comment text-xl cursor-pointer"></i>
-                                        <i class="fas fa-paper-plane text-xl cursor-pointer"></i>
-                                    </div>
-                                    <p class="font-semibold">123 likes</p>
-                                    <p><span class="font-semibold">username</span> This is a sample caption...</p>
-                                    <p class="text-gray-500 text-sm mt-1">View all 12 comments</p>
-                                    <input type="text" placeholder="Add a comment..." class="w-full mt-2 border-t pt-2 text-sm focus:outline-none">
-                                </div>
+                        <i class="fas fa-arrow-right text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- 2. Upcoming Deadlines / To-Do List -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h2 class="text-lg font-semibold mb-4">What's Due Soon</h2>
+                    <div class="space-y-4">
+                        <!-- To-Do Item 1 -->
+                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
+                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <div class="flex-1">
+                                <p class="font-medium">Submit Greedy Algorithms Worksheet</p>
+                                <p class="text-xs text-gray-500">Advanced Algorithms</p>
+                            </div>
+                            <span class="text-sm font-medium text-red-600">Due Tomorrow</span>
+                        </div>
+                        <!-- To-Do Item 2 -->
+                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
+                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <div class="flex-1">
+                                <p class="font-medium">Quiz 2: SQL Joins</p>
+                                <p class="text-xs text-gray-500">Database Systems</p>
+                            </div>
+                            <span class="text-sm font-medium text-yellow-600">Due in 3 days</span>
+                        </div>
+                         <!-- To-Do Item 3 -->
+                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
+                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <div class="flex-1">
+                                <p class="font-medium">Project Proposal Draft</p>
+                                <p class="text-xs text-gray-500">Operating Systems</p>
+                            </div>
+                            <span class="text-sm font-medium text-gray-500">Due Oct 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Recent Activity / Classroom Feed -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h2 class="text-lg font-semibold mb-4">Recent Activity</h2>
+                    <div class="space-y-5">
+                        <!-- Activity Item 1 -->
+                        <div class="flex space-x-4">
+                            <div class="bg-blue-100 h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center"><i class="fas fa-bullhorn text-blue-600"></i></div>
+                            <div>
+                                <p class="text-sm"><span class="font-semibold">Ms. Senthil Anandhi</span> posted an announcement in <span class="font-semibold">Operating Systems</span></p>
+                                <p class="text-xs text-gray-500">2 hours ago</p>
                             </div>
                         </div>
+                        <!-- Activity Item 2 -->
+                        <div class="flex space-x-4">
+                            <div class="bg-green-100 h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center"><i class="fas fa-book text-green-600"></i></div>
+                            <div>
+                                <p class="text-sm"><span class="font-semibold">Dr. Evelyn Reed</span> posted new material: <span class="font-semibold">"Lecture 7 Slides"</span></p>
+                                <p class="text-xs text-gray-500">Yesterday</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     </div>
                     <!-- Remainder Content -->
                     <div id="remainder-content" class="content-section hidden">
