@@ -18,13 +18,60 @@
         .fixed-add-button { position: absolute; bottom: 1.5rem; right: 1.5rem; }
         .nav-item.active { background-color: #f3f4f6; border-radius: 8px; }
         .nav-item.active i, .nav-item.active span { color: #1f2937; }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+        /* Search panel alignment and animation */
+        #search-panel {
+            left: -300px; /* Initially off-screen, matching panel width */
+            width: 300px; /* Fixed width for the search panel */
+            z-index: 20; /* Above navigation (z-10) */
+            transition: left 0.3s ease; /* Smooth slide animation */
+            top: 0;
+            height: 100vh; /* Full viewport height */
+            box-sizing: border-box; /* Include padding in width */
+        }
+        .search-active #search-panel {
+            left: 224px; /* Align flush with nav (56px * 4 = 224px, as w-56 in Tailwind is 224px) */
+        }
+        .search-active #main-content {
+            margin-left: 524px; /* Nav (224px) + search panel (300px) */
+            transition: margin-left 0.3s ease; /* Smooth shift */
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #search-panel {
+                width: 100%; /* Full width on small screens */
+                left: -100%;
+            }
+            .search-active #search-panel {
+                left: 0; /* Slide to cover the screen */
+            }
+            .search-active #main-content {
+                margin-left: 0; /* Hide main content on small screens when search is active */
+                display: none; /* Prevent overlap */
+            }
+            .nav-item span {
+                display: none; /* Hide nav text on small screens for better fit */
+            }
+            nav {
+                width: 60px; /* Slimmer nav on small screens */
+            }
+            #main-content {
+                margin-left: 60px; /* Adjust for slimmer nav */
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
-    <div class="flex">
+    <div class="flex min-h-screen">
         <!-- Left Navigation -->
         <nav class="bg-white shadow-sm fixed left-0 top-0 h-full w-56 z-10 flex flex-col items-start py-4 px-4 space-y-6">
-            <span class="text-3xl font-bold text-gray-800 mb-4">InSightEval</span>
+            <div class="logo-container flex items-center space-x-3 mb-4 pl-2">
+                <i class="fas fa-graduation-cap text-2xl text-blue-600"></i>
+                <span class="text-2xl font-bold text-gray-800 whitespace-nowrap transition-all duration-200">InSightEval</span>
+            </div>
             <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="home">
                 <i class="fas fa-home text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">HOME</span>
@@ -55,408 +102,370 @@
             </div>
         </nav>
 
+        <!-- Search Panel -->
+        <div id="search-panel" class="bg-white shadow-lg h-full border-r border-gray-200 p-6 fixed top-0 transition-all duration-300 z-20">
+            <h2 class="text-2xl font-bold mb-6">Search</h2>
+            <input type="text" placeholder="Search" class="w-full bg-gray-100 rounded-md px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Search">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-semibold">Recent</h3>
+                <button id="clear-recent-btn" class="text-blue-500 text-sm font-semibold hover:text-blue-700">Clear all</button>
+            </div>
+            <div id="recent-searches-list" class="space-y-4">
+                <!-- Recent search items will be dynamically added here -->
+            </div>
+        </div>
+
         <!-- Main Content -->
-        <div class="ml-60 mt-4 w-full pr-4">
+        <div id="main-content" class="ml-60 mt-4 w-full pr-4 transition-all duration-300">
             <div class="w-full">
-                <div id="main-content">
-                    <!-- Home Content -->
-                    <div id="home-content" class="content-section">
-                        <!-- 1. Resume Section -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h2 class="text-lg font-semibold mb-3">Resume Where You Left Off</h2>
-                    <div class="bg-gray-50 p-4 rounded-lg flex items-center justify-between hover:bg-gray-100 transition-colors cursor-pointer">
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-red-100 p-3 rounded-lg">
-                                <i class="fas fa-clipboard-list text-xl text-red-600"></i>
-                            </div>
-                            <div>
-                                <p class="font-semibold">Assignment 3: Dynamic Programming</p>
-                                <p class="text-sm text-gray-500">Advanced Algorithms - Due: Oct 1, 2025</p>
-                            </div>
-                        </div>
-                        <i class="fas fa-arrow-right text-gray-400"></i>
-                    </div>
-                </div>
-
-                <!-- 2. Upcoming Deadlines / To-Do List -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h2 class="text-lg font-semibold mb-4">What's Due Soon</h2>
-                    <div class="space-y-4">
-                        <!-- To-Do Item 1 -->
-                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
-                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <div class="flex-1">
-                                <p class="font-medium">Submit Greedy Algorithms Worksheet</p>
-                                <p class="text-xs text-gray-500">Advanced Algorithms</p>
-                            </div>
-                            <span class="text-sm font-medium text-red-600">Due Tomorrow</span>
-                        </div>
-                        <!-- To-Do Item 2 -->
-                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
-                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <div class="flex-1">
-                                <p class="font-medium">Quiz 2: SQL Joins</p>
-                                <p class="text-xs text-gray-500">Database Systems</p>
-                            </div>
-                            <span class="text-sm font-medium text-yellow-600">Due in 3 days</span>
-                        </div>
-                         <!-- To-Do Item 3 -->
-                        <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
-                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <div class="flex-1">
-                                <p class="font-medium">Project Proposal Draft</p>
-                                <p class="text-xs text-gray-500">Operating Systems</p>
-                            </div>
-                            <span class="text-sm font-medium text-gray-500">Due Oct 10</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. Recent Activity / Classroom Feed -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h2 class="text-lg font-semibold mb-4">Recent Activity</h2>
-                    <div class="space-y-5">
-                        <!-- Activity Item 1 -->
-                        <div class="flex space-x-4">
-                            <div class="bg-blue-100 h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center"><i class="fas fa-bullhorn text-blue-600"></i></div>
-                            <div>
-                                <p class="text-sm"><span class="font-semibold">Ms. Senthil Anandhi</span> posted an announcement in <span class="font-semibold">Operating Systems</span></p>
-                                <p class="text-xs text-gray-500">2 hours ago</p>
-                            </div>
-                        </div>
-                        <!-- Activity Item 2 -->
-                        <div class="flex space-x-4">
-                            <div class="bg-green-100 h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center"><i class="fas fa-book text-green-600"></i></div>
-                            <div>
-                                <p class="text-sm"><span class="font-semibold">Dr. Evelyn Reed</span> posted new material: <span class="font-semibold">"Lecture 7 Slides"</span></p>
-                                <p class="text-xs text-gray-500">Yesterday</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    </div>
-                    <!-- Remainder Content -->
-                    <div id="remainder-content" class="content-section hidden">
-                        <div class="bg-white rounded-lg shadow-sm p-4">
-                            <h1 class="text-2xl font-semibold text-center mb-8">Remainder</h1>
-                            <div class="w-full max-w-6xl flex flex-row gap-6 mx-auto">
-                                <!-- Teachers Reminder Section -->
-                                <div class="w-1/2 bg-white rounded-lg shadow-lg p-6 h-[600px] flex flex-col">
-                                    <h2 class="mt-2.5 text-lg font-semibold mb-4">To Remember</h2>
-                                    <div id="teacherReminders" class="space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-                                        <div class="p-4 bg-blue-100 rounded-md">Complete homework by Friday</div>
-                                        <div class="p-4 bg-blue-100 rounded-md">Prepare for quiz on Monday</div>
-                                        <div class="p-4 bg-blue-100 rounded-md">Submit project proposal by Wednesday</div>
-                                        <div class="p-4 bg-blue-100 rounded-md">Attend guest lecture on Thursday</div>
-                                        <div class="p-4 bg-blue-100 rounded-md">Complete homework by Friday</div>
-                                        <div class="p-4 bg-blue-100 rounded-md">Prepare for quiz on Monday</div>
-                                        <div class="p-4 bg-blue-100 rounded-md">Submit project proposal by Wednesday</div>
-                                        <div class="p-4 bg-blue-100 rounded-md">Attend guest lecture on Thursday</div>
-                                    </div>
+                <!-- Home Content -->
+                <div id="home-content" class="content-section">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h2 class="text-lg font-semibold mb-3">Resume Where You Left Off</h2>
+                        <div class="bg-gray-50 p-4 rounded-lg flex items-center justify-between hover:bg-gray-100 transition-colors cursor-pointer">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-red-100 p-3 rounded-lg">
+                                    <i class="fas fa-clipboard-list text-xl text-red-600"></i>
                                 </div>
-                                <!-- Students Reminder Section -->
-                                <div class="w-1/2 bg-white rounded-lg shadow-lg p-6 h-[600px] flex flex-col">
-                                    <h2 class="mt-2.5 text-lg font-semibold mb-4">Self Remainder</h2>
-                                    <div id="studentReminders" class="space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-                                        <!-- Student reminders will be appended here -->
-                                    </div>
-                                    <div class="mt-4">
-                                        <input id="studentInput" type="text" placeholder="Add your reminder..." class="w-full p-2 border rounded-md">
-                                        <button onclick="addStudentReminder()" class="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Add Remainder</button>
-                                    </div>
+                                <div>
+                                    <p class="font-semibold">Assignment 3: Dynamic Programming</p>
+                                    <p class="text-sm text-gray-500">Advanced Algorithms - Due: Oct 1, 2025</p>
                                 </div>
                             </div>
-                            <script>
-                                // Add a student reminder
-                                function addStudentReminder() {
-                                    const input = document.getElementById('studentInput');
-                                    const reminderText = input.value.trim();
-                                    if (reminderText) {
-                                        const reminderDiv = document.createElement('div');
-                                        reminderDiv.className = 'p-4 bg-green-100 rounded-md flex justify-between items-center';
-                                        reminderDiv.innerHTML = `
-                                            <span>${reminderText}</span>
-                                            <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">Delete</button>
-                                        `;
-                                        document.getElementById('studentReminders').appendChild(reminderDiv);
-                                        input.value = '';
-                                    }
-                                }
-                            </script>
+                            <i class="fas fa-arrow-right text-gray-400"></i>
                         </div>
                     </div>
-                    
-                    <!-- ========== CORRECTED CLASSROOM SECTION ========== -->
-                    <div id="classroom-content" class="content-section hidden">
-                        <!-- Header section with Add/Join buttons -->
-                        <header class="flex justify-between items-center mb-6">
-                            <h1 class="text-3xl font-bold text-gray-800">Classrooms</h1>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h2 class="text-lg font-semibold mb-4">What's Due Soon</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
+                                <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" aria-label="Complete Greedy Algorithms Worksheet">
+                                <div class="flex-1">
+                                    <p class="font-medium">Submit Greedy Algorithms Worksheet</p>
+                                    <p class="text-xs text-gray-500">Advanced Algorithms</p>
+                                </div>
+                                <span class="text-sm font-medium text-red-600">Due Tomorrow</span>
+                            </div>
+                            <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
+                                <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" aria-label="Complete Quiz 2: SQL Joins">
+                                <div class="flex-1">
+                                    <p class="font-medium">Quiz 2: SQL Joins</p>
+                                    <p class="text-xs text-gray-500">Database Systems</p>
+                                </div>
+                                <span class="text-sm font-medium text-yellow-600">Due in 3 days</span>
+                            </div>
+                            <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
+                                <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" aria-label="Complete Project Proposal Draft">
+                                <div class="flex-1">
+                                    <p class="font-medium">Project Proposal Draft</p>
+                                    <p class="text-xs text-gray-500">Operating Systems</p>
+                                </div>
+                                <span class="text-sm font-medium text-gray-500">Due Oct 10</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h2 class="text-lg font-semibold mb-4">Recent Activity</h2>
+                        <div class="space-y-5">
                             <div class="flex space-x-4">
-                                <button id="add-classroom-btn" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2">
-                                    <i class="fas fa-plus"></i>
-                                    <span>Add</span>
-                                </button>
-                                <button id="join-classroom-btn" class="bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 flex items-center space-x-2">
-                                    <i class="fas fa-sign-in-alt"></i>
-                                    <span>Join</span>
-                                </button>
-                            </div>
-                        </header>
-                         <div id="add-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
-            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
-            <h2 class="text-2xl font-bold mb-4 border-b pb-3">Create Classroom</h2>
-            <form class="space-y-4">
-                <div>
-                    <label for="new-classroom-name" class="block text-sm font-medium text-gray-700">Classroom Name</label>
-                    <input type="text" id="new-classroom-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="new-classroom-subject" class="block text-sm font-medium text-gray-700">Subject Code</label>
-                    <input type="text" id="new-classroom-subject" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="new-classroom-desc" class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea id="new-classroom-desc" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
-                <div class="flex justify-end pt-4">
-                    <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Create</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ======== Join Classroom Modal ======== -->
-    <div id="join-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
-            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
-            <h2 class="text-2xl font-bold mb-4 border-b pb-3">Join Classroom</h2>
-            <form class="space-y-4">
-                <div>
-                    <label for="join-classroom-code" class="block text-sm font-medium text-gray-700">Classroom Code</label>
-                    <input type="text" id="join-classroom-code" placeholder="Enter the code provided by your teacher" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="flex justify-end pt-4">
-                    <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Join</button>
-                </div>
-            </form>
-        </div>
-    </div>
-                        <!-- List of joined classrooms -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Sample Classroom Card 1 -->
-                            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                                <div class="p-6 border-t-4 border-blue-500">
-                                    <h2 class="text-xl font-bold text-gray-800 mb-1">Advanced Algorithms</h2>
-                                    <p class="text-sm text-gray-600 mb-4">Dr. Evelyn Reed</p>
-                                    <div class="flex justify-between items-center text-sm text-gray-500">
-                                        <span><i class="fas fa-user-friends mr-1"></i> 28 Students</span>
-                                        <span>CS-404</span>
-                                    </div>
-                                </div>
-                                <a href="{{ url_for('classroom', classroom_id=1) }}" class="block bg-gray-50 text-center font-semibold text-blue-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-                            </div>
-                             <!-- Sample Classroom Card 2 -->
-                             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                                <div class="p-6 border-t-4 border-green-500">
-                                    <h2 class="text-xl font-bold text-gray-800 mb-1">Database Systems</h2>
-                                    <p class="text-sm text-gray-600 mb-4">Prof. Samuel Chen</p>
-                                    <div class="flex justify-between items-center text-sm text-gray-500">
-                                        <span><i class="fas fa-user-friends mr-1"></i> 35 Students</span>
-                                        <span>DB-301</span>
-                                    </div>
-                                </div>
-                                <a href="#" class="block bg-gray-50 text-center font-semibold text-green-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-                            </div>
-                            <!-- Add more classroom cards here -->
-                             <!-- Sample Classroom Card 3 -->
-<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-    <div class="p-6 border-t-4 border-purple-500">
-        <h2 class="text-xl font-bold text-gray-800 mb-1">Operating Systems</h2>
-        <p class="text-sm text-gray-600 mb-4">Ms. Senthil Anandhi</p>
-        <div class="flex justify-between items-center text-sm text-gray-500">
-            <span><i class="fas fa-user-friends mr-1"></i> 41 Students</span>
-            <span>OS-312</span>
-        </div>
-    </div>
-    <a href="#" class="block bg-gray-50 text-center font-semibold text-purple-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-</div>
-
-<!-- Sample Classroom Card 4 -->
-<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-    <div class="p-6 border-t-4 border-red-500">
-        <h2 class="text-xl font-bold text-gray-800 mb-1">Intro to AI & ML</h2>
-        <p class="text-sm text-gray-600 mb-4">Dr. Alan Grant</p>
-        <div class="flex justify-between items-center text-sm text-gray-500">
-            <span><i class="fas fa-user-friends mr-1"></i> 52 Students</span>
-            <span>AI-101</span>
-        </div>
-    </div>
-    <a href="#" class="block bg-gray-50 text-center font-semibold text-red-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-</div>
-
-<!-- Sample Classroom Card 5 -->
-<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-    <div class="p-6 border-t-4 border-yellow-500">
-        <h2 class="text-xl font-bold text-gray-800 mb-1">Web Development</h2>
-        <p class="text-sm text-gray-600 mb-4">Mr. Eric Varghese</p>
-        <div class="flex justify-between items-center text-sm text-gray-500">
-            <span><i class="fas fa-user-friends mr-1"></i> 38 Students</span>
-            <span>WD-202</span>
-        </div>
-    </div>
-    <a href="#" class="block bg-gray-50 text-center font-semibold text-yellow-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-</div>
-
-<!-- Sample Classroom Card 6 -->
-<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-    <div class="p-6 border-t-4 border-indigo-500">
-        <h2 class="text-xl font-bold text-gray-800 mb-1">Data Structures</h2>
-        <p class="text-sm text-gray-600 mb-4">Prof. Nandan</p>
-        <div class="flex justify-between items-center text-sm text-gray-500">
-            <span><i class="fas fa-user-friends mr-1"></i> 45 Students</span>
-            <span>DS-210</span>
-        </div>
-    </div>
-    <a href="#" class="block bg-gray-50 text-center font-semibold text-indigo-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Search Content -->
-                    <div id="search-content" class="content-section hidden">
-                        <div class="bg-white rounded-lg shadow-sm p-4">
-                            <h2 class="text-xl font-semibold mb-4">Search</h2>
-                            <input type="text" placeholder="Search for users, courses, or posts..." class="w-full p-2 border rounded focus:outline-none">
-                        </div>
-                    </div>
-                   <!-- Courses Content -->
-                    <div id="courses-content" class="content-section hidden">
-                        <div class="bg-white rounded-lg shadow-sm p-4">
-                            <h1 class="text-2xl font-semibold text-center mb-4">Courses</h1>
-                            <div class="course-container flex flex-wrap justify-center">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
-                                    <h2 class="mt-2.5 text-lg font-semibold">DSA</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
-                                </div>
-                                <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
-                                    <h2 class="mt-2.5 text-lg font-semibold">OOPS</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
-                                    <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
-                                </div>
-                                <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
-                                    <h2 class="mt-2.5 text-lg font-semibold">DBMS</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
-                                    <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
-                                </div>
-                                <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
-                                    <h2 class="mt-2.5 text-lg font-semibold">OS</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
-                                    <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
-                                </div>
-                                <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
-                                    <h2 class="mt-2.5 text-lg font-semibold">DMML</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
-                                    <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                                <div class="bg-blue-100 h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center"><i class="fas fa-bullhorn text-blue-600"></i></div>
+                                <div>
+                                    <p class="text-sm"><span class="font-semibold">Ms. Senthil Anandhi</span> posted an announcement in <span class="font-semibold">Operating Systems</span></p>
+                                    <p class="text-xs text-gray-500">2 hours ago</p>
                                 </div>
                             </div>
-                            <footer class="text-center mt-5 text-xs text-gray-500">
-                                <p>InsightEval adopts a hierarchical learning approach, allowing you to progress to the next course only after completing the previous one.</p>
-                            </footer>
+                            <div class="flex space-x-4">
+                                <div class="bg-green-100 h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center"><i class="fas fa-book text-green-600"></i></div>
+                                <div>
+                                    <p class="text-sm"><span class="font-semibold">Dr. Evelyn Reed</span> posted new material: <span class="font-semibold">"Lecture 7 Slides"</span></p>
+                                    <p class="text-xs text-gray-500">Yesterday</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- Post Content -->
-                    <div id="post-content" class="content-section hidden">
-                        <div class="bg-white rounded-lg shadow-sm p-4">
-                            <h2 class="text-xl font-semibold mb-4">Create a Post</h2>
-                            <textarea placeholder="What's on your mind?" class="w-full p-2 border rounded focus:outline-none"></textarea>
-                            <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Post</button>
+                </div>
+
+                <!-- Remainder Content -->
+                <div id="remainder-content" class="content-section hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-4">
+                        <h1 class="text-2xl font-semibold text-center mb-8">Remainder</h1>
+                        <div class="w-full max-w-6xl flex flex-row gap-6 mx-auto">
+                            <div class="w-1/2 bg-white rounded-lg shadow-lg p-6 h-[600px] flex flex-col">
+                                <h2 class="mt-2.5 text-lg font-semibold mb-4">To Remember</h2>
+                                <div id="teacherReminders" class="space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+                                    <div class="p-4 bg-blue-100 rounded-md">Complete homework by Friday</div>
+                                    <div class="p-4 bg-blue-100 rounded-md">Prepare for quiz on Monday</div>
+                                    <div class="p-4 bg-blue-100 rounded-md">Submit project proposal by Wednesday</div>
+                                    <div class="p-4 bg-blue-100 rounded-md">Attend guest lecture on Thursday</div>
+                                    <div class="p-4 bg-blue-100 rounded-md">Complete homework by Friday</div>
+                                    <div class="p-4 bg-blue-100 rounded-md">Prepare for quiz on Monday</div>
+                                    <div class="p-4 bg-blue-100 rounded-md">Submit project proposal by Wednesday</div>
+                                    <div class="p-4 bg-blue-100 rounded-md">Attend guest lecture on Thursday</div>
+                                </div>
+                            </div>
+                            <div class="w-1/2 bg-white rounded-lg shadow-lg p-6 h-[600px] flex flex-col">
+                                <h2 class="mt-2.5 text-lg font-semibold mb-4">Self Remainder</h2>
+                                <div id="studentReminders" class="space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+                                    <!-- Student reminders will be appended here -->
+                                </div>
+                                <div class="mt-4">
+                                    <input id="studentInput" type="text" placeholder="Add your reminder..." class="w-full p-2 border rounded-md" aria-label="Add a reminder">
+                                    <button onclick="addStudentReminder()" class="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Add Remainder</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- Profile Content -->
-                    <div id="profile-content" class="content-section hidden">
-                         <div class="container px-4 py-8">
-                            <div class="flex flex-col md:flex-row gap-8">
-                                <!-- Left Side -->
-                                <div class="w-full md:w-2/5 bg-white p-6 rounded-lg shadow-md">
-                                    <div class="mb-4">
-                                        <div class="profile-pic-container">
-                                            <img src="https://via.placeholder.com/128x128" alt="Profile Picture" class="profile-pic-preview" id="preview" onclick="document.getElementById('profile_pic').click()">
-                                            <input type="file" id="profile_pic" accept="image/*" class="input-field" onchange="previewImage(event)">
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="name" class="block text-gray-700 font-semibold mb-2">Name</label>
-                                        <input type="text" id="name" class="w-full p-2 border rounded-md" value="User Name">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="id" class="block text-gray-700 font-semibold mb-2">ID</label>
-                                        <input type="text" id="id" class="w-full p-2 border rounded-md" value="1NHCS057">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="department" class="block text-gray-700 font-semibold mb-2">Department</label>
-                                        <input type="text" id="department" class="w-full p-2 border rounded-md" value="Computer Science and Engineering">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="bio" class="block text-gray-700 font-semibold mb-2">Bio</label>
-                                        <textarea id="bio" class="w-full p-2 border rounded-md" rows="4" maxlength="200" placeholder="Enter Bio here">hai\nhello\nenghene</textarea>
-                                    </div>
-                                    <div class="flex justify-between space-x-4 mb-4">
-                                        <button id="resetPassword" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">Reset Password</button>
-                                        <button id="save" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 hidden">Save</button>
-                                        <button id="headerLogout" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">Logout</button>
+                </div>
+
+                <!-- Classroom Content -->
+                <div id="classroom-content" class="content-section hidden">
+                    <header class="flex justify-between items-center mb-6">
+                        <h1 class="text-3xl font-bold text-gray-800">Classrooms</h1>
+                        <div class="flex space-x-4">
+                            <button id="add-classroom-btn" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2">
+                                <i class="fas fa-plus"></i>
+                                <span>Add</span>
+                            </button>
+                            <button id="join-classroom-btn" class="bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 flex items-center space-x-2">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Join</span>
+                            </button>
+                        </div>
+                    </header>
+                    <div id="add-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
+                            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+                            <h2 class="text-2xl font-bold mb-4 border-b pb-3">Create Classroom</h2>
+                            <form id="add-classroom-form" class="space-y-4">
+                                <div>
+                                    <label for="new-classroom-name" class="block text-sm font-medium text-gray-700">Classroom Name</label>
+                                    <input type="text" id="new-classroom-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                </div>
+                                <div>
+                                    <label for="new-classroom-subject" class="block text-sm font-medium text-gray-700">Subject Code</label>
+                                    <input type="text" id="new-classroom-subject" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                </div>
+                                <div>
+                                    <label for="new-classroom-desc" class="block text-sm font-medium text-gray-700">Description</label>
+                                    <textarea id="new-classroom-desc" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                </div>
+                                <div class="flex justify-end pt-4">
+                                    <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
+                                    <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Create</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="join-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
+                            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+                            <h2 class="text-2xl font-bold mb-4 border-b pb-3">Join Classroom</h2>
+                            <form id="join-classroom-form" class="space-y-4">
+                                <div>
+                                    <label for="join-classroom-code" class="block text-sm font-medium text-gray-700">Classroom Code</label>
+                                    <input type="text" id="join-classroom-code" placeholder="Enter the code provided by your teacher" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                </div>
+                                <div class="flex justify-end pt-4">
+                                    <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
+                                    <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Join</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                            <div class="p-6 border-t-4 border-blue-500">
+                                <h2 class="text-xl font-bold text-gray-800 mb-1">Advanced Algorithms</h2>
+                                <p class="text-sm text-gray-600 mb-4">Dr. Evelyn Reed</p>
+                                <div class="flex justify-between items-center text-sm text-gray-500">
+                                    <span><i class="fas fa-user-friends mr-1"></i> 28 Students</span>
+                                    <span>CS-404</span>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('classroom', classroom_id=1) }}" class="block bg-gray-50 text-center font-semibold text-blue-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                            <div class="p-6 border-t-4 border-green-500">
+                                <h2 class="text-xl font-bold text-gray-800 mb-1">Database Systems</h2>
+                                <p class="text-sm text-gray-600 mb-4">Prof. Samuel Chen</p>
+                                <div class="flex justify-between items-center text-sm text-gray-500">
+                                    <span><i class="fas fa-user-friends mr-1"></i> 35 Students</span>
+                                    <span>DB-301</span>
+                                </div>
+                            </div>
+                            <a href="#" class="block bg-gray-50 text-center font-semibold text-green-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                            <div class="p-6 border-t-4 border-purple-500">
+                                <h2 class="text-xl font-bold text-gray-800 mb-1">Operating Systems</h2>
+                                <p class="text-sm text-gray-600 mb-4">Ms. Senthil Anandhi</p>
+                                <div class="flex justify-between items-center text-sm text-gray-500">
+                                    <span><i class="fas fa-user-friends mr-1"></i> 41 Students</span>
+                                    <span>OS-312</span>
+                                </div>
+                            </div>
+                            <a href="#" class="block bg-gray-50 text-center font-semibold text-purple-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                            <div class="p-6 border-t-4 border-red-500">
+                                <h2 class="text-xl font-bold text-gray-800 mb-1">Intro to AI & ML</h2>
+                                <p class="text-sm text-gray-600 mb-4">Dr. Alan Grant</p>
+                                <div class="flex justify-between items-center text-sm text-gray-500">
+                                    <span><i class="fas fa-user-friends mr-1"></i> 52 Students</span>
+                                    <span>AI-101</span>
+                                </div>
+                            </div>
+                            <a href="#" class="block bg-gray-50 text-center font-semibold text-red-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                            <div class="p-6 border-t-4 border-yellow-500">
+                                <h2 class="text-xl font-bold text-gray-800 mb-1">Web Development</h2>
+                                <p class="text-sm text-gray-600 mb-4">Mr. Eric Varghese</p>
+                                <div class="flex justify-between items-center text-sm text-gray-500">
+                                    <span><i class="fas fa-user-friends mr-1"></i> 38 Students</span>
+                                    <span>WD-202</span>
+                                </div>
+                            </div>
+                            <a href="#" class="block bg-gray-50 text-center font-semibold text-yellow-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                            <div class="p-6 border-t-4 border-indigo-500">
+                                <h2 class="text-xl font-bold text-gray-800 mb-1">Data Structures</h2>
+                                <p class="text-sm text-gray-600 mb-4">Prof. Nandan</p>
+                                <div class="flex justify-between items-center text-sm text-gray-500">
+                                    <span><i class="fas fa-user-friends mr-1"></i> 45 Students</span>
+                                    <span>DS-210</span>
+                                </div>
+                            </div>
+                            <a href="#" class="block bg-gray-50 text-center font-semibold text-indigo-600 p-3 hover:bg-gray-100">Enter Classroom</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Courses Content -->
+                <div id="courses-content" class="content-section hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-4">
+                        <h1 class="text-2xl font-semibold text-center mb-4">Courses</h1>
+                        <div class="course-container flex flex-wrap justify-center">
+                            <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                <h2 class="mt-2.5 text-lg font-semibold">DSA</h2>
+                                <p class="text-sm">Date: September 25, 2025</p>
+                                <div class="stars text-xl text-yellow-400">★★★</div>
+                            </div>
+                            <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
+                                <h2 class="mt-2.5 text-lg font-semibold">OOPS</h2>
+                                <p class="text-sm">Date: September 25, 2025</p>
+                                <div class="stars text-xl text-yellow-400">★★★</div>
+                                <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                            </div>
+                            <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
+                                <h2 class="mt-2.5 text-lg font-semibold">DBMS</h2>
+                                <p class="text-sm">Date: September 25, 2025</p>
+                                <div class="stars text-xl text-yellow-400">★★★</div>
+                                <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                            </div>
+                            <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
+                                <h2 class="mt-2.5 text-lg font-semibold">OS</h2>
+                                <p class="text-sm">Date: September 25, 2025</p>
+                                <div class="stars text-xl text-yellow-400">★★★</div>
+                                <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                            </div>
+                            <div class="course locked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative bg-gray-100 opacity-70 cursor-pointer">
+                                <h2 class="mt-2.5 text-lg font-semibold">DMML</h2>
+                                <p class="text-sm">Date: September 25, 2025</p>
+                                <div class="stars text-xl text-yellow-400">★★★</div>
+                                <div class="lock-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-600">🔒</div>
+                            </div>
+                        </div>
+                        <footer class="text-center mt-5 text-xs text-gray-500">
+                            <p>InsightEval adopts a hierarchical learning approach, allowing you to progress to the next course only after completing the previous one.</p>
+                        </footer>
+                    </div>
+                </div>
+
+                <!-- Post Content -->
+                <div id="post-content" class="content-section hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-4">
+                        <h2 class="text-xl font-semibold mb-4">Create a Post</h2>
+                        <textarea placeholder="What's on your mind?" class="w-full p-2 border rounded focus:outline-none" aria-label="Create a post"></textarea>
+                        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Post</button>
+                    </div>
+                </div>
+
+                <!-- Profile Content -->
+                <div id="profile-content" class="content-section hidden">
+                    <div class="container px-4 py-8">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="w-full md:w-2/5 bg-white p-6 rounded-lg shadow-md">
+                                <div class="mb-4">
+                                    <div class="profile-pic-container">
+                                        <img src="https://via.placeholder.com/128x128" alt="Profile Picture" class="profile-pic-preview" id="preview" onclick="document.getElementById('profile_pic').click()">
+                                        <input type="file" id="profile_pic" accept="image/*" class="input-field" onchange="previewImage(event)">
                                     </div>
                                 </div>
-                                <!-- Right Side -->
-                                <div class="w-full md:w-3/5 bg-white p-6 rounded-lg shadow-md flex flex-col right-container">
-                                    <nav class="mb-6 bg-gray-100 p-3 rounded-md">
-                                        <ul class="flex justify-start space-x-6">
-                                            <li><a href="#" class="nav-link active" data-tab="posts">Post</a></li>
-                                            <li><a href="#" class="nav-link" data-tab="classrooms">ClassRoom</a></li>
-                                        </ul>
-                                    </nav>
-                                    <div id="content" class="scrollable-container">
-                                        <div id="posts" class="tab-content grid grid-cols-2 gap-4">
-                                            <!-- Posts will be added here -->
+                                <div class="mb-4">
+                                    <label for="name" class="block text-gray-700 font-semibold mb-2">Name</label>
+                                    <input type="text" id="name" class="w-full p-2 border rounded-md" value="User Name">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="id" class="block text-gray-700 font-semibold mb-2">ID</label>
+                                    <input type="text" id="id" class="w-full p-2 border rounded-md" value="1NHCS057">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="department" class="block text-gray-700 font-semibold mb-2">Department</label>
+                                    <input type="text" id="department" class="w-full p-2 border rounded-md" value="Computer Science and Engineering">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="bio" class="block text-gray-700 font-semibold mb-2">Bio</label>
+                                    <textarea id="bio" class="w-full p-2 border rounded-md" rows="4" maxlength="200" placeholder="Enter Bio here">hai\nhello\nenghene</textarea>
+                                </div>
+                                <div class="flex justify-between space-x-4 mb-4">
+                                    <button id="resetPassword" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">Reset Password</button>
+                                    <button id="save" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 hidden">Save</button>
+                                    <button id="headerLogout" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">Logout</button>
+                                </div>
+                            </div>
+                            <div class="w-full md:w-3/5 bg-white p-6 rounded-lg shadow-md flex flex-col right-container">
+                                <nav class="mb-6 bg-gray-100 p-3 rounded-md">
+                                    <ul class="flex justify-start space-x-6">
+                                        <li><a href="#" class="nav-link active" data-tab="posts">Post</a></li>
+                                        <li><a href="#" class="nav-link" data-tab="classrooms">ClassRoom</a></li>
+                                    </ul>
+                                </nav>
+                                <div id="content" class="scrollable-container">
+                                    <div id="posts" class="tab-content grid grid-cols-2 gap-4">
+                                        <!-- Posts will be added here -->
+                                    </div>
+                                    <div id="classrooms" class="tab-content hidden grid grid-cols-3 gap-4">
+                                        <!-- Classrooms will be added here -->
+                                    </div>
+                                    <div id="addPostForm" class="tab-content hidden">
+                                        <div class="mb-4">
+                                            <label for="postImage" class="block text-gray-700 font-semibold mb-2">Image</label>
+                                            <input type="file" id="postImage" accept="image/*" class="w-full p-2 border rounded-md">
                                         </div>
-                                        <div id="classrooms" class="tab-content hidden grid grid-cols-3 gap-4">
-                                            <!-- Classrooms will be added here -->
+                                        <div class="mb-4">
+                                            <label for="postDescription" class="block text-gray-700 font-semibold mb-2">Description</label>
+                                            <textarea id="postDescription" class="w-full p-2 border rounded-md" rows="3" maxlength="100" placeholder="Enter a short description"></textarea>
                                         </div>
-                                        <div id="addPostForm" class="tab-content hidden">
-                                            <div class="mb-4">
-                                                <label for="postImage" class="block text-gray-700 font-semibold mb-2">Image</label>
-                                                <input type="file" id="postImage" accept="image/*" class="w-full p-2 border rounded-md">
-                                            </div>
-                                            <div class="mb-4">
-                                                <label for="postDescription" class="block text-gray-700 font-semibold mb-2">Description</label>
-                                                <textarea id="postDescription" class="w-full p-2 border rounded-md" rows="3" maxlength="100" placeholder="Enter a short description"></textarea>
-                                            </div>
-                                            <div class="flex justify-end space-x-2">
-                                                <button id="submitPost" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Submit</button>
-                                                <button id="cancelPost" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400">Cancel</button>
-                                            </div>
-                                        </div>
-                                        <div id="addClassroomForm" class="tab-content hidden">
-                                            <div class="mb-4">
-                                                <label for="classroomName" class="block text-gray-700 font-semibold mb-2">Classroom Name</label>
-                                                <input type="text" id="classroomName" class="w-full p-2 border rounded-md" placeholder="Enter classroom name">
-                                            </div>
-                                            <div class="flex justify-end space-x-2">
-                                                <button id="submitClassroom" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Submit</button>
-                                                <button id="cancelClassroom" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400">Cancel</button>
-                                            </div>
+                                        <div class="flex justify-end space-x-2">
+                                            <button id="submitPost" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Submit</button>
+                                            <button id="cancelPost" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400">Cancel</button>
                                         </div>
                                     </div>
-                                    <div class="fixed-add-button">
-                                        <button id="addButton" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Add</button>
+                                    <div id="addClassroomForm" class="tab-content hidden">
+                                        <div class="mb-4">
+                                            <label for="classroomName" class="block text-gray-700 font-semibold mb-2">Classroom Name</label>
+                                            <input type="text" id="classroomName" class="w-full p-2 border rounded-md" placeholder="Enter classroom name">
+                                        </div>
+                                        <div class="flex justify-end space-x-2">
+                                            <button id="submitClassroom" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Submit</button>
+                                            <button id="cancelClassroom" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400">Cancel</button>
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="fixed-add-button">
+                                    <button id="addButton" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Add</button>
                                 </div>
                             </div>
                         </div>
@@ -468,11 +477,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Navigation Functionality ---
+            const body = document.body;
             const navItems = document.querySelectorAll('.nav-item');
             const contentSections = document.querySelectorAll('.content-section');
             const homeNavItem = document.querySelector('.nav-item[data-section="home"]');
 
+            // --- Navigation Logic ---
             function showSection(sectionId) {
                 contentSections.forEach(section => section.classList.add('hidden'));
                 const targetSection = document.getElementById(sectionId);
@@ -483,18 +493,64 @@
 
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
+                    const section = item.getAttribute('data-section');
+                    if (section === 'search') {
+                        body.classList.add('search-active');
+                    } else {
+                        body.classList.remove('search-active');
+                        showSection(section + '-content');
+                    }
                     navItems.forEach(nav => nav.classList.remove('active'));
                     item.classList.add('active');
-                    const sectionId = item.getAttribute('data-section') + '-content';
-                    showSection(sectionId);
                 });
             });
 
             // Default to home section on page load
-            if(homeNavItem) {
+            if (homeNavItem) {
                 homeNavItem.classList.add('active');
                 showSection('home-content');
             }
+
+            // --- Dynamic Recent Searches ---
+            const recentSearchesList = document.getElementById('recent-searches-list');
+            let recentSearches = [
+                { name: 'Ms. Senthil Anandhi', role: 'Teacher', initial: 'M', color: 'bg-purple-500' },
+                { name: 'Advanced Algorithms', role: 'Course', initial: 'A', color: 'bg-blue-500' },
+                { name: 'Balu Chandrashekar', role: 'Student', initial: 'B', color: 'bg-green-500' }
+            ];
+
+            function renderRecentSearches() {
+                recentSearchesList.innerHTML = '';
+                recentSearches.forEach((search, index) => {
+                    const searchItemHTML = `
+                        <div class="flex items-center justify-between recent-search-item">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full ${search.color} flex items-center justify-center text-white font-bold">${search.initial}</div>
+                                <div>
+                                    <p class="font-semibold text-sm">${search.name}</p>
+                                    <p class="text-xs text-gray-500">${search.role}</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-700 remove-recent-btn" data-index="${index}">&times;</button>
+                        </div>`;
+                    recentSearchesList.insertAdjacentHTML('beforeend', searchItemHTML);
+                });
+            }
+
+            document.getElementById('clear-recent-btn').addEventListener('click', () => {
+                recentSearches = [];
+                renderRecentSearches();
+            });
+
+            recentSearchesList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-recent-btn')) {
+                    const indexToRemove = parseInt(e.target.dataset.index);
+                    recentSearches.splice(indexToRemove, 1);
+                    renderRecentSearches();
+                }
+            });
+
+            renderRecentSearches();
 
             // --- Add/Join Classroom Modal Functionality ---
             const addClassroomBtn = document.getElementById('add-classroom-btn');
@@ -505,14 +561,18 @@
 
             const openModal = (modal) => {
                 if (modal) modal.classList.remove('hidden');
-            }
+            };
 
             const closeModal = (modal) => {
                 if (modal) modal.classList.add('hidden');
-            }
+            };
 
-            if(addClassroomBtn) addClassroomBtn.addEventListener('click', () => openModal(addModal));
-            if(joinClassroomBtn) joinClassroomBtn.addEventListener('click', () => openModal(joinModal));
+            if (addClassroomBtn) {
+                addClassroomBtn.addEventListener('click', () => openModal(addModal));
+            }
+            if (joinClassroomBtn) {
+                joinClassroomBtn.addEventListener('click', () => openModal(joinModal));
+            }
 
             closeButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -527,15 +587,12 @@
             });
 
             // --- Other Page Interactions ---
-            
-            // Like button functionality
             document.querySelectorAll('.fa-heart').forEach(heart => {
                 heart.addEventListener('click', () => {
                     heart.classList.toggle('text-red-500');
                 });
             });
 
-            // Course interaction functionality
             const courses = document.querySelectorAll('.course');
             courses.forEach(course => {
                 course.addEventListener('click', () => {
@@ -548,7 +605,6 @@
                 });
             });
 
-            // Profile-specific JavaScript
             const inputs = document.querySelectorAll('#profile_pic, #name, #id, #department, #bio');
             const saveButton = document.getElementById('save');
             if (saveButton) {
@@ -572,10 +628,8 @@
 
                         const tab = link.getAttribute('data-tab');
                         tabContents.forEach(content => {
-                            if(content.id !== 'posts' && content.id !== 'classrooms' && content.id !== 'addPostForm' && content.id !== 'addClassroomForm'){
-                               // don't hide main sections
-                            } else {
-                               content.classList.add('hidden');
+                            if (content.id === 'posts' || content.id === 'classrooms' || content.id === 'addPostForm' || content.id === 'addClassroomForm') {
+                                content.classList.add('hidden');
                             }
                         });
 
@@ -594,10 +648,8 @@
                     const activeTab = document.querySelector('.nav-link.active')?.getAttribute('data-tab');
                     if (activeTab) {
                         tabContents.forEach(content => {
-                             if(content.id !== 'posts' && content.id !== 'classrooms' && content.id !== 'addPostForm' && content.id !== 'addClassroomForm'){
-                               // don't hide main sections
-                            } else {
-                               content.classList.add('hidden');
+                            if (content.id === 'posts' || content.id === 'classrooms' || content.id === 'addPostForm' || content.id === 'addClassroomForm') {
+                                content.classList.add('hidden');
                             }
                         });
                         if (activeTab === 'posts') {
@@ -614,10 +666,10 @@
             const submitPostButton = document.getElementById('submitPost');
             if (submitPostButton) {
                 submitPostButton.addEventListener('click', () => {
-                    // ... (rest of the script)
+                    // Placeholder for post submission logic
                 });
             }
-            
+
             const logoutButton = document.getElementById('headerLogout');
             if (logoutButton) {
                 logoutButton.addEventListener('click', () => {
@@ -639,7 +691,21 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        function addStudentReminder() {
+            const input = document.getElementById('studentInput');
+            const reminderText = input.value.trim();
+            if (reminderText) {
+                const reminderDiv = document.createElement('div');
+                reminderDiv.className = 'p-4 bg-green-100 rounded-md flex justify-between items-center';
+                reminderDiv.innerHTML = `
+                    <span>${reminderText}</span>
+                    <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">Delete</button>
+                `;
+                document.getElementById('studentReminders').appendChild(reminderDiv);
+                input.value = '';
+            }
+        }
     </script>
 </body>
 </html>
-
