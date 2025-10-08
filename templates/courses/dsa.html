@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Course</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      background-color: #f9fafb;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      position: fixed;
+      height: 100vh;
+      top: 0;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 18px;
+      color: #374151;
+      text-decoration: none;
+      border-radius: 6px;
+      margin: 6px 10px;
+      transition: all 0.3s ease;
+    }
+    .sidebar a:hover {
+      background-color: #e5e7eb;
+    }
+    .sidebar a.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    section {
+      scroll-margin-top: 60px;
+      margin-bottom: 50px;
+    }
+
+    .section-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 25px 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: #1f2937;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #111827;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+
+    p, li {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #374151;
+    }
+
+    ul {
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .code-block {
+      background-color: #f3f4f6;
+      border-left: 4px solid #3b82f6;
+      padding: 18px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        position: relative;
+        box-shadow: none;
+      }
+      .content {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body class="flex">
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-xl font-bold p-4 border-b">DSA Course</h2>
+        <nav id="sidebar-nav">
+            <a href="#introduction" class="active">Introduction</a>
+            <a href="#arrays">Arrays</a>
+            <a href="#vector">Vector</a>
+            <a href="#list">List</a>
+            <a href="#stack">Stack</a>
+            <a href="#queue">Queue</a>
+            <a href="#trees">Trees</a>
+            <a href="#graphs">Graphs</a>
+            <a href="assessment.html" class="border-t mt-2 pt-2 font-semibold">Final Assessment</a>
+        </nav>
+    </div>
+    <!-- Right Content -->
+    <div class="content">
+        <h1 class="text-3xl font-bold mb-4">Data Structures and Algorithms</h1>
+        <section id="introduction" class="section-card">
+            <h2 class="text-2xl font-semibold mb-2">Introduction</h2>
+            <p class="mb-4">Welcome to the DSA (Data Structures and Algorithms) course! This foundational course is designed to equip you with essential knowledge and skills in organizing data efficiently and solving complex problems through algorithmic thinking. Whether you're preparing for technical interviews, advancing your programming expertise, or building scalable software, mastering DSA is crucial for efficient coding and problem-solving.</p>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-3">What You'll Learn in This Course</h3>
+                <ul class="list-disc ml-6 space-y-1">
+                    <li><strong>Fundamental Data Structures:</strong> Dive into basic and advanced structures like arrays, vectors, linked lists, stacks, queues, trees, and graphs, understanding their implementations, operations, and real-world applications.</li>
+                    <li><strong>Algorithmic Techniques:</strong> Explore core algorithms including traversal methods (e.g., BFS, DFS), searching (linear and binary), sorting (bubble, quicksort, mergesort), and dynamic programming basics to optimize problem-solving.</li>
+                    <li><strong>Time and Space Complexity:</strong> Learn Big O notation to analyze and compare the efficiency of data structures and algorithms, enabling you to choose the best approach for different scenarios.</li>
+                    <li><strong>Practical Implementation:</strong> Apply concepts through examples and code snippets, focusing on how these structures and algorithms enhance code performance in languages like C++, Java, or Python.</li>
+                    <li><strong>Problem-Solving Strategies:</strong> Develop skills to break down problems, identify suitable data structures, and design step-by-step algorithmic solutions for common challenges in software development.</li>
+                </ul>
+            </div>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-3">About the Final Assessment</h3>
+                <p class="mb-3">At the end of this course, you'll take a comprehensive Final Assessment to evaluate your mastery of the topics covered. This assessment is structured as a series of Multiple Choice Questions (MCQs) designed to test your conceptual understanding and practical application skills.</p>
+                <ul class="list-disc ml-6 space-y-1">
+                    <li><strong>Format:</strong> 20-30 MCQs covering all modules, with 4 options per question and a single correct answer.</li>
+                    <li><strong>Topics Covered:</strong> Introduction to DSA, Arrays, Vectors, Lists, Stacks, Queues, Trees, Graphs, and algorithmic complexities.</li>
+                    <li><strong>Duration:</strong> 45-60 minutes, timed to simulate real-world exam conditions.</li>
+                    <li><strong>Scoring:</strong> Automated grading with immediate feedback; aim for 80%+ to complete the course successfully.</li>
+                    <li><strong>Purpose:</strong> Reinforce learning, identify areas for review, and certify your proficiency in DSA fundamentals.</li>
+                </ul>
+                <p class="mt-3">Access the Final Assessment via the navigation sidebar once you've progressed through the modules. Good luck—your journey to becoming a DSA expert starts here!</p>
+            </div>
+        </section>
+        <section id="arrays" class="mt-6 section-card">
+            <h2 class="text-2xl font-semibold mb-4">Arrays</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is an Array?</h3>
+                    <p>An array is a fundamental data structure that stores a fixed-size sequence of elements of the same data type in contiguous memory locations. It provides a way to organize data so that elements can be accessed efficiently using an index, starting from 0.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">How Elements are Stored</h3>
+                    <p>Arrays store elements in contiguous memory locations, meaning each element occupies a consecutive memory block. This allows for <strong>O(1)</strong> time complexity for accessing elements by index, as the memory address of an element can be calculated directly (base address + index × element size).</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Fixed Size:</strong> The size of an array is defined at creation and cannot be changed dynamically in Java.</li>
+                        <li><strong>Homogeneous Elements:</strong> All elements must be of the same data type (e.g., all integers or all strings).</li>
+                        <li><strong>Memory Efficiency:</strong> Contiguous storage minimizes overhead but requires pre-allocation of memory.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Declaring an Array in Java</h3>
+                    <p>In Java, an array is declared by specifying the data type of its elements followed by square brackets <code>[]</code> and the array name.</p>
+                    <div class="code-block">
+                        <p><strong>Syntax:</strong></p>
+                        <pre>
+dataType[] arrayName; // Preferred style
+// or
+dataType arrayName[];
+                        </pre>
+                        <p><strong>Example:</strong></p>
+                        <pre>
+int[] numbers; // Declare an integer array
+String[] names; // Declare a string array
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Initializing an Array in Java</h3>
+                    <p>Arrays in Java can be initialized during declaration or later using the <code>new</code> keyword. You must specify the size or provide initial values.</p>
+                    <div class="code-block">
+                        <p><strong>Initialize with Size:</strong></p>
+                        <pre>
+int[] numbers = new int[5]; // Array of 5 integers, initialized to 0
+                        </pre>
+                        <p><strong>Initialize with Values:</strong></p>
+                        <pre>
+int[] numbers = {1, 2, 3, 4, 5}; // Array with predefined values
+                        </pre>
+                        <p><strong>Separate Declaration and Initialization:</strong></p>
+                        <pre>
+int[] numbers;
+numbers = new int[] {10, 20, 30}; // Initialize later
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Arrays</h3>
+                    <p>Arrays are versatile and widely used in programming for:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Data Storage:</strong> Store lists of data like numbers, names, or scores.</li>
+                        <li><strong>Algorithm Implementation:</strong> Serve as the backbone for sorting (e.g., quicksort) and searching (e.g., binary search).</li>
+                        <li><strong>Matrix Operations:</strong> Represent multi-dimensional data like matrices or tables.</li>
+                        <li><strong>Temporary Storage:</strong> Hold intermediate results in computations.</li>
+                        <li><strong>Look-up Tables:</strong> Provide quick access to data using indices.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Iterating Through an Array</h3>
+                    <p>Arrays can be traversed using loops to access or modify elements.</p>
+                    <div class="code-block">
+                        <p><strong>Using a For Loop:</strong></p>
+                        <pre>
+int[] numbers = {1, 2, 3, 4, 5};
+for (int i = 0; i < numbers.length; i++) {
+    System.out.println(numbers[i]);
+}
+                        </pre>
+                        <p><strong>Using an Enhanced For Loop (For-Each):</strong></p>
+                        <pre>
+for (int num : numbers) {
+    System.out.println(num);
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">The Arrays Class in Java</h3>
+                    <p>The <code>java.util.Arrays</code> class provides utility methods for array manipulation. Import it with <code>import java.util.Arrays;</code>.</p>
+                    <p><strong>Important Methods:</strong></p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><code>Arrays.sort(array):</code> Sorts the array in ascending order. Time complexity: O(n log n).</li>
+                        <li><code>Arrays.binarySearch(array, key):</code> Searches for a value using binary search (requires sorted array). Returns the index or a negative value if not found.</li>
+                        <li><code>Arrays.fill(array, value):</code> Fills the array with a specified value.</li>
+                        <li><code>Arrays.toString(array):</code> Returns a string representation of the array for easy printing.</li>
+                        <li><code>Arrays.copyOf(array, newLength):</code> Creates a copy of the array with a new length.</li>
+                        <li><code>Arrays.equals(array1, array2):</code> Compares two arrays for equality.</li>
+                    </ul>
+                    <div class="code-block">
+                        <p><strong>Example Usage:</strong></p>
+                        <pre>
+import java.util.Arrays;
+
+int[] numbers = {5, 2, 8, 1, 9};
+Arrays.sort(numbers); // Sorts to {1, 2, 5, 8, 9}
+System.out.println(Arrays.toString(numbers)); // Prints: [1, 2, 5, 8, 9]
+int index = Arrays.binarySearch(numbers, 5); // Returns 2
+Arrays.fill(numbers, 0); // Fills array with 0s
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Advantages of Arrays</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Fast Access:</strong> O(1) time complexity for accessing elements by index due to contiguous memory.</li>
+                        <li><strong>Memory Efficiency:</strong> Minimal overhead as no pointers or metadata are needed per element.</li>
+                        <li><strong>Simple Implementation:</strong> Easy to declare and use in most programming languages.</li>
+                        <li><strong>Cache Friendliness:</strong> Contiguous storage improves cache locality, enhancing performance.</li>
+                        <li><strong>Versatility:</strong> Suitable for a wide range of applications, from simple lists to complex matrices.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Limitations:</strong> Fixed size in Java means arrays cannot grow or shrink dynamically, unlike Vectors or ArrayLists. Use collections for dynamic sizing.</li>
+                        <li><strong>Multi-Dimensional Arrays:</strong> Arrays can be nested (e.g., <code>int[][] matrix</code>) for representing grids or tables, useful in applications like image processing.</li>
+                        <li><strong>Best Practices:</strong> Always check array bounds to avoid <code>ArrayIndexOutOfBoundsException</code>. Initialize arrays with meaningful values to avoid null or garbage data.</li>
+                        <li><strong>Real-World Example:</strong> Arrays are used in graphics (pixel arrays), database query results, and algorithmic problems like finding duplicates or maximum values.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="vector" class="mt-6 section-card">
+            <h2 class="text-2xl font-semibold mb-4">Vectors</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a Vector?</h3>
+                    <p>In C++, a <code>std::vector</code> is a dynamic array provided by the Standard Template Library (STL). Unlike fixed-size arrays, vectors can resize dynamically, allowing elements to be added or removed at runtime. Vectors maintain contiguous memory for efficient access while offering flexibility.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">How Elements are Stored</h3>
+                    <p>Vectors store elements in contiguous memory locations, similar to arrays, ensuring O(1) access time via indices. However, when a vector's capacity is exceeded, it reallocates a larger memory block, copies existing elements, and deallocates the old block, which can be costly (O(n) in such cases).</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Dynamic Size:</strong> Vectors automatically resize by doubling their capacity when full, ensuring amortized O(1) time for adding elements.</li>
+                        <li><strong>Homogeneous Elements:</strong> All elements must be of the same data type, defined via templates.</li>
+                        <li><strong>Memory Management:</strong> Vectors handle memory allocation and deallocation internally, reducing manual memory management errors.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Declaring a Vector in C++</h3>
+                    <p>In C++, vectors are declared using the <code>std::vector</code> class from the <code>&lt;vector&gt;</code> header. You specify the element type within template angle brackets.</p>
+                    <div class="code-block">
+                        <p><strong>Syntax:</strong></p>
+                        <pre>
+#include &lt;vector&gt;
+std::vector&lt;dataType&gt; vectorName;
+                        </pre>
+                        <p><strong>Example:</strong></p>
+                        <pre>
+#include &lt;vector&gt;
+std::vector&lt;int&gt; numbers; // Declare an integer vector
+std::vector&lt;std::string&gt; names; // Declare a string vector
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Initializing a Vector in C++</h3>
+                    <p>Vectors can be initialized in multiple ways: empty, with a size, with default values, or with an initializer list.</p>
+                    <div class="code-block">
+                        <p><strong>Empty Vector:</strong></p>
+                        <pre>
+std::vector&lt;int&gt; numbers; // Empty vector
+                        </pre>
+                        <p><strong>With Size:</strong></p>
+                        <pre>
+std::vector&lt;int&gt; numbers(5); // Vector of 5 integers, initialized to 0
+                        </pre>
+                        <p><strong>With Size and Default Value:</strong></p>
+                        <pre>
+std::vector&lt;int&gt; numbers(5, 10); // Vector of 5 integers, all set to 10
+                        </pre>
+                        <p><strong>With Initializer List:</strong></p>
+                        <pre>
+std::vector&lt;int&gt; numbers = {1, 2, 3, 4, 5}; // Initialize with values
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Vectors</h3>
+                    <p>Vectors are widely used in C++ for:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Dynamic Data Storage:</strong> Store lists of data that may grow or shrink, like user inputs or records.</li>
+                        <li><strong>Algorithm Implementation:</strong> Support algorithms requiring dynamic resizing, such as dynamic programming or graph traversal.</li>
+                        <li><strong>Temporary Buffers:</strong> Hold intermediate results in computations with varying sizes.</li>
+                        <li><strong>Data Processing:</strong> Process sequences of data in applications like simulations or machine learning.</li>
+                        <li><strong>Flexible Arrays:</strong> Replace fixed-size arrays when the size is unknown or changes over time.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Iterating Through a Vector</h3>
+                    <p>Vectors can be traversed using various methods, including loops and iterators.</p>
+                    <div class="code-block">
+                        <p><strong>Using a For Loop:</strong></p>
+                        <pre>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+std::vector&lt;int&gt; numbers = {1, 2, 3, 4, 5};
+for (size_t i = 0; i &lt; numbers.size(); i++) {
+    std::cout &lt;&lt; numbers[i] &lt;&lt; " ";
+}
+                        </pre>
+                        <p><strong>Using a Range-Based For Loop:</strong></p>
+                        <pre>
+for (int num : numbers) {
+    std::cout &lt;&lt; num &lt;&lt; " ";
+}
+                        </pre>
+                        <p><strong>Using Iterators:</strong></p>
+                        <pre>
+for (auto it = numbers.begin(); it != numbers.end(); ++it) {
+    std::cout &lt;&lt; *it &lt;&lt; " ";
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">The std::vector Class in C++</h3>
+                    <p>The <code>std::vector</code> class, part of the C++ STL, provides a rich set of methods for vector manipulation. Include <code>&lt;vector&gt;</code> to use it.</p>
+                    <p><strong>Important Methods:</strong></p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><code>push_back(value):</code> Adds an element to the end of the vector. Amortized O(1).</li>
+                        <li><code>pop_back():</code> Removes the last element. O(1).</li>
+                        <li><code>size():</code> Returns the current number of elements. O(1).</li>
+                        <li><code>capacity():</code> Returns the current storage capacity. O(1).</li>
+                        <li><code>resize(n):</code> Changes the size to n, either truncating or adding default elements. O(n).</li>
+                        <li><code>clear():</code> Removes all elements, leaving size 0. O(n).</li>
+                        <li><code>at(index):</code> Accesses element at index with bounds checking. O(1).</li>
+                        <li><code>begin()/end():</code> Returns iterators to the start/end of the vector.</li>
+                    </ul>
+                    <div class="code-block">
+                        <p><strong>Example Usage:</strong></p>
+                        <pre>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+std::vector&lt;int&gt; numbers = {5, 2, 8};
+numbers.push_back(1); // Adds 1 to the end
+numbers.pop_back(); // Removes 1
+std::cout &lt;&lt; "Size: " &lt;&lt; numbers.size() &lt;&lt; std::endl; // Prints 3
+std::cout &lt;&lt; numbers.at(1) &lt;&lt; std::endl; // Prints 2
+numbers.resize(5, 0); // Resizes to 5, adds two 0s
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Advantages of Vectors</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Dynamic Sizing:</strong> Automatically resizes to accommodate new elements, unlike fixed-size arrays.</li>
+                        <li><strong>Fast Access:</strong> O(1) time complexity for accessing elements by index due to contiguous memory.</li>
+                        <li><strong>Safe Memory Management:</strong> Handles memory allocation/deallocation automatically, reducing memory leaks.</li>
+                        <li><strong>Rich Functionality:</strong> Provides built-in methods for common operations like adding, removing, or resizing.</li>
+                        <li><strong>STL Integration:</strong> Works seamlessly with STL algorithms (e.g., <code>std::sort</code>, <code>std::find</code>).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Performance Consideration:</strong> Frequent resizing can be costly; use <code>reserve(n)</code> to pre-allocate capacity and reduce reallocations.</li>
+                        <li><strong>Thread Safety:</strong> Vectors are not thread-safe; use synchronization mechanisms for concurrent access.</li>
+                        <li><strong>Comparison with Arrays:</strong> Vectors offer flexibility over arrays but may have slight overhead due to dynamic memory management.</li>
+                        <li><strong>Real-World Example:</strong> Vectors are used in applications like dynamic lists in GUIs, data processing pipelines, and competitive programming for quick prototyping.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="list" class="mt-6 section-card">
+            <h2 class="text-2xl font-semibold mb-4">Lists</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a List?</h3>
+                    <p>In Python, a list is a versatile, dynamic data structure that stores an ordered collection of elements, which can be of different data types. Lists are mutable, meaning elements can be added, removed, or modified after creation. They are one of Python's built-in data types, widely used for their flexibility and ease of use.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">How Elements are Stored</h3>
+                    <p>Python lists are implemented as dynamic arrays under the hood, but unlike C++ vectors, they store references to objects rather than the objects themselves. This allows lists to hold heterogeneous data (e.g., integers, strings, or objects). Elements are stored in contiguous memory for efficient access, with dynamic resizing handled automatically.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Dynamic Size:</strong> Lists grow or shrink as elements are added or removed, with amortized O(1) time for append operations.</li>
+                        <li><strong>Heterogeneous Elements:</strong> Lists can store elements of different types (e.g., <code>[1, "hello", 3.14]</code>).</li>
+                        <li><strong>Memory Overhead:</strong> Storing references adds slight overhead compared to arrays but enables flexibility.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Declaring a List in Python</h3>
+                    <p>In Python, lists are declared using square brackets <code>[]</code> or the <code>list()</code> constructor. No explicit type declaration is needed due to Python's dynamic typing.</p>
+                    <div class="code-block">
+                        <p><strong>Syntax:</strong></p>
+                        <pre>
+list_name = []  # Empty list
+# or
+list_name = list()  # Empty list using constructor
+                        </pre>
+                        <p><strong>Example:</strong></p>
+                        <pre>
+numbers = []  # Declare an empty list
+items = list()  # Declare an empty list using constructor
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Initializing a List in Python</h3>
+                    <p>Lists can be initialized with elements during declaration, using a constructor, or by adding elements later.</p>
+                    <div class="code-block">
+                        <p><strong>Initialize with Values:</strong></p>
+                        <pre>
+numbers = [1, 2, 3, 4, 5]  # List with integers
+mixed = [1, "hello", 3.14]  # Heterogeneous list
+                        </pre>
+                        <p><strong>Using list() Constructor:</strong></p>
+                        <pre>
+numbers = list((1, 2, 3))  # Convert tuple to list
+                        </pre>
+                        <p><strong>With List Comprehension:</strong></p>
+                        <pre>
+squares = [x**2 for x in range(5)]  # Creates [0, 1, 4, 9, 16]
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Inputting Elements to a List</h3>
+                    <p>Elements can be added to a list dynamically using methods like <code>append()</code>, <code>extend()</code>, or <code>insert()</code>, or by taking user input.</p>
+                    <div class="code-block">
+                        <p><strong>Using append() for Single Elements:</strong></p>
+                        <pre>
+numbers = []
+numbers.append(10)  # Adds 10 to the end
+numbers.append(20)  # Adds 20 to the end
+                        </pre>
+                        <p><strong>Using extend() for Multiple Elements:</strong></p>
+                        <pre>
+numbers.extend([30, 40])  # Adds 30 and 40 to the end
+                        </pre>
+                        <p><strong>Using insert() for Specific Index:</strong></p>
+                        <pre>
+numbers.insert(1, 15)  # Inserts 15 at index 1
+                        </pre>
+                        <p><strong>Taking User Input:</strong></p>
+                        <pre>
+numbers = []
+n = int(input("Enter number of elements: "))
+for i in range(n):
+    element = int(input("Enter element: "))
+    numbers.append(element)
+print(numbers)  # Prints the input list
+                        </pre>
+                        <p><strong>Using List Comprehension for Input:</strong></p>
+                        <pre>
+numbers = [int(x) for x in input("Enter numbers separated by spaces: ").split()]
+print(numbers)  # Prints the input list
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Lists</h3>
+                    <p>Lists are highly versatile in Python and used for:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Data Storage:</strong> Store collections of items like scores, names, or records.</li>
+                        <li><strong>Algorithm Implementation:</strong> Support algorithms like sorting, searching, or dynamic programming.</li>
+                        <li><strong>Data Processing:</strong> Manipulate data in applications like data analysis or machine learning.</li>
+                        <li><strong>Temporary Storage:</strong> Hold intermediate results in computations.</li>
+                        <li><strong>Flexible Collections:</strong> Handle heterogeneous data or dynamic datasets in scripts.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Iterating Through a List</h3>
+                    <p>Lists can be traversed using loops or list comprehensions to access or modify elements.</p>
+                    <div class="code-block">
+                        <p><strong>Using a For Loop:</strong></p>
+                        <pre>
+numbers = [1, 2, 3, 4, 5]
+for i in range(len(numbers)):
+    print(numbers[i])
+                        </pre>
+                        <p><strong>Using a For-Each Loop:</strong></p>
+                        <pre>
+for num in numbers:
+    print(num)
+                        </pre>
+                        <p><strong>Using enumerate() for Index and Value:</strong></p>
+                        <pre>
+for index, num in enumerate(numbers):
+    print(f"Index {index}: {num}")
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Important List Methods in Python</h3>
+                    <p>Python lists come with built-in methods for manipulation. No import is required as lists are a core data type.</p>
+                    <p><strong>Important Methods:</strong></p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><code>append(x):</code> Adds element x to the end of the list. O(1) amortized.</li>
+                        <li><code>extend(iterable):</code> Adds all elements from an iterable to the end. O(k), where k is the iterable's length.</li>
+                        <li><code>insert(i, x):</code> Inserts element x at index i. O(n) due to shifting.</li>
+                        <li><code>remove(x):</code> Removes the first occurrence of x. O(n).</li>
+                        <li><code>pop(i):</code> Removes and returns the element at index i (default: last). O(1) for end, O(n) otherwise.</li>
+                        <li><code>sort():</code> Sorts the list in-place. O(n log n).</li>
+                        <li><code>reverse():</code> Reverses the list in-place. O(n).</li>
+                        <li><code>count(x):</code> Returns the number of occurrences of x. O(n).</li>
+                        <li><code>index(x):</code> Returns the index of the first occurrence of x. O(n).</li>
+                    </ul>
+                    <div class="code-block">
+                        <p><strong>Example Usage:</strong></p>
+                        <pre>
+numbers = [5, 2, 8, 2]
+numbers.append(1)  # Adds 1: [5, 2, 8, 2, 1]
+numbers.sort()  # Sorts: [1, 2, 2, 5, 8]
+numbers.remove(2)  # Removes first 2: [1, 2, 5, 8]
+print(numbers.pop())  # Removes and prints 8: [1, 2, 5]
+print(numbers.count(2))  # Prints 1
+print(numbers.index(5))  # Prints 2
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Advantages of Lists</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Dynamic Sizing:</strong> Lists can grow or shrink dynamically, making them ideal for varying data sizes.</li>
+                        <li><strong>Heterogeneous Data:</strong> Can store elements of different types, unlike arrays or C++ vectors.</li>
+                        <li><strong>Ease of Use:</strong> Simple syntax and built-in methods make lists beginner-friendly.</li>
+                        <li><strong>Flexibility:</strong> Supports advanced features like list comprehensions and slicing.</li>
+                        <li><strong>Integration:</strong> Works seamlessly with Python's standard library (e.g., sorting, filtering).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Performance Consideration:</strong> Operations like <code>insert</code> or <code>remove</code> are O(n) due to shifting elements; use collections like <code>deque</code> for faster insertions/deletions at ends.</li>
+                        <li><strong>Slicing:</strong> Lists support slicing (e.g., <code>lst[1:3]</code>) for extracting sublists, which is powerful for data manipulation.</li>
+                        <li><strong>Comparison with Arrays/Vectors:</strong> Lists are more flexible but less memory-efficient due to storing references. Use arrays or NumPy for performance-critical numerical tasks.</li>
+                        <li><strong>Real-World Example:</strong> Lists are used in data analysis (e.g., storing datasets), web development (e.g., lists of URLs), and scripting (e.g., processing user inputs).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="stack" class="mt-6 section-card">
+            <h2 class="text-2xl font-semibold mb-4">Stack</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a Stack?</h3>
+                    <p>A stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle, where the last element added is the first one removed. It supports two main operations: push (add to top) and pop (remove from top). Stacks are useful for managing temporary data or reversing order.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">How Elements are Stored</h3>
+                    <p>In Java, stacks can be implemented using arrays or linked lists. The <code>java.util.Stack</code> class uses a dynamic array (extending <code>Vector</code>) for storage, allowing contiguous memory with dynamic resizing. Elements are stored from the bottom to the top, with the top element at the highest index.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>LIFO Order:</strong> The last pushed element is at the top and popped first.</li>
+                        <li><strong>Dynamic Size:</strong> <code>Stack</code> inherits from <code>Vector</code>, so it resizes automatically.</li>
+                        <li><strong>Memory Efficiency:</strong> Uses contiguous memory, but resizing can involve O(n) time occasionally.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Declaring a Stack in Java</h3>
+                    <p>In Java, a stack is declared using the <code>java.util.Stack</code> class. Import <code>java.util.Stack;</code> to use it.</p>
+                    <div class="code-block">
+                        <p><strong>Syntax:</strong></p>
+                        <pre>
+import java.util.Stack;
+Stack&lt;dataType&gt; stackName = new Stack&lt;dataType&gt;();
+                        </pre>
+                        <p><strong>Example:</strong></p>
+                        <pre>
+Stack&lt;Integer&gt; numbers = new Stack&lt;Integer&gt;(); // Declare an integer stack
+Stack&lt;String&gt; names = new Stack&lt;String&gt;(); // Declare a string stack
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Initializing a Stack in Java</h3>
+                    <p>Stacks are typically initialized empty, and elements are added using <code>push()</code>. You can also add elements during creation by pushing them one by one.</p>
+                    <div class="code-block">
+                        <p><strong>Empty Stack:</strong></p>
+                        <pre>
+Stack&lt;Integer&gt; numbers = new Stack&lt;Integer&gt;();
+                        </pre>
+                        <p><strong>Adding Elements:</strong></p>
+                        <pre
+                        >
+numbers.push(1);
+numbers.push(2);
+numbers.push(3); // Stack: [1, 2, 3] (top is 3)
+                        </pre>
+                        <p><strong>Using a Loop to Initialize:</strong></p>
+                        <pre>
+for (int i = 4; i <= 5; i++) {
+    numbers.push(i);
+} // Stack: [1, 2, 3, 4, 5]
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Stacks</h3>
+                    <p>Stacks are essential in various applications:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Function Call Management:</strong> Track method calls and recursion in program execution.</li>
+                        <li><strong>Expression Evaluation:</strong> Parse and evaluate mathematical expressions (e.g., infix to postfix).</li>
+                        <li><strong>Undo Mechanisms:</strong> Implement undo features in editors or software.</li>
+                        <li><strong>Backtracking Algorithms:</strong> Explore paths in mazes or puzzles, popping back when stuck.</li>
+                        <li><strong>Browser History:</strong> Manage back/forward navigation in web browsers.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Iterating Through a Stack</h3>
+                    <p>Stacks can be iterated using loops or iterators, but note that iteration doesn't follow LIFO; it's typically from bottom to top.</p>
+                    <div class="code-block">
+                        <p><strong>Using a For-Each Loop:</strong></p>
+                        <pre>
+Stack&lt;Integer&gt; numbers = new Stack&lt;Integer&gt;();
+numbers.push(1);
+numbers.push(2);
+numbers.push(3);
+for (Integer num : numbers) {
+    System.out.println(num); // Prints 1, 2, 3 (bottom to top)
+}
+                        </pre>
+                        <p><strong>Using an Iterator:</strong></p>
+                        <pre>
+import java.util.Iterator;
+Iterator&lt;Integer&gt; it = numbers.iterator();
+while (it.hasNext()) {
+    System.out.println(it.next()); // Prints 1, 2, 3
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">The Stack Class in Java</h3>
+                    <p>The <code>java.util.Stack</code> class extends <code>Vector</code> and provides methods for stack operations. Import <code>java.util.Stack;</code>.</p>
+                    <p><strong>Important Methods:</strong></p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><code>push(item):</code> Adds item to the top. O(1).</li>
+                        <li><code>pop():</code> Removes and returns the top item. O(1).</li>
+                        <li><code>peek():</code> Returns the top item without removing it. O(1).</li>
+                        <li><code>empty():</code> Checks if the stack is empty. O(1).</li>
+                        <li><code>search(item):</code> Returns the position of item from the top (1-based), or -1 if not found. O(n).</li>
+                    </ul>
+                    <div class="code-block">
+                        <p><strong>Example Usage:</strong></p>
+                        <pre>
+import java.util.Stack;
+
+Stack&lt;Integer&gt; numbers = new Stack&lt;Integer&gt;();
+numbers.push(1);
+numbers.push(2); // Stack: [1, 2]
+System.out.println(numbers.peek()); // Prints 2
+System.out.println(numbers.pop()); // Prints 2, Stack: [1]
+System.out.println(numbers.empty()); // Prints false
+System.out.println(numbers.search(1)); // Prints 1
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Advantages of Stacks</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Simple Operations:</strong> Push and pop are O(1), making stacks efficient for LIFO access.</li>
+                        <li><strong>Dynamic Sizing:</strong> In Java, <code>Stack</code> resizes automatically via <code>Vector</code>.</li>
+                        <li><strong>Memory Management:</strong> No need for manual memory allocation; handled by the class.</li>
+                        <li><strong>Versatility:</strong> Useful in recursion, parsing, and backtracking scenarios.</li>
+                        <li><strong>Thread Safety:</strong> <code>Stack</code> is synchronized, making it safe for multi-threaded environments.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Limitations:</strong> <code>Stack</code> is legacy; prefer <code>Deque</code> (e.g., <code>ArrayDeque</code>) for better performance and non-synchronized use.</li>
+                        <li><strong>Custom Implementation:</strong> Implement stacks using arrays or linked lists for better control in performance-critical applications.</li>
+                        <li><strong>Best Practices:</strong> Avoid using <code>Stack</code> as a general list; use it only for LIFO operations to maintain intent.</li>
+                        <li><strong>Real-World Example:</strong> Stacks are used in compiler design for syntax checking, in Java's call stack for method execution, and in algorithms like depth-first search (DFS).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="queue" class="mt-6 section-card">
+            <h2 class="text-2xl font-semibold mb-4">Queue</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a Queue?</h3>
+                    <p>A queue is a linear data structure that follows the First-In-First-Out (FIFO) principle, where the first element added is the first one removed. It supports two main operations: enqueue (add to rear) and dequeue (remove from front). Queues are useful for managing ordered tasks or data.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">How Elements are Stored</h3>
+                    <p>In Java, queues can be implemented using linked lists or arrays. The <code>java.util.Queue</code> interface is often implemented by <code>LinkedList</code> or <code>ArrayDeque</code>. <code>LinkedList</code> uses nodes with pointers for dynamic storage, while <code>ArrayDeque</code> uses a circular array for efficient contiguous memory use.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>FIFO Order:</strong> The first enqueued element is at the front and dequeued first.</li>
+                        <li><strong>Dynamic Size:</strong> Implementations like <code>LinkedList</code> grow dynamically without fixed capacity.</li>
+                        <li><strong>Memory Efficiency:</strong> <code>ArrayDeque</code> is more efficient for large queues due to no pointers per element.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Declaring a Queue in Java</h3>
+                    <p>In Java, queues are declared using the <code>Queue</code> interface with implementations like <code>LinkedList</code> or <code>ArrayDeque</code>. Import <code>java.util.*;</code>.</p>
+                    <div class="code-block">
+                        <p><strong>Syntax:</strong></p>
+                        <pre>
+import java.util.Queue;
+import java.util.LinkedList; // or ArrayDeque
+Queue&lt;dataType&gt; queueName = new LinkedList&lt;dataType&gt;();
+                        </pre>
+                        <p><strong>Example:</strong></p>
+                        <pre>
+Queue&lt;Integer&gt; numbers = new LinkedList&lt;Integer&gt;(); // Using LinkedList
+Queue&lt;String&gt; names = new ArrayDeque&lt;String&gt;(); // Using ArrayDeque
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Initializing a Queue in Java</h3>
+                    <p>Queues are typically initialized empty, and elements are added using <code>add()</code> or <code>offer()</code>. You can also initialize with elements from a collection.</p>
+                    <div class="code-block">
+                        <p><strong>Empty Queue:</strong></p>
+                        <pre>
+Queue&lt;Integer&gt; numbers = new LinkedList&lt;Integer&gt;();
+                        </pre>
+                        <p><strong>Adding Elements:</strong></p>
+                        <pre>
+numbers.add(1);
+numbers.add(2);
+numbers.add(3); // Queue: 1 <- 2 <- 3 (front is 1)
+                        </pre>
+                        <p><strong>Initialize from Collection:</strong></p>
+                        <pre>
+List&lt;Integer&gt; list = Arrays.asList(4, 5, 6);
+Queue&lt;Integer&gt; numbersFromList = new LinkedList&lt;Integer&gt;(list); // Queue: 4 <- 5 <- 6
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Queues</h3>
+                    <p>Queues are fundamental in various scenarios:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Task Scheduling:</strong> Manage tasks in printers or operating systems.</li>
+                        <li><strong>Breadth-First Search (BFS):</strong> Explore graphs level by level.</li>
+                        <li><strong>Buffering:</strong> Handle data streams in networking or file I/O.</li>
+                        <li><strong>Simulation:</strong> Model real-world queues like bank lines or customer service.</li>
+                        <li><strong>Async Processing:</strong> Process messages or events in order.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Iterating Through a Queue</h3>
+                    <p>Queues can be iterated using loops or iterators, traversing from front to rear.</p>
+                    <div class="code-block">
+                        <p><strong>Using a For-Each Loop:</strong></p>
+                        <pre>
+Queue&lt;Integer&gt; numbers = new LinkedList&lt;Integer&gt;();
+numbers.add(1);
+numbers.add(2);
+numbers.add(3);
+for (Integer num : numbers) {
+    System.out.println(num); // Prints 1, 2, 3 (front to rear)
+}
+                        </pre>
+                        <p><strong>Using an Iterator:</strong></p>
+                        <pre>
+Iterator&lt;Integer&gt; it = numbers.iterator();
+while (it.hasNext()) {
+    System.out.println(it.next()); // Prints 1, 2, 3
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">The Queue Interface in Java</h3>
+                    <p>The <code>java.util.Queue</code> interface provides methods for queue operations. Common implementations are <code>LinkedList</code> and <code>ArrayDeque</code>.</p>
+                    <p><strong>Important Methods:</strong></p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><code>add(element):</code> Adds element to the rear (throws exception if full). O(1).</li>
+                        <li><code>offer(element):</code> Adds element to the rear (returns false if full). O(1).</li>
+                        <li><code>remove():</code> Removes and returns the front element (throws exception if empty). O(1).</li>
+                        <li><code>poll():</code> Removes and returns the front element (returns null if empty). O(1).</li>
+                        <li><code>element():</code> Returns the front element (throws exception if empty). O(1).</li>
+                        <li><code>peek():</code> Returns the front element (returns null if empty). O(1).</li>
+                        <li><code>isEmpty():</code> Checks if the queue is empty. O(1).</li>
+                        <li><code>size():</code> Returns the number of elements. O(1).</li>
+                    </ul>
+                    <div class="code-block">
+                        <p><strong>Example Usage:</strong></p>
+                        <pre>
+import java.util.Queue;
+import java.util.LinkedList;
+
+Queue&lt;Integer&gt; numbers = new LinkedList&lt;Integer&gt;();
+numbers.add(1);
+numbers.offer(2); // Queue: 1 <- 2
+System.out.println(numbers.peek()); // Prints 1
+System.out.println(numbers.poll()); // Prints 1, Queue: 2
+System.out.println(numbers.isEmpty()); // Prints false
+System.out.println(numbers.size()); // Prints 1
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Advantages of Queues</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Efficient Operations:</strong> Enqueue and dequeue are O(1) in efficient implementations like <code>ArrayDeque</code>.</li>
+                        <li><strong>Dynamic Sizing:</strong> No fixed capacity; grows as needed.</li>
+                        <li><strong>Flexibility:</strong> Supports priority queues or circular queues via different implementations.</li>
+                        <li><strong>Thread Safety Options:</strong> Use <code>PriorityBlockingQueue</code> for concurrent access.</li>
+                        <li><strong>Versatility:</strong> Essential for FIFO-based algorithms and real-time systems.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Variations:</strong> PriorityQueue for sorted queues, ArrayDeque for double-ended queues (Deque).</li>
+                        <li><strong>Custom Implementation:</strong> Implement queues using arrays (circular) or linked lists for specific needs.</li>
+                        <li><strong>Best Practices:</strong> Prefer <code>ArrayDeque</code> over <code>LinkedList</code> for better performance in most cases.</li>
+                        <li><strong>Real-World Example:</strong> Queues are used in message queues (e.g., Kafka), BFS in graph algorithms, and CPU scheduling in operating systems.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="trees" class="mt-6 section-card">
+            <h2 class="text-2xl font-semibold mb-4">Trees</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a Tree?</h3>
+                    <p>A tree is a hierarchical data structure consisting of nodes connected by edges, with a root node at the top and no cycles. Each node can have zero or more children. Trees are used to represent structured data, like file systems or organizational charts.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">How Elements are Stored</h3>
+                    <p>In Java, trees are implemented using classes with node references. For binary trees, each node has left and right child pointers. Storage is non-contiguous, using heap memory for nodes. This allows dynamic growth but requires pointers, adding overhead.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Hierarchical Structure:</strong> Root at top, leaves at bottom; paths from root to leaves represent hierarchy.</li>
+                        <li><strong>Binary Trees:</strong> Each node has at most two children; variants like BST maintain order.</li>
+                        <li><strong>Memory:</strong> Each node stores data and references to children, using O(n) space for n nodes.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Declaring a Tree in Java</h3>
+                    <p>In Java, trees are custom-implemented using a Node class. There's no built-in tree class, but <code>TreeMap</code> uses red-black trees internally.</p>
+                    <div class="code-block">
+                        <p><strong>Node Class:</strong></p>
+                        <pre>
+class TreeNode {
+    int data;
+    TreeNode left, right;
+    TreeNode(int data) {
+        this.data = data;
+        left = right = null;
+    }
+}
+                        </pre>
+                        <p><strong>Declaring the Tree:</strong></p>
+                        <pre>
+TreeNode root = null; // Declare the root of the tree
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Initializing a Tree in Java</h3>
+                    <p>Trees are initialized by creating nodes and linking them. For a binary tree, set left and right children.</p>
+                    <div class="code-block">
+                        <p><strong>Basic Initialization:</strong></p>
+                        <pre>
+TreeNode root = new TreeNode(1);
+root.left = new TreeNode(2);
+root.right = new TreeNode(3);
+root.left.left = new TreeNode(4); // Tree: 1 (root), 2 (left), 3 (right), 4 (left of 2)
+                        </pre>
+                        <p><strong>Inserting in BST:</strong></p>
+                        <pre>
+public TreeNode insert(TreeNode root, int data) {
+    if (root == null) {
+        return new TreeNode(data);
+    }
+    if (data < root.data) {
+        root.left = insert(root.left, data);
+    } else if (data > root.data) {
+        root.right = insert(root.right, data);
+    }
+    return root;
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Trees</h3>
+                    <p>Trees are widely used for:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Hierarchical Data:</strong> Represent file systems or DOM in HTML.</li>
+                        <li><strong>Searching/Sorting:</strong> BST for O(log n) searches, heaps for priority queues.</li>
+                        <li><strong>Databases:</strong> B-trees for indexing in databases like MySQL.</li>
+                        <li><strong>Decision Making:</strong> Decision trees in machine learning.</li>
+                        <li><strong>Parsing:</strong> Syntax trees in compilers.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Iterating Through a Tree (Traversals)</h3>
+                    <p>Trees are traversed using methods like in-order, pre-order, post-order, or level-order (BFS).</p>
+                    <div class="code-block">
+                        <p><strong>In-Order Traversal (Recursive):</strong></p>
+                        <pre>
+public void inOrder(TreeNode node) {
+    if (node != null) {
+        inOrder(node.left);
+        System.out.print(node.data + " ");
+        inOrder(node.right);
+    }
+}
+                        </pre>
+                        <p><strong>Level-Order Traversal (BFS):</strong></p>
+                        <pre>
+import java.util.Queue;
+import java.util.LinkedList;
+
+public void levelOrder(TreeNode root) {
+    if (root == null) return;
+    Queue&lt;TreeNode&gt; queue = new LinkedList&lt;TreeNode&gt;();
+    queue.add(root);
+    while (!queue.isEmpty()) {
+        TreeNode node = queue.poll();
+        System.out.print(node.data + " ");
+        if (node.left != null) queue.add(node.left);
+        if (node.right != null) queue.add(node.right);
+    }
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Important Tree Operations in Java</h3>
+                    <p>Trees involve operations like insertion, deletion, search, and traversal. For BST, operations are O(log n) on average.</p>
+                    <p><strong>Important Operations:</strong></p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><code>Insert:</code> Add node while maintaining structure (e.g., BST order).</li>
+                        <li><code>Delete:</code> Remove node, handling cases for 0/1/2 children.</li>
+                        <li><code>Search:</code> Find a node by value, O(log n) in balanced trees.</li>
+                        <li><code>Traversals:</code> In-order (sorted), pre-order, post-order, level-order.</li>
+                        <li><code>Height/Depth:</code> Calculate tree height for balance checks.</li>
+                    </ul>
+                    <div class="code-block">
+                        <p><strong>Example Search in BST:</strong></p>
+                        <pre>
+public TreeNode search(TreeNode root, int data) {
+    if (root == null || root.data == data) return root;
+    if (data < root.data) return search(root.left, data);
+    return search(root.right, data);
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Advantages of Trees</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Efficient Operations:</strong> O(log n) for insert/search/delete in balanced trees.</li>
+                        <li><strong>Hierarchical Representation:</strong> Naturally models real-world hierarchies.</li>
+                        <li><strong>Dynamic:</strong> No fixed size; grows as needed.</li>
+                        <li><strong>Ordered Data:</strong> BST provides sorted traversal without extra sorting.</li>
+                        <li><strong>Versatility:</strong> Variants like AVL, red-black ensure balance for performance.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Balancing:</strong> Unbalanced trees can degrade to O(n) performance; use self-balancing trees like AVL.</li>
+                        <li><strong>Variants:</strong> Binary Tree, BST, Heap, Trie for specific uses.</li>
+                        <li><strong>Best Practices:</strong> Use recursion for traversals but watch for stack overflow in deep trees; iterate for large trees.</li>
+                        <li><strong>Real-World Example:</strong> Trees are used in XML/JSON parsing, game AI (minimax trees), and database indexing (B-trees).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="graphs" class="mt-6 section-card">
+            <h2 class="text-2xl font-semibold mb-4">Graphs</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a Graph?</h3>
+                    <p>A graph is a data structure consisting of nodes (vertices) connected by edges, representing relationships. Graphs can be directed or undirected, weighted or unweighted, and may contain cycles. They model networks like social media or maps.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">How Elements are Stored</h3>
+                    <p>In Java, graphs are stored using adjacency lists (List of Lists) or adjacency matrices (2D array). Adjacency lists use less space for sparse graphs, while matrices offer O(1) edge checks but O(V^2) space.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Adjacency List:</strong> Array/List of lists, each index representing a vertex with its neighbors.</li>
+                        <li><strong>Adjacency Matrix:</strong> 2D boolean/integer array where matrix[i][j] indicates an edge from i to j.</li>
+                        <li><strong>Memory:</strong> Adjacency list: O(V + E); matrix: O(V^2).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Declaring a Graph in Java</h3>
+                    <p>In Java, graphs are custom-implemented using lists or arrays. No built-in graph class, but <code>Graph</code> can be created with adjacency lists.</p>
+                    <div class="code-block">
+                        <p><strong>Adjacency List Declaration:</strong></p>
+                        <pre>
+import java.util.ArrayList;
+import java.util.List;
+
+class Graph {
+    int vertices;
+    List&lt;List&lt;Integer&gt;&gt; adjList;
+    Graph(int vertices) {
+        this.vertices = vertices;
+        adjList = new ArrayList&lt;&gt;(vertices);
+        for (int i = 0; i < vertices; i++) {
+            adjList.add(new ArrayList&lt;&gt;());
+        }
+    }
+}
+                        </pre>
+                        <p><strong>Declaring the Graph:</strong></p>
+                        <pre>
+Graph graph = new Graph(5); // Graph with 5 vertices
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Initializing a Graph in Java</h3>
+                    <p>Graphs are initialized by adding edges between vertices. For undirected graphs, add bidirectional edges.</p>
+                    <div class="code-block">
+                        <p><strong>Adding Edges:</strong></p>
+                        <pre>
+public void addEdge(int u, int v) {
+    adjList.get(u).add(v);
+    adjList.get(v).add(u); // For undirected graph
+}
+                        </pre>
+                        <p><strong>Example Initialization:</strong></p>
+                        <pre>
+Graph graph = new Graph(5);
+graph.addEdge(0, 1);
+graph.addEdge(0, 2);
+graph.addEdge(1, 3);
+graph.addEdge(2, 4); // Initializes edges
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Graphs</h3>
+                    <p>Graphs are crucial for:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Networks:</strong> Model social networks, computer networks, or transportation routes.</li>
+                        <li><strong>Pathfinding:</strong> Shortest paths (Dijkstra, A*) in maps or games.</li>
+                        <li><strong>Recommendations:</strong> Graph-based algorithms in e-commerce.</li>
+                        <li><strong>Dependency Resolution:</strong> Topological sort for task scheduling.</li>
+                        <li><strong>Clustering:</strong> Community detection in data analysis.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Iterating Through a Graph (Traversals)</h3>
+                    <p>Graphs are traversed using DFS (depth-first) or BFS (breadth-first).</p>
+                    <div class="code-block">
+                        <p><strong>DFS (Recursive):</strong></p>
+                        <pre>
+public void dfs(int v, boolean[] visited) {
+    visited[v] = true;
+    System.out.print(v + " ");
+    for (int neighbor : adjList.get(v)) {
+        if (!visited[neighbor]) {
+            dfs(neighbor, visited);
+        }
+    }
+}
+                        </pre>
+                        <p><strong>BFS (Using Queue):</strong></p>
+                        <pre>
+import java.util.Queue;
+import java.util.LinkedList;
+
+public void bfs(int start) {
+    boolean[] visited = new boolean[vertices];
+    Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+    visited[start] = true;
+    queue.add(start);
+    while (!queue.isEmpty()) {
+        int v = queue.poll();
+        System.out.print(v + " ");
+        for (int neighbor : adjList.get(v)) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.add(neighbor);
+            }
+        }
+    }
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Important Graph Operations in Java</h3>
+                    <p>Graphs support operations like adding edges, traversals, shortest path, and cycle detection.</p>
+                    <p><strong>Important Operations:</strong></p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><code>Add Edge:</code> Connect vertices, O(1) in adjacency list.</li>
+                        <li><code>Traversal (DFS/BFS):</code> Explore graph, O(V + E).</li>
+                        <li><code>Shortest Path:</code> Dijkstra for weighted graphs, O((V+E) log V) with priority queue.</li>
+                        <li><code>Cycle Detection:</code> Use DFS or Union-Find, O(V + E).</li>
+                        <li><code>Topological Sort:</code> For DAGs, using Kahn's algorithm or DFS.</li>
+                    </ul>
+                    <div class="code-block">
+                        <p><strong>Example Add Edge:</strong></p>
+                        <pre>
+graph.addEdge(3, 4); // Adds edge between 3 and 4
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Advantages of Graphs</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Relationship Modeling:</strong> Effectively represent complex connections.</li>
+                        <li><strong>Efficient Algorithms:</strong> O(V + E) for traversals in adjacency lists.</li>
+                        <li><strong>Flexibility:</strong> Support directed/undirected, weighted graphs.</li>
+                        <li><strong>Scalability:</strong> Adjacency lists handle sparse graphs well.</li>
+                        <li><strong>Real-World Applicability:</strong> Basis for advanced structures like trees or networks.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Weighted Graphs:</strong> Use maps or pairs for edge weights in adjacency lists.</li>
+                        <li><strong>Libraries:</strong> Use third-party libraries like JGraphT for advanced graph operations.</li>
+                        <li><strong>Best Practices:</strong> Choose adjacency list for sparse graphs, matrix for dense; handle cycles in algorithms.</li>
+                        <li><strong>Real-World Example:</strong> Graphs are used in Google Maps (shortest paths), Facebook (social connections), and recommendation systems (graph-based collaborative filtering).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+        // Get all navigation links
+        const navLinks = document.querySelectorAll('#sidebar-nav a');
+
+        // Add click event listener to each link
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                // Handle in-page links (starting with #)
+                if (this.getAttribute('href').startsWith('#')) {
+                    event.preventDefault(); // Prevent default anchor jump
+                    const targetId = this.getAttribute('href').substring(1); // Get ID without #
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        // Get the section's top position relative to the document
+                        const rect = targetSection.getBoundingClientRect();
+                        const offsetTop = rect.top + window.pageYOffset - 40; // Adjust for content padding
+                        // Scroll to the exact position
+                        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                    }
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                }
+                // External links (e.g., assessment.html) will navigate normally
+            });
+        });
+    </script>
+</body>
+</html>

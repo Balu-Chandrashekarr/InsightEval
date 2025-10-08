@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Management Systems Course</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+      <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      background-color: #f9fafb;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      position: fixed;
+      height: 100vh;
+      top: 0;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 18px;
+      color: #374151;
+      text-decoration: none;
+      border-radius: 6px;
+      margin: 6px 10px;
+      transition: all 0.3s ease;
+    }
+    .sidebar a:hover {
+      background-color: #e5e7eb;
+    }
+    .sidebar a.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    section {
+      scroll-margin-top: 60px;
+      margin-bottom: 50px;
+    }
+
+    .section-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 25px 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: #1f2937;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #111827;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+
+    p, li {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #374151;
+    }
+
+    ul {
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .code-block {
+      background-color: #f3f4f6;
+      border-left: 4px solid #3b82f6;
+      padding: 18px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        position: relative;
+        box-shadow: none;
+      }
+      .content {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body class="flex">
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-xl font-bold p-4 border-b">DBMS Course</h2>
+        <nav id="sidebar-nav">
+            <a href="#introduction" class="active">Introduction</a>
+            <a href="#relational-model">Relational Model</a>
+            <a href="#sql">SQL</a>
+            <a href="#joins">Joins</a>
+            <a href="#normalization">Normalization</a>
+            <a href="#transactions">Transactions</a>
+            <a href="#indexing">Indexing</a>
+            <a href="assessment.html" class="border-t mt-2 pt-2 font-semibold">Final Assessment</a>
+        </nav>
+    </div>
+    <!-- Right Content -->
+    <div class="content">
+        <h1>Database Management Systems Fundamentals</h1>
+        <section id="introduction" class="section-card">
+            <h2 class="text-2xl font-semibold mb-2">Introduction</h2>
+            <p class="mb-4">Welcome to the Database Management Systems (DBMS) course! A DBMS is software that manages databases, enabling efficient storage, retrieval, and manipulation of data. It provides a structured way to organize data, ensure consistency, and support concurrent access. This course covers core DBMS concepts—Relational Model, SQL, Joins, Normalization, Transactions, and Indexing—using SQL for queries and Java (via JDBC) for database interaction. You’ll learn to design, query, and manage databases, preparing you for roles in software development, data analysis, and system administration.</p>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-3">What You'll Learn in This Course</h3>
+                <ul class="list-disc ml-6 space-y-1">
+                    <li><strong>Core DBMS Concepts:</strong> Understand relational databases, SQL queries, joins, normalization, transactions, and indexing.</li>
+                    <li><strong>Practical Skills:</strong> Write SQL queries and use Java (JDBC) to interact with databases programmatically.</li>
+                    <li><strong>Database Design:</strong> Learn to model data using the relational model and normalize schemas for efficiency.</li>
+                    <li><strong>Concurrency Control:</strong> Master transactions to ensure data integrity in multi-user systems.</li>
+                    <li><strong>Performance Optimization:</strong> Explore indexing and query optimization for faster data retrieval.</li>
+                    <li><strong>Real-World Applications:</strong> Apply DBMS concepts to build scalable systems like e-commerce platforms or banking applications.</li>
+                </ul>
+            </div>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-3">Why Study DBMS?</h3>
+                <p class="mb-3">DBMS knowledge is essential for several reasons:</p>
+                <ul class="list-disc ml-6 space-y-1">
+                    <li><strong>Data-Driven Applications:</strong> Build systems like social media platforms or inventory management tools.</li>
+                    <li><strong>Career Opportunities:</strong> Essential for roles in database administration, backend development, and data engineering.</li>
+                    <li><strong>Scalability:</strong> Design databases that handle large datasets and high traffic.</li>
+                    <li><strong>Technical Interviews:</strong> SQL and DBMS concepts are common in coding and system design interviews.</li>
+                    <li><strong>Foundation for Advanced Topics:</strong> Underpins data warehousing, big data, and cloud databases.</li>
+                </ul>
+            </div>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-3">About the Final Assessment</h3>
+                <p class="mb-3">The Final Assessment tests your mastery of DBMS concepts through Multiple Choice Questions (MCQs) covering theory and practical applications. It ensures you can apply database principles effectively.</p>
+                <ul class="list-disc ml-6 space-y-1">
+                    <li><strong>Format:</strong> 20-30 MCQs with 4 options per question and one correct answer.</li>
+                    <li><strong>Topics Covered:</strong> Relational Model, SQL, Joins, Normalization, Transactions, Indexing, and query optimization.</li>
+                    <li><strong>Duration:</strong> 45-60 minutes, timed to simulate exam conditions.</li>
+                    <li><strong>Scoring:</strong> Automated grading with immediate feedback; aim for 80%+ to pass.</li>
+                    <li><strong>Preparation Tips:</strong> Practice SQL queries, understand normalization forms, and review transaction properties.</li>
+                    <li><strong>Purpose:</strong> Reinforce learning, identify gaps, and certify proficiency in DBMS fundamentals.</li>
+                </ul>
+                <p class="mt-3">Access the Final Assessment via the sidebar after completing all modules. Begin your journey to mastering database systems!</p>
+            </div>
+        </section>
+        <section id="relational-model" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Relational Model</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is the Relational Model?</h3>
+                    <p>The relational model organizes data into tables (relations), where each table consists of rows (tuples) and columns (attributes). It uses keys to establish relationships between tables, ensuring data integrity and efficient querying.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Table:</strong> A collection of rows with the same attributes.</li>
+                        <li><strong>Primary Key:</strong> Uniquely identifies each row.</li>
+                        <li><strong>Foreign Key:</strong> Links tables by referencing a primary key in another table.</li>
+                        <li><strong>Schema:</strong> Defines the structure of tables and relationships.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Example Schema</h3>
+                    <p>Consider a database for a library system with two tables: <code>Books</code> and <code>Borrowers</code>.</p>
+                    <div class="code-block">
+                        <p><strong>Books Table:</strong></p>
+                        <pre>
+CREATE TABLE Books (
+    book_id INT PRIMARY KEY,
+    title VARCHAR(100),
+    author VARCHAR(50),
+    publication_year INT
+);
+                        </pre>
+                        <p><strong>Borrowers Table:</strong></p>
+                        <pre>
+CREATE TABLE Borrowers (
+    borrower_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    book_id INT,
+    FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Relational Algebra</h3>
+                    <p>Relational algebra provides a theoretical foundation for querying databases using operations like selection, projection, join, and union.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Selection:</strong> Filters rows based on conditions (e.g., books published after 2000).</li>
+                        <li><strong>Projection:</strong> Selects specific columns (e.g., book titles).</li>
+                        <li><strong>Join:</strong> Combines tables based on keys (e.g., Books and Borrowers).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of the Relational Model</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Data Organization:</strong> Structure data in tables for clarity and consistency.</li>
+                        <li><strong>Relationships:</strong> Model complex relationships using keys.</li>
+                        <li><strong>Querying:</strong> Enable efficient data retrieval with SQL.</li>
+                        <li><strong>Scalability:</strong> Support large datasets in enterprise systems.</li>
+                        <li><strong>Data Integrity:</strong> Enforce constraints like primary and foreign keys.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Constraints:</strong> NOT NULL, UNIQUE, CHECK ensure data validity.</li>
+                        <li><strong>Normalization:</strong> Reduces redundancy, covered in a later section.</li>
+                        <li><strong>Best Practices:</strong> Use meaningful table/column names; enforce keys for integrity.</li>
+                        <li><strong>Real-World Example:</strong> Relational databases power e-commerce (product catalogs), banking (accounts), and CRM systems.</li>
+                        <li><strong>Alternatives:</strong> NoSQL databases (e.g., MongoDB) for unstructured data.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="sql" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">SQL</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is SQL?</h3>
+                    <p>Structured Query Language (SQL) is a standardized language for managing and querying relational databases. It supports Data Definition Language (DDL), Data Manipulation Language (DML), Data Control Language (DCL), and Transaction Control Language (TCL) operations, enabling comprehensive database management.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>DDL:</strong> Define and modify database structures (e.g., CREATE, ALTER, DROP).</li>
+                        <li><strong>DML:</strong> Manipulate data (e.g., INSERT, UPDATE, DELETE, SELECT).</li>
+                        <li><strong>DCL:</strong> Manage access and permissions (e.g., GRANT, REVOKE).</li>
+                        <li><strong>TCL:</strong> Control transactions (e.g., COMMIT, ROLLBACK).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">SQL Commands</h3>
+                    <p>SQL commands cover a wide range of operations for creating, querying, and managing databases. Below are examples using the library schema.</p>
+                    <div class="code-block">
+                        <p><strong>DDL: Create and Alter Table</strong></p>
+                        <pre>
+-- Create table
+CREATE TABLE Books (
+    book_id INT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    author VARCHAR(50),
+    publication_year INT CHECK (publication_year > 1800)
+);
+
+-- Alter table to add column
+ALTER TABLE Books ADD genre VARCHAR(50);
+
+-- Drop table
+DROP TABLE Books;
+                        </pre>
+                        <p><strong>DML: Insert, Update, Delete, Select</strong></p>
+                        <pre>
+-- Insert data
+INSERT INTO Books (book_id, title, author, publication_year, genre)
+VALUES (1, '1984', 'George Orwell', 1949, 'Dystopian');
+
+-- Update data
+UPDATE Books
+SET genre = 'Science Fiction'
+WHERE book_id = 1;
+
+-- Delete data
+DELETE FROM Books
+WHERE publication_year < 1900;
+
+-- Select with conditions
+SELECT title, author
+FROM Books
+WHERE publication_year > 2000
+ORDER BY title;
+                        </pre>
+                        <p><strong>Advanced Queries: Joins and Aggregations</strong></p>
+                        <pre>
+-- Inner join
+SELECT b.title, br.name
+FROM Books b
+INNER JOIN Borrowers br ON b.book_id = br.book_id;
+
+-- Group by and aggregate
+SELECT author, COUNT(*) as book_count
+FROM Books
+GROUP BY author
+HAVING COUNT(*) > 2
+ORDER BY book_count DESC;
+
+-- Subquery
+SELECT title
+FROM Books
+WHERE book_id IN (SELECT book_id FROM Borrowers WHERE name = 'Alice');
+                        </pre>
+                        <p><strong>DCL: Permissions</strong></p>
+                        <pre>
+-- Grant read access
+GRANT SELECT ON Books TO user_read;
+
+-- Revoke access
+REVOKE SELECT ON Books FROM user_read;
+                        </pre>
+                        <p><strong>TCL: Transaction Control</strong></p>
+                        <pre>
+-- Start transaction
+START TRANSACTION;
+
+-- Insert data
+INSERT INTO Books (book_id, title, author) VALUES (2, 'Brave New World', 'Aldous Huxley');
+
+-- Commit transaction
+COMMIT;
+
+-- Rollback example
+START TRANSACTION;
+INSERT INTO Books (book_id, title) VALUES (3, 'Invalid Book');
+ROLLBACK;
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">SQL with Java (JDBC)</h3>
+                    <p>Java Database Connectivity (JDBC) enables Java programs to execute SQL commands for dynamic database interaction.</p>
+                    <div class="code-block">
+                        <p><strong>Example (Multiple SQL Operations):</strong></p>
+                        <pre>
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class JdbcExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/library";
+        String user = "root";
+        String password = "password";
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            // Insert
+            String insertSql = "INSERT INTO Books (book_id, title, author, publication_year) VALUES (?, ?, ?, ?)";
+            PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+            insertStmt.setInt(1, 4);
+            insertStmt.setString(2, "The Great Gatsby");
+            insertStmt.setString(3, "F. Scott Fitzgerald");
+            insertStmt.setInt(4, 1925);
+            insertStmt.executeUpdate();
+            System.out.println("Book inserted");
+
+            // Select with condition
+            String selectSql = "SELECT title, author FROM Books WHERE publication_year > ?";
+            PreparedStatement selectStmt = conn.prepareStatement(selectSql);
+            selectStmt.setInt(1, 2000);
+            ResultSet rs = selectStmt.executeQuery();
+            while (rs.next()) {
+                System.out.println(rs.getString("title") + " by " + rs.getString("author"));
+            }
+
+            // Update
+            String updateSql = "UPDATE Books SET genre = ? WHERE book_id = ?";
+            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+            updateStmt.setString(1, "Classic");
+            updateStmt.setInt(2, 4);
+            updateStmt.executeUpdate();
+            System.out.println("Book updated");
+
+            // Delete
+            String deleteSql = "DELETE FROM Books WHERE publication_year < ?";
+            PreparedStatement deleteStmt = conn.prepareStatement(deleteSql);
+            deleteStmt.setInt(1, 1900);
+            deleteStmt.executeUpdate();
+            System.out.println("Old books deleted");
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Query Optimization Techniques</h3>
+                    <p>Optimizing SQL queries improves performance, especially for large datasets.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Use Indexes:</strong> Create indexes on frequently queried columns.</li>
+                        <li><strong>Avoid SELECT *:</strong> Specify only needed columns to reduce data transfer.</li>
+                        <li><strong>Parameterized Queries:</strong> Prevent SQL injection and improve execution plans.</li>
+                        <li><strong>Analyze Query Plans:</strong> Use EXPLAIN to understand query execution.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of SQL</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Data Retrieval:</strong> Generate reports or dashboards from large datasets.</li>
+                        <li><strong>Data Manipulation:</strong> Update records dynamically (e.g., user profiles).</li>
+                        <li><strong>Schema Management:</strong> Define and modify database structures.</li>
+                        <li><strong>Integration:</strong> Connect applications via JDBC or ORMs (e.g., Hibernate).</li>
+                        <li><strong>Security:</strong> Manage user permissions for controlled access.</li>
+                        <li><strong>Data Analysis:</strong> Perform aggregations for business intelligence.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Aggregate Functions:</strong> COUNT, SUM, AVG, MIN, MAX for summarizing data.</li>
+                        <li><strong>Subqueries and Joins:</strong> Use for complex filtering and combining data.</li>
+                        <li><strong>Best Practices:</strong> Use parameterized queries; avoid dynamic SQL in production.</li>
+                        <li><strong>Real-World Example:</strong> SQL powers e-commerce platforms, financial systems, and analytics tools.</li>
+                        <li><strong>Performance:</strong> Optimize queries with indexes; monitor execution time.</li>
+                        <li><strong>SQL Variants:</strong> MySQL, PostgreSQL, Oracle SQL have slight syntax differences.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="joins" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Joins</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What are Joins?</h3>
+                    <p>Joins combine rows from two or more tables based on a related column, typically a primary key or foreign key. They enable querying data across multiple tables, leveraging the relational model to retrieve meaningful results.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Inner Join:</strong> Returns rows where there is a match in both tables.</li>
+                        <li><strong>Left (Outer) Join:</strong> Returns all rows from the left table, with matching rows from the right table (NULL if no match).</li>
+                        <li><strong>Right (Outer) Join:</strong> Returns all rows from the right table, with matching rows from the left table (NULL if no match).</li>
+                        <li><strong>Full (Outer) Join:</strong> Returns all rows from both tables, with NULLs where there is no match.</li>
+                        <li><strong>Cross Join:</strong> Returns the Cartesian product of both tables (all possible combinations).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Join Examples in SQL</h3>
+                    <p>Using the library schema (<code>Books</code> and <code>Borrowers</code>), here are examples of different joins.</p>
+                    <div class="code-block">
+                        <p><strong>Inner Join:</strong> Books borrowed by users</p>
+                        <pre>
+SELECT b.title, br.name
+FROM Books b
+INNER JOIN Borrowers br ON b.book_id = br.book_id;
+                        </pre>
+                        <p><strong>Left Join:</strong> All books, including those not borrowed</p>
+                        <pre>
+SELECT b.title, br.name
+FROM Books b
+LEFT JOIN Borrowers br ON b.book_id = br.book_id;
+                        </pre>
+                        <p><strong>Right Join:</strong> All borrowers, including those without books</p>
+                        <pre>
+SELECT b.title, br.name
+FROM Books b
+RIGHT JOIN Borrowers br ON b.book_id = br.book_id;
+                        </pre>
+                        <p><strong>Full Join:</strong> All books and borrowers, with NULLs for non-matches</p>
+                        <pre>
+SELECT b.title, br.name
+FROM Books b
+FULL JOIN Borrowers br ON b.book_id = br.book_id;
+                        </pre>
+                        <p><strong>Cross Join:</strong> All possible book-borrower combinations</p>
+                        <pre>
+SELECT b.title, br.name
+FROM Books b
+CROSS JOIN Borrowers br;
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Joins with Java (JDBC)</h3>
+                    <p>Java (JDBC) can execute join queries to retrieve related data programmatically.</p>
+                    <div class="code-block">
+                        <p><strong>Example (Inner Join with JDBC):</strong></p>
+                        <pre>
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class JoinExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/library";
+        String user = "root";
+        String password = "password";
+        String sql = "SELECT b.title, br.name FROM Books b INNER JOIN Borrowers br ON b.book_id = br.book_id";
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String name = rs.getString("name");
+                System.out.println("Book: " + title + ", Borrowed by: " + name);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Join Optimization</h3>
+                    <p>Optimizing joins improves query performance, especially for large tables.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Use Indexes:</strong> Index join columns (e.g., <code>book_id</code>) for faster lookups.</li>
+                        <li><strong>Specify Join Conditions:</strong> Use precise ON clauses to avoid unnecessary comparisons.</li>
+                        <li><strong>Avoid Unnecessary Joins:</strong> Only join tables needed for the query.</li>
+                        <li><strong>Use EXPLAIN:</strong> Analyze join performance with query execution plans.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Joins</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Data Integration:</strong> Combine related data from multiple tables (e.g., orders and customers).</li>
+                        <li><strong>Reporting:</strong> Generate reports by joining tables (e.g., sales and products).</li>
+                        <li><strong>Relational Queries:</strong> Retrieve complex relationships in a single query.</li>
+                        <li><strong>Data Analysis:</strong> Aggregate data across tables for insights.</li>
+                        <li><strong>Application Development:</strong> Fetch related data for application logic.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Join Types Trade-offs:</strong> Inner joins are faster but exclude non-matching rows; outer joins are inclusive but slower.</li>
+                        <li><strong>Self-Join:</strong> Join a table with itself for hierarchical data (e.g., employee-manager relationships).</li>
+                        <li><strong>Best Practices:</strong> Use aliases for readability; index join columns; test query performance.</li>
+                        <li><strong>Real-World Example:</strong> Joins power e-commerce (products and orders), social media (users and posts), and HR systems (employees and departments).</li>
+                        <li><strong>Performance:</strong> Avoid excessive joins in high-traffic systems; consider denormalization for read-heavy workloads.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="normalization" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Normalization</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is Normalization?</h3>
+                    <p>Normalization is the process of organizing a database to eliminate redundancy and ensure data integrity by dividing tables into smaller, related tables based on functional dependencies. It follows normal forms (1NF, 2NF, 3NF, BCNF).</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>1NF:</strong> Ensure atomic values and no repeating groups.</li>
+                        <li><strong>2NF:</strong> Remove partial dependencies; non-key attributes depend on the entire primary key.</li>
+                        <li><strong>3NF:</strong> Eliminate transitive dependencies.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Normalization Example</h3>
+                    <p>Consider an unnormalized table for student courses.</p>
+                    <div class="code-block">
+                        <p><strong>Unnormalized Table:</strong></p>
+                        <pre>
+Student (student_id, name, course1, course2)
+                        </pre>
+                        <p><strong>1NF (Atomic Values):</strong></p>
+                        <pre>
+StudentCourses (student_id, name, course)
+                        </pre>
+                        <p><strong>2NF (Split Partial Dependencies):</strong></p>
+                        <pre>
+Students (student_id, name)
+StudentCourses (student_id, course)
+                        </pre>
+                        <p><strong>3NF (Remove Transitive Dependencies):</strong></p>
+                        <pre>
+Students (student_id, name)
+Courses (course_id, course_name)
+StudentCourses (student_id, course_id)
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Normalization Process</h3>
+                    <p>Steps to normalize a database:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Identify Functional Dependencies:</strong> Determine how attributes depend on each other.</li>
+                        <li><strong>Apply Normal Forms:</strong> Progress through 1NF, 2NF, 3NF, and optionally BCNF.</li>
+                        <li><strong>Test Integrity:</strong> Ensure no data anomalies (insert, update, delete).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Normalization</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Reduce Redundancy:</strong> Minimize duplicate data to save storage.</li>
+                        <li><strong>Data Integrity:</strong> Prevent anomalies during updates or deletes.</li>
+                        <li><strong>Efficient Queries:</strong> Simplify joins and data retrieval.</li>
+                        <li><strong>Scalability:</strong> Support large databases with complex relationships.</li>
+                        <li><strong>Maintainability:</strong> Easier to modify schema without data loss.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Denormalization:</strong> Intentionally add redundancy for performance in read-heavy systems.</li>
+                        <li><strong>BCNF:</strong> Advanced form for complex schemas; rarely needed.</li>
+                        <li><strong>Best Practices:</strong> Normalize to 3NF for most applications; balance with performance needs.</li>
+                        <li><strong>Real-World Example:</strong> Normalized databases are used in banking (account management) and retail (inventory systems).</li>
+                        <li><strong>Tools:</strong> Use ER diagrams to visualize relationships before normalizing.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="transactions" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Transactions</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What are Transactions?</h3>
+                    <p>A transaction is a sequence of database operations that executes as a single unit, ensuring data consistency. Transactions follow the ACID properties: Atomicity, Consistency, Isolation, Durability.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Atomicity:</strong> All operations succeed or none are applied.</li>
+                        <li><strong>Consistency:</strong> Database remains in a valid state.</li>
+                        <li><strong>Isolation:</strong> Transactions execute independently.</li>
+                        <li><strong>Durability:</strong> Committed changes are permanently saved.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Transactions in Java (JDBC)</h3>
+                    <p>JDBC supports transactions by disabling auto-commit and using commit/rollback.</p>
+                    <div class="code-block">
+                        <p><strong>Example:</strong></p>
+                        <pre>
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+public class TransactionExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/bank";
+        String user = "root";
+        String password = "password";
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            conn.setAutoCommit(false); // Disable auto-commit
+            PreparedStatement stmt1 = conn.prepareStatement(
+                "UPDATE Accounts SET balance = balance - ? WHERE account_id = ?");
+            PreparedStatement stmt2 = conn.prepareStatement(
+                "UPDATE Accounts SET balance = balance + ? WHERE account_id = ?");
+            stmt1.setDouble(1, 100.0);
+            stmt1.setInt(2, 1);
+            stmt2.setDouble(1, 100.0);
+            stmt2.setInt(2, 2);
+            stmt1.executeUpdate();
+            stmt2.executeUpdate();
+            conn.commit(); // Commit transaction
+            System.out.println("Transfer successful");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            try (Connection conn = DriverManager.getConnection(url, user, password)) {
+                conn.rollback(); // Rollback on error
+            } catch (Exception rollbackEx) {
+                System.out.println("Rollback failed: " + rollbackEx.getMessage());
+            }
+        }
+    }
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Concurrency Control</h3>
+                    <p>Concurrency control ensures multiple transactions execute without conflicts.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Locking:</strong> Use read/write locks to prevent concurrent access.</li>
+                        <li><strong>Isolation Levels:</strong> Read Uncommitted, Read Committed, Repeatable Read, Serializable.</li>
+                        <li><strong>Deadlock Detection:</strong> DBMS detects and resolves deadlocks.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Transactions</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Data Integrity:</strong> Ensure consistent updates (e.g., bank transfers).</li>
+                        <li><strong>Concurrent Access:</strong> Support multiple users safely.</li>
+                        <li><strong>Error Recovery:</strong> Rollback failed operations to maintain consistency.</li>
+                        <li><strong>Business Logic:</strong> Implement complex operations (e.g., order processing).</li>
+                        <li><strong>Audit Trails:</strong> Track changes for accountability.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Transaction Logs:</strong> Record operations for recovery (e.g., redo/undo logs).</li>
+                        <li><strong>Two-Phase Commit:</strong> Ensures distributed transactions are atomic.</li>
+                        <li><strong>Best Practices:</strong> Keep transactions short; use appropriate isolation levels.</li>
+                        <li><strong>Real-World Example:</strong> Transactions manage bank transfers, online orders, and flight bookings.</li>
+                        <li><strong>Performance:</strong> Avoid long-running transactions to reduce locking overhead.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="indexing" class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Indexing</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is Indexing?</h3>
+                    <p>Indexing creates data structures (indexes) to improve query performance by enabling faster data retrieval. Indexes are typically implemented as B-trees or hash tables.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Primary Index:</strong> Built on primary key; ensures unique rows.</li>
+                        <li><strong>Secondary Index:</strong> Built on non-key columns for faster searches.</li>
+                        <li><strong>Clustered Index:</strong> Determines physical order of data.</li>
+                        <li><strong>Non-Clustered Index:</strong> Separate structure with pointers to data.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Creating Indexes in SQL</h3>
+                    <p>Indexes are created using the <code>CREATE INDEX</code> statement.</p>
+                    <div class="code-block">
+                        <p><strong>Example:</strong></p>
+                        <pre>
+-- Create primary index
+CREATE TABLE Books (
+    book_id INT PRIMARY KEY,
+    title VARCHAR(100)
+);
+
+-- Create secondary index
+CREATE INDEX idx_title ON Books(title);
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Query Optimization with Indexes</h3>
+                    <p>Indexes speed up SELECT queries but slow down INSERT/UPDATE due to index maintenance.</p>
+                    <div class="code-block">
+                        <p><strong>Example (Using Index):</strong></p>
+                        <pre>
+-- Fast retrieval with index
+SELECT title FROM Books WHERE title = '1984';
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Indexing</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Faster Queries:</strong> Improve performance for WHERE, JOIN, and ORDER BY clauses.</li>
+                        <li><strong>Search Efficiency:</strong> Enable quick lookups in large datasets.</li>
+                        <li><strong>Scalability:</strong> Support high-traffic systems like e-commerce.</li>
+                        <li><strong>Data Analysis:</strong> Speed up aggregations and reports.</li>
+                        <li><strong>Constraint Enforcement:</strong> Primary indexes ensure uniqueness.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>B-Tree vs. Hash:</strong> B-trees for range queries; hash for exact matches.</li>
+                        <li><strong>Index Maintenance:</strong> Updates to indexed columns require index updates.</li>
+                        <li><strong>Best Practices:</strong> Index frequently queried columns; avoid over-indexing.</li>
+                        <li><strong>Real-World Example:</strong> Indexes power search engines, CRM systems, and analytics platforms.</li>
+                        <li><strong>Performance Trade-offs:</strong> Balance query speed with update overhead.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+        // Get all navigation links
+        const navLinks = document.querySelectorAll('#sidebar-nav a');
+
+        // Add click event listener to each link
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                // Handle in-page links (starting with #)
+                if (this.getAttribute('href').startsWith('#')) {
+                    event.preventDefault(); // Prevent default anchor jump
+                    const targetId = this.getAttribute('href').substring(1); // Get ID without #
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        // Get the section's top position relative to the document
+                        const rect = targetSection.getBoundingClientRect();
+                        const offsetTop = rect.top + window.pageYOffset - 40; // Adjust for content padding
+                        // Scroll to the exact position
+                        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                        console.log(`Scrolling to ${targetId} at offsetTop: ${offsetTop}`);
+                    } else {
+                        console.log(`Section ${targetId} not found`);
+                    }
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                }
+                // External links (e.g., assessment.html) will navigate normally
+            });
+        });
+    </script>
+</body>
+</html>

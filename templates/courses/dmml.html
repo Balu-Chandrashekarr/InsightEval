@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMML Course</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      background-color: #f9fafb;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      position: fixed;
+      height: 100vh;
+      top: 0;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 18px;
+      color: #374151;
+      text-decoration: none;
+      border-radius: 6px;
+      margin: 6px 10px;
+      transition: all 0.3s ease;
+    }
+    .sidebar a:hover {
+      background-color: #e5e7eb;
+    }
+    .sidebar a.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    section {
+      scroll-margin-top: 60px;
+      margin-bottom: 50px;
+    }
+
+    .section-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 25px 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: #1f2937;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #111827;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+
+    p, li {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #374151;
+    }
+
+    ul {
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .code-block {
+      background-color: #f3f4f6;
+      border-left: 4px solid #3b82f6;
+      padding: 18px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        position: relative;
+        box-shadow: none;
+      }
+      .content {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body class="flex">
+  <!-- Left Sidebar -->
+  <div class="sidebar">
+    <h2 class="text-xl font-bold p-4 border-b">DMML Course</h2>
+    <nav id="sidebar-nav">
+      <a href="#introduction" class="active">Introduction</a>
+      <a href="#data-preprocessing">Data Preprocessing</a>
+      <a href="#classification">Classification</a>
+      <a href="#regression">Regression</a>
+      <a href="#clustering">Clustering</a>
+      <a href="#association-rule-mining">Association Rule Mining</a>
+      <a href="#evaluation-metrics">Evaluation Metrics</a>
+      <a href="assessment.html" class="border-t mt-2 pt-2 font-semibold">Final Assessment</a>
+    </nav>
+  </div>
+
+  <!-- Right Content -->
+  <div class="content">
+    <h1>Data Mining and Machine Learning Fundamentals</h1>
+
+    <!-- INTRODUCTION -->
+    <section id="introduction" class="section-card">
+      <h2>Introduction</h2>
+      <p>Welcome to the Data Mining and Machine Learning (DMML) course! Data Mining extracts patterns and knowledge from large datasets, while Machine Learning (ML) enables systems to learn from data and make predictions or decisions. This course covers core DMML concepts—Data Preprocessing, Classification, Regression, Clustering, Association Rule Mining, and Evaluation Metrics—using Python with libraries like pandas, scikit-learn, and NumPy. You’ll learn to process data, build models, and evaluate performance, preparing you for roles in data science, analytics, and AI development.</p>
+      <div class="mb-6">
+        <h3>What You'll Learn in This Course</h3>
+        <ul class="list-disc ml-6 space-y-1">
+          <li><strong>Core DMML Concepts:</strong> Understand data preprocessing, classification, regression, clustering, association rules, and evaluation metrics.</li>
+          <li><strong>Practical Skills:</strong> Implement algorithms using Python and libraries like scikit-learn.</li>
+          <li><strong>Data Preparation:</strong> Clean and transform data for effective modeling.</li>
+          <li><strong>Model Building:</strong> Develop and apply classification, regression, clustering, and association rule mining techniques.</li>
+          <li><strong>Performance Evaluation:</strong> Use metrics to assess model accuracy and reliability.</li>
+          <li><strong>Real-World Applications:</strong> Apply DMML to problems like fraud detection, customer segmentation, and recommendation systems.</li>
+        </ul>
+      </div>
+      <div class="mb-6">
+        <h3>Why Study DMML?</h3>
+        <p class="mb-3">DMML knowledge is critical for several reasons:</p>
+        <ul class="list-disc ml-6 space-y-1">
+          <li><strong>Data-Driven Decisions:</strong> Extract insights from data for business and research.</li>
+          <li><strong>Career Opportunities:</strong> Essential for roles in data science, machine learning engineering, and analytics.</li>
+          <li><strong>Automation:</strong> Build models to automate predictions and classifications.</li>
+          <li><strong>Technical Interviews:</strong> DMML concepts are common in data science and AI interviews.</li>
+          <li><strong>Foundation for Advanced Topics:</strong> Underpins deep learning, big data analytics, and AI systems.</li>
+        </ul>
+      </div>
+      <div class="mb-6">
+        <h3>About the Final Assessment</h3>
+        <p class="mb-3">The Final Assessment tests your mastery of DMML concepts through Multiple Choice Questions (MCQs) covering theory and practical applications. It ensures you can apply data mining and machine learning techniques effectively.</p>
+        <ul class="list-disc ml-6 space-y-1">
+          <li><strong>Format:</strong> 20-30 MCQs with 4 options per question and one correct answer.</li>
+          <li><strong>Topics Covered:</strong> Data Preprocessing, Classification, Regression, Clustering, Association Rule Mining, and Evaluation Metrics.</li>
+          <li><strong>Duration:</strong> 45-60 minutes, timed to simulate exam conditions.</li>
+          <li><strong>Scoring:</strong> Automated grading with immediate feedback; aim for 80%+ to pass.</li>
+          <li><strong>Preparation Tips:</strong> Practice Python coding, understand algorithm workflows, and review evaluation metrics.</li>
+          <li><strong>Purpose:</strong> Reinforce learning, identify gaps, and certify proficiency in DMML fundamentals.</li>
+        </ul>
+        <p class="mt-3">Access the Final Assessment via the sidebar after completing all modules. Begin your journey to mastering data mining and machine learning!</p>
+      </div>
+    </section>
+
+    <!-- DATA PREPROCESSING -->
+    <section id="data-preprocessing" class="section-card">
+      <h2>Data Preprocessing</h2>
+      <div class="space-y-6">
+        <div>
+          <h3>What is Data Preprocessing?</h3>
+          <p>Data preprocessing prepares raw data for analysis by cleaning, transforming, and organizing it to improve model performance. It addresses issues like missing values, outliers, and inconsistent formats.</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Data Cleaning:</strong> Handle missing values, remove duplicates, and correct errors.</li>
+            <li><strong>Data Transformation:</strong> Normalize, scale, or encode data for consistency.</li>
+            <li><strong>Data Reduction:</strong> Reduce dimensionality or sample data to improve efficiency.</li>
+            <li><strong>Data Integration:</strong> Combine data from multiple sources.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Preprocessing Example in Python</h3>
+          <p>Using pandas and scikit-learn to preprocess a dataset with missing values and categorical data.</p>
+          <div class="code-block">
+            <pre>
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+
+# Load dataset
+data = pd.DataFrame({
+    'age': [25, None, 35, 40],
+    'salary': [50000, 60000, 55000, 70000],
+    'gender': ['Male', 'Female', 'Male', None]
+})
+
+# Handle missing values
+data['age'].fillna(data['age'].mean(), inplace=True)
+data['gender'].fillna(data['gender'].mode()[0], inplace=True)
+
+# Encode categorical data
+le = LabelEncoder()
+data['gender'] = le.fit_transform(data['gender'])
+
+# Scale numerical features
+scaler = StandardScaler()
+data[['age', 'salary']] = scaler.fit_transform(data[['age', 'salary']])
+
+print(data)
+            </pre>
+          </div>
+        </div>
+        <div>
+          <h3>Preprocessing Steps</h3>
+          <p>Common steps in preprocessing:</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Missing Values:</strong> Impute with mean, median, or mode.</li>
+            <li><strong>Encoding:</strong> Convert categorical data to numerical (e.g., one-hot encoding).</li>
+            <li><strong>Scaling:</strong> Normalize or standardize features for ML algorithms.</li>
+            <li><strong>Outlier Detection:</strong> Remove or adjust extreme values.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Uses of Data Preprocessing</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Model Accuracy:</strong> Clean data improves prediction quality.</li>
+            <li><strong>Efficiency:</strong> Reduced data size speeds up training.</li>
+            <li><strong>Consistency:</strong> Standardized formats ensure reliable analysis.</li>
+            <li><strong>Data Integration:</strong> Combine datasets for comprehensive insights.</li>
+            <li><strong>Scalability:</strong> Prepare data for large-scale ML pipelines.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Additional Notes</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Feature Engineering:</strong> Create new features to enhance model performance.</li>
+            <li><strong>Tools:</strong> Use pandas for data manipulation, scikit-learn for preprocessing.</li>
+            <li><strong>Best Practices:</strong> Split data into training/test sets; avoid data leakage.</li>
+            <li><strong>Real-World Example:</strong> Preprocessing powers customer segmentation, fraud detection, and sentiment analysis.</li>
+            <li><strong>Challenges:</strong> Handle imbalanced datasets; choose appropriate imputation methods.</li>
+            <li><strong>Database Integration:</strong> Use SQL queries (e.g., joins from DBMS course) to extract and combine data for preprocessing.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLASSIFICATION -->
+    <section id="classification" class="section-card">
+      <h2>Classification</h2>
+      <div class="space-y-6">
+        <div>
+          <h3>What is Classification?</h3>
+          <p>Classification predicts categorical labels (e.g., spam vs. not spam) based on input features. It’s a supervised learning technique where models learn from labeled data.</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Algorithms:</strong> Logistic Regression, Decision Trees, Support Vector Machines (SVM), Random Forest.</li>
+            <li><strong>Binary Classification:</strong> Two classes (e.g., yes/no).</li>
+            <li><strong>Multi-Class Classification:</strong> Multiple classes (e.g., classifying animals).</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Classification Example in Python</h3>
+          <p>Using scikit-learn to train a logistic regression model for binary classification.</p>
+          <div class="code-block">
+            <pre>
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Load dataset
+iris = load_iris()
+X = iris.data
+y = (iris.target == 0).astype(int)  # Binary: Setosa vs. others
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred = model.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+            </pre>
+          </div>
+        </div>
+        <div>
+          <h3>Classification Process</h3>
+          <p>Steps to build a classification model:</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Data Preparation:</strong> Preprocess data (clean, encode, scale).</li>
+            <li><strong>Model Selection:</strong> Choose an algorithm (e.g., Logistic Regression).</li>
+            <li><strong>Training:</strong> Fit the model on labeled training data.</li>
+            <li><strong>Evaluation:</strong> Use metrics like accuracy, precision, recall.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Uses of Classification</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Spam Detection:</strong> Classify emails as spam or not.</li>
+            <li><strong>Medical Diagnosis:</strong> Predict diseases based on symptoms.</li>
+            <li><strong>Fraud Detection:</strong> Identify fraudulent transactions.</li>
+            <li><strong>Sentiment Analysis:</strong> Classify text as positive/negative.</li>
+            <li><strong>Customer Churn:</strong> Predict if customers will leave.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Additional Notes</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Overfitting:</strong> Avoid complex models that memorize training data.</li>
+            <li><strong>Cross-Validation:</strong> Use k-fold cross-validation for robust evaluation.</li>
+            <li><strong>Best Practices:</strong> Balance datasets; tune hyperparameters.</li>
+            <li><strong>Real-World Example:</strong> Classification powers email filters, credit scoring, and image recognition.</li>
+            <li><strong>Tools:</strong> Scikit-learn, TensorFlow for advanced models.</li>
+            <li><strong>Database Integration:</strong> Use SQL joins (from DBMS course) to fetch labeled data for training.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- REGRESSION -->
+    <section id="regression" class="section-card">
+      <h2>Regression</h2>
+      <div class="space-y-6">
+        <div>
+          <h3>What is Regression?</h3>
+          <p>Regression predicts continuous numerical values (e.g., house prices) based on input features. It’s a supervised learning technique used when the output is quantitative.</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Algorithms:</strong> Linear Regression, Polynomial Regression, Random Forest Regressor.</li>
+            <li><strong>Linear Regression:</strong> Models linear relationships between features and output.</li>
+            <li><strong>Non-Linear Regression:</strong> Captures complex patterns using polynomial or tree-based models.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Regression Example in Python</h3>
+          <p>Using scikit-learn to train a linear regression model for predicting house prices.</p>
+          <div class="code-block">
+            <pre>
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load dataset
+housing = fetch_california_housing()
+X = housing.data
+y = housing.target
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred = model.predict(X_test)
+print(f"Mean Squared Error: {mean_squared_error(y_test, y_pred):.2f}")
+print(f"R² Score: {r2_score(y_test, y_pred):.2f}")
+            </pre>
+          </div>
+        </div>
+        <div>
+          <h3>Regression Process</h3>
+          <p>Steps to build a regression model:</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Data Preparation:</strong> Preprocess data (clean, scale, encode).</li>
+            <li><strong>Model Selection:</strong> Choose an algorithm (e.g., Linear Regression).</li>
+            <li><strong>Training:</strong> Fit the model on training data.</li>
+            <li><strong>Evaluation:</strong> Use metrics like Mean Squared Error (MSE) and R².</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Uses of Regression</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Price Prediction:</strong> Predict house or stock prices.</li>
+            <li><strong>Sales Forecasting:</strong> Estimate future sales based on trends.</li>
+            <li><strong>Risk Assessment:</strong> Predict financial risks or credit scores.</li>
+            <li><strong>Energy Consumption:</strong> Forecast energy usage for buildings.</li>
+            <li><strong>Scientific Analysis:</strong> Model relationships in experimental data.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Additional Notes</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Overfitting:</strong> Use regularization (e.g., Ridge, Lasso) to prevent overfitting.</li>
+            <li><strong>Feature Selection:</strong> Select relevant features to improve model performance.</li>
+            <li><strong>Best Practices:</strong> Check for multicollinearity; use cross-validation.</li>
+            <li><strong>Real-World Example:</strong> Regression powers real estate pricing, demand forecasting, and weather prediction.</li>
+            <li><strong>Tools:</strong> Scikit-learn, XGBoost for advanced models.</li>
+            <li><strong>Database Integration:</strong> Fetch feature data using SQL queries (e.g., joins from DBMS course) for training.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLUSTERING -->
+    <section id="clustering" class="section-card">
+      <h2>Clustering</h2>
+      <div class="space-y-6">
+        <div>
+          <h3>What is Clustering?</h3>
+          <p>Clustering groups similar data points into clusters based on features, without predefined labels. It’s an unsupervised learning technique used for pattern discovery.</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Algorithms:</strong> K-Means, Hierarchical Clustering, DBSCAN.</li>
+            <li><strong>Applications:</strong> Customer segmentation, image segmentation, anomaly detection.</li>
+            <li><strong>Distance Metrics:</strong> Euclidean, Manhattan for measuring similarity.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Clustering Example in Python</h3>
+          <p>Using scikit-learn to perform K-Means clustering with visualization.</p>
+          <div class="code-block">
+            <pre>
+from sklearn.datasets import load_iris
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+# Load dataset
+iris = load_iris()
+X = iris.data
+
+# Scale features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Apply K-Means
+kmeans = KMeans(n_clusters=3, random_state=42)
+clusters = kmeans.fit_predict(X_scaled)
+
+# Visualize clusters (2D projection)
+plt.scatter(X_scaled[:, 0], X_scaled[:, 1], c=clusters, cmap='viridis')
+plt.title('K-Means Clustering on Iris Dataset')
+plt.xlabel('Feature 1 (Scaled)')
+plt.ylabel('Feature 2 (Scaled)')
+plt.show()
+            </pre>
+          </div>
+        </div>
+        <div>
+          <h3>Clustering Process</h3>
+          <p>Steps to perform clustering:</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Data Preparation:</strong> Preprocess and scale features.</li>
+            <li><strong>Algorithm Selection:</strong> Choose a clustering method (e.g., K-Means).</li>
+            <li><strong>Determine Clusters:</strong> Select the number of clusters (e.g., using elbow method).</li>
+            <li><strong>Evaluate:</strong> Assess cluster quality with metrics like silhouette score.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Uses of Clustering</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Customer Segmentation:</strong> Group customers for targeted marketing.</li>
+            <li><strong>Anomaly Detection:</strong> Identify outliers in data (e.g., fraud).</li>
+            <li><strong>Image Segmentation:</strong> Group pixels for object detection.</li>
+            <li><strong>Market Research:</strong> Discover patterns in consumer behavior.</li>
+            <li><strong>Bioinformatics:</strong> Cluster genes or proteins.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Additional Notes</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Choosing K:</strong> Use elbow method or silhouette score for optimal clusters.</li>
+            <li><strong>Scalability:</strong> K-Means is fast but sensitive to outliers; DBSCAN handles noise better.</li>
+            <li><strong>Best Practices:</strong> Scale features; validate clusters with domain knowledge.</li>
+            <li><strong>Real-World Example:</strong> Clustering powers recommendation systems, fraud detection, and social network analysis.</li>
+            <li><strong>Challenges:</strong> Handle high-dimensional data; choose appropriate distance metrics.</li>
+            <li><strong>Database Integration:</strong> Use SQL queries to fetch feature data for clustering.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASSOCIATION RULE MINING -->
+    <section id="association-rule-mining" class="section-card">
+      <h2>Association Rule Mining</h2>
+      <div class="space-y-6">
+        <div>
+          <h3>What is Association Rule Mining?</h3>
+          <p>Association Rule Mining discovers relationships between items in large datasets, often in the form of "if-then" rules (e.g., if bread, then butter). It’s widely used in market basket analysis.</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Key Metrics:</strong> Support, Confidence, Lift.</li>
+            <li><strong>Algorithms:</strong> Apriori, FP-Growth.</li>
+            <li><strong>Applications:</strong> Recommendation systems, cross-selling.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Association Rule Mining Example in Python</h3>
+          <p>Using the `mlxtend` library to apply the Apriori algorithm.</p>
+          <div class="code-block">
+            <pre>
+from mlxtend.frequent_patterns import apriori, association_rules
+import pandas as pd
+
+# Sample transaction data
+data = pd.DataFrame([
+    ['Milk', 'Bread', 'Butter'],
+    ['Milk', 'Bread'],
+    ['Bread', 'Butter'],
+    ['Milk', 'Butter']
+], columns=['Item1', 'Item2', 'Item3']).notnull()
+
+# Apply Apriori
+frequent_itemsets = apriori(data, min_support=0.5, use_colnames=True)
+
+# Generate rules
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
+            </pre>
+          </div>
+        </div>
+        <div>
+          <h3>Association Rule Mining Process</h3>
+          <p>Steps to perform association rule mining:</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Data Preparation:</strong> Convert transactions to binary format.</li>
+            <li><strong>Frequent Itemsets:</strong> Identify items with sufficient support.</li>
+            <li><strong>Rule Generation:</strong> Create rules based on confidence and lift.</li>
+            <li><strong>Evaluation:</strong> Filter rules by thresholds or business relevance.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Uses of Association Rule Mining</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Market Basket Analysis:</strong> Identify products frequently bought together.</li>
+            <li><strong>Recommendation Systems:</strong> Suggest items based on purchase patterns.</li>
+            <li><strong>Inventory Management:</strong> Optimize stock based on co-purchases.</li>
+            <li><strong>Web Analytics:</strong> Analyze user navigation patterns.</li>
+            <li><strong>Healthcare:</strong> Discover co-occurring symptoms or treatments.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Additional Notes</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Support:</strong> Frequency of itemset in transactions.</li>
+            <li><strong>Confidence:</strong> Likelihood that rule is true.</li>
+            <li><strong>Lift:</strong> Strength of rule compared to random chance.</li>
+            <li><strong>Best Practices:</strong> Set appropriate thresholds; validate rules with domain experts.</li>
+            <li><strong>Real-World Example:</strong> Used in e-commerce (Amazon recommendations), retail, and bioinformatics.</li>
+            <li><strong>Database Integration:</strong> Fetch transaction data using SQL for rule mining.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVALUATION METRICS -->
+    <section id="evaluation-metrics" class="section-card">
+      <h2>Evaluation Metrics</h2>
+      <div class="space-y-6">
+        <div>
+          <h3>What are Evaluation Metrics?</h3>
+          <p>Evaluation metrics assess the performance of machine learning models, measuring accuracy, precision, recall, and other aspects of predictions.</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Accuracy:</strong> Proportion of correct predictions.</li>
+            <li><strong>Precision:</strong> Proportion of true positives among positive predictions.</li>
+            <li><strong>Recall:</strong> Proportion of true positives identified.</li>
+            <li><strong>F1-Score:</strong> Harmonic mean of precision and recall.</li>
+            <li><strong>Silhouette Score:</strong> Measures cluster quality in unsupervised learning.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Evaluation Example in Python</h3>
+          <p>Using scikit-learn to compute classification metrics with a confusion matrix visualization.</p>
+          <div class="code-block">
+            <pre>
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+iris = load_iris()
+X = iris.data
+y = (iris.target == 0).astype(int)
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred = model.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+print(f"Precision: {precision_score(y_test, y_pred):.2f}")
+print(f"Recall: {recall_score(y_test, y_pred):.2f}")
+print(f"F1-Score: {f1_score(y_test, y_pred):.2f}")
+
+# Visualize confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.show()
+            </pre>
+          </div>
+        </div>
+        <div>
+          <h3>Evaluation Process</h3>
+          <p>Steps to evaluate models:</p>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Split Data:</strong> Use train/test or cross-validation splits.</li>
+            <li><strong>Predict:</strong> Generate predictions on test data.</li>
+            <li><strong>Compute Metrics:</strong> Calculate accuracy, precision, recall, etc.</li>
+            <li><strong>Interpret Results:</strong> Assess model performance based on metrics and domain requirements.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Uses of Evaluation Metrics</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Model Selection:</strong> Compare algorithms based on performance.</li>
+            <li><strong>Hyperparameter Tuning:</strong> Optimize models using metric feedback.</li>
+            <li><strong>Validation:</strong> Ensure models generalize to unseen data.</li>
+            <li><strong>Business Decisions:</strong> Justify model deployment based on metrics.</li>
+            <li><strong>Debugging:</strong> Identify model weaknesses (e.g., low recall).</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Additional Notes</h3>
+          <ul class="list-disc ml-6 space-y-1">
+            <li><strong>Confusion Matrix:</strong> Visualize true positives, false positives, etc.</li>
+            <li><strong>ROC-AUC:</strong> Measure classification performance for imbalanced data.</li>
+            <li><strong>Best Practices:</strong> Choose metrics aligned with business goals; use cross-validation.</li>
+            <li><strong>Real-World Example:</strong> Metrics evaluate models in fraud detection, medical diagnosis, and marketing.</li>
+            <li><strong>Challenges:</strong> Handle imbalanced datasets; avoid over-optimizing for one metric.</li>
+            <li><strong>Database Integration:</strong> Use SQL to fetch test data for model evaluation.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Sidebar navigation active state + smooth scroll
+    const navLinks = document.querySelectorAll('#sidebar-nav a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(event) {
+        if (this.getAttribute('href').startsWith('#')) {
+          event.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetSection = document.getElementById(targetId);
+          if (targetSection) {
+            const rect = targetSection.getBoundingClientRect();
+            const offsetTop = rect.top + window.pageYOffset - 60;
+            window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+          }
+          navLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Systems Course</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #f8f8f8;
+            border-right: 1px solid #e5e7eb;
+            position: fixed;
+            height: 100vh;
+            top: 0;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #e5e7eb;
+        }
+        .sidebar a.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .content {
+            margin-left: 260px;
+            padding: 40px 20px 20px;
+            min-height: 100vh;
+        }
+        .section-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        section {
+            scroll-margin-top: 40px;
+            margin-bottom: 40px; /* Spacing between content sections */
+        }
+        .code-block {
+            background-color: #f4f4f4;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        p, li {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+                position: relative;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px 10px;
+            }
+        }
+    </style>
+</head>
+<body class="flex">
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-xl font-bold p-4 border-b">OS Course</h2>
+        <nav id="sidebar-nav">
+            <a href="#introduction" class="active">Introduction</a>
+            <a href="#processes">Processes</a>
+            <a href="#threads">Threads</a>
+            <a href="#memory-management">Memory Management</a>
+            <a href="#file-systems">File Systems</a>
+            <a href="#synchronization">Synchronization</a>
+            <a href="assessment.html" class="border-t mt-2 pt-2 font-semibold">Final Assessment</a>
+        </nav>
+    </div>
+    <!-- Right Content -->
+    <div class="content">
+        <h1 class="text-3xl font-bold mb-4">Operating Systems Fundamentals</h1>
+        <section id="introduction">
+            <div class="section-card">
+            <h2 class="text-2xl font-semibold mb-2">Introduction</h2>
+            <p class="mb-4">Welcome to the Operating Systems (OS) course! An operating system is the backbone of any computing device, acting as an intermediary between hardware and software. It manages resources like CPU, memory, and I/O devices, ensuring efficient execution of programs and a seamless user experience. This course dives deep into core OS concepts—Processes, Threads, Memory Management, File Systems, and Synchronization—using C++ for low-level operations and Java for high-level concepts like threading. You’ll learn how OS principles enable multitasking, resource sharing, and system stability, preparing you for system-level programming, technical interviews, or advanced studies in computer science.</p>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-3">What You'll Learn in This Course</h3>
+                <ul class="list-disc ml-6 space-y-1">
+                    <li><strong>Core OS Concepts:</strong> Master processes, threads, memory management, file systems, and synchronization, understanding their roles in system design.</li>
+                    <li><strong>Practical Implementations:</strong> Explore code examples in C++ for process creation and memory allocation, and Java for threading and file operations.</li>
+                    <li><strong>Resource Management:</strong> Learn how the OS allocates CPU, memory, and I/O resources efficiently to support multiple applications.</li>
+                    <li><strong>Concurrency and Synchronization:</strong> Understand techniques to manage concurrent tasks and prevent issues like race conditions or deadlocks.</li>
+                    <li><strong>System Design Insights:</strong> Gain knowledge of OS architecture, including kernel types (monolithic, microkernel) and scheduling algorithms.</li>
+                    <li><strong>Problem-Solving:</strong> Apply OS concepts to design solutions for real-world challenges, such as process scheduling or memory optimization.</li>
+                </ul>
+            </div>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-3">Why Study Operating Systems?</h3>
+                <p class="mb-3">Understanding OS concepts is crucial for several reasons:</p>
+                <ul class="list-disc ml-6 space-y-1">
+                    <li><strong>System Programming:</strong> Build efficient software that interacts closely with hardware.</li>
+                    <li><strong>Performance Optimization:</strong> Write applications that leverage OS resources effectively.</li>
+                    <li><strong>Career Opportunities:</strong> OS knowledge is essential for roles in system administration, embedded systems, and kernel development.</li>
+                    <li><strong>Technical Interviews:</strong> Many top tech companies test OS concepts in coding interviews.</li>
+                    <li><strong>Foundation for Advanced Topics:</strong> OS principles underpin distributed systems, cloud computing, and virtualization.</li>
+                </ul>
+            </div>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-3">About the Final Assessment</h3>
+                <p class="mb-3">The Final Assessment evaluates your mastery of OS concepts through a comprehensive set of Multiple Choice Questions (MCQs). It tests both theoretical understanding and practical applications, ensuring you’re ready to apply OS principles.</p>
+                <ul class="list-disc ml-6 space-y-1">
+                    <li><strong>Format:</strong> 20-30 MCQs with 4 options per question and one correct answer.</li>
+                    <li><strong>Topics Covered:</strong> Processes, Threads, Memory Management, File Systems, Synchronization, scheduling, and OS design principles.</li>
+                    <li><strong>Duration:</strong> 45-60 minutes, timed to simulate real-world exam conditions.</li>
+                    <li><strong>Scoring:</strong> Automated grading with immediate feedback; aim for 80%+ to pass successfully.</li>
+                    <li><strong>Purpose:</strong> Reinforce learning, identify areas for improvement, and certify proficiency in OS fundamentals.</li>
+                    <li><strong>Preparation Tips:</strong> Review code examples, understand key terms (e.g., PCB, virtual memory), and practice concurrency scenarios.</li>
+                </ul>
+                <p class="mt-3">Access the Final Assessment via the sidebar after completing all modules. Start your journey to mastering operating systems!</p>
+            </div>
+                    </div>
+        </section>
+        <section id="processes">
+            <div class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Processes</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a Process?</h3>
+                    <p>A process is a program in execution, encompassing its code, data, stack, heap, and state (e.g., program counter, registers). It’s the fundamental unit of execution in an OS, running in its own isolated memory space to prevent interference. Each process has a Process Control Block (PCB) that stores metadata like process ID, state, and resource usage.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Components:</strong> Code (text segment), data (global variables), stack (function calls), heap (dynamic memory).</li>
+                        <li><strong>States:</strong> New (created), Ready (awaiting CPU), Running (executing), Waiting (I/O or event), Terminated (completed).</li>
+                        <li><strong>Attributes:</strong> Process ID (PID), priority, memory limits, open files.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Process Creation in C++</h3>
+                    <p>Processes are created using system calls like <code>fork()</code> on Unix or <code>CreateProcess</code> on Windows. The <code>fork()</code> system call creates a child process that’s a copy of the parent.</p>
+                    <div class="code-block">
+                        <p><strong>Example (Unix fork):</strong></p>
+                        <pre>
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    pid_t pid = fork(); // Create child process
+    if (pid == 0) {
+        printf("Child process, PID: %d, Parent PID: %d\n", getpid(), getppid());
+    } else if (pid > 0) {
+        printf("Parent process, PID: %d, Child PID: %d\n", getpid(), pid);
+        sleep(1); // Ensure child prints first
+    } else {
+        printf("Fork failed\n");
+    }
+    return 0;
+}
+                        </pre>
+                        <p><strong>Example (Executing a Program):</strong></p>
+                        <pre>
+#include <unistd.h>
+#include <stdio.h>
+
+int main() {
+    pid_t pid = fork();
+    if (pid == 0) {
+        execl("/bin/ls", "ls", "-l", NULL); // Replace child with ls command
+        printf("execl failed\n");
+    } else if (pid > 0) {
+        wait(NULL); // Wait for child to finish
+        printf("Parent process done\n");
+    } else {
+        printf("Fork failed\n");
+    }
+    return 0;
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Process Scheduling</h3>
+                    <p>The OS schedules processes to share CPU time, using algorithms like First-Come-First-Serve (FCFS), Round-Robin (RR), or Priority Scheduling. Scheduling ensures fair resource allocation and responsiveness.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>FCFS:</strong> Executes processes in arrival order; simple but may cause delays.</li>
+                        <li><strong>Round-Robin:</strong> Allocates fixed time slices (quantum) for fairness.</li>
+                        <li><strong>Priority Scheduling:</strong> Prioritizes high-priority processes, risking starvation for low-priority ones.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Processes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Multitasking:</strong> Run multiple applications (e.g., browser, editor) simultaneously.</li>
+                        <li><strong>Isolation:</strong> Separate memory spaces prevent crashes from affecting other processes.</li>
+                        <li><strong>System Services:</strong> Manage daemons (background processes) like logging or networking.</li>
+                        <li><strong>Parallel Processing:</strong> Divide tasks across processes for distributed systems.</li>
+                        <li><strong>Inter-Process Communication (IPC):</strong> Enable processes to share data via pipes, message queues, or shared memory.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Process Control Block (PCB):</strong> Critical for context switching; stores CPU registers, memory maps, and I/O status.</li>
+                        <li><strong>Context Switching:</strong> Overhead from saving/restoring process state; minimized in efficient OS designs.</li>
+                        <li><strong>Zombie/Orphan Processes:</strong> Zombies are terminated but not reaped; orphans are adopted by the init process.</li>
+                        <li><strong>Limitations:</strong> Processes are heavyweight due to separate memory; threads are lighter alternatives.</li>
+                        <li><strong>Real-World Example:</strong> Processes run your IDE, web server, or database, isolating tasks for stability.</li>
+                    </ul>
+                </div>
+            </div>
+                    </div>
+        </section>
+        <section id="threads">
+            <div class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Threads</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a Thread?</h3>
+                    <p>A thread is the smallest unit of execution within a process, sharing the process’s memory and resources. Threads enable parallelism, allowing multiple tasks to run concurrently within a single process, improving performance on multi-core systems.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Types:</strong> User threads (application-managed) and kernel threads (OS-managed).</li>
+                        <li><strong>Shared Resources:</strong> Threads share code, data, and files but maintain separate stacks and registers.</li>
+                        <li><strong>Thread States:</strong> New, Runnable, Blocked, Waiting, Timed Waiting, Terminated.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Creating Threads in Java</h3>
+                    <p>Java supports threading via the <code>Thread</code> class or <code>Runnable</code> interface. The <code>ExecutorService</code> is preferred for managing thread pools.</p>
+                    <div class="code-block">
+                        <p><strong>Example (Using Runnable):</strong></p>
+                        <pre>
+public class MyThread implements Runnable {
+    public void run() {
+        for (int i = 1; i <= 3; i++) {
+            System.out.println(Thread.currentThread().getName() + ": Count " + i);
+            try {
+                Thread.sleep(100); // Simulate work
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new MyThread(), "Thread-1");
+        Thread t2 = new Thread(new MyThread(), "Thread-2");
+        t1.start();
+        t2.start();
+    }
+}
+                        </pre>
+                        <p><strong>Example (Using ExecutorService):</strong></p>
+                        <pre>
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ThreadPoolExample {
+    public static void main(String[] args) {
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        for (int i = 1; i <= 4; i++) {
+            final int taskId = i;
+            executor.submit(() -> {
+                System.out.println("Task " + taskId + " running on " + Thread.currentThread().getName());
+            });
+        }
+        executor.shutdown();
+    }
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Thread Lifecycle and Management</h3>
+                    <p>Threads transition through states, and Java provides methods to control them:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>start():</strong> Begins thread execution; calls <code>run()</code>.</li>
+                        <li><strong>sleep(millis):</strong> Pauses thread for specified time.</li>
+                        <li><strong>join():</strong> Waits for a thread to complete.</li>
+                        <li><strong>interrupt():</strong> Signals a thread to stop (handled by application).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Threads</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Parallel Execution:</strong> Run computations and I/O tasks simultaneously.</li>
+                        <li><strong>Performance:</strong> Leverage multi-core CPUs for faster execution.</li>
+                        <li><strong>Responsiveness:</strong> Keep GUIs responsive during background tasks.</li>
+                        <li><strong>Server Applications:</strong> Handle multiple client requests concurrently.</li>
+                        <li><strong>Event Handling:</strong> Process asynchronous events in real-time systems.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Thread Safety:</strong> Shared resources require synchronization to prevent data corruption.</li>
+                        <li><strong>Thread Pools:</strong> <code>ExecutorService</code> reduces overhead of creating/destroying threads.</li>
+                        <li><strong>Thread Priorities:</strong> Java allows setting priorities, but scheduling depends on the OS.</li>
+                        <li><strong>Limitations:</strong> Threads share memory, risking race conditions; use synchronization carefully.</li>
+                        <li><strong>Real-World Example:</strong> Threads power web servers (handling HTTP requests), game engines (rendering and physics), and database query processing.</li>
+                    </ul>
+                </div>
+            </div>
+                    </div>
+        </section>
+        <section id="memory-management">
+            <div class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Memory Management</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is Memory Management?</h3>
+                    <p>Memory management is the process of allocating, tracking, and deallocating memory for processes and threads. The OS ensures efficient use of RAM, prevents memory leaks, and isolates process memory spaces to avoid interference.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Types:</strong> Paging (fixed-size blocks), Segmentation (variable-size segments), Virtual Memory (disk-backed memory).</li>
+                        <li><strong>Goals:</strong> Minimize fragmentation, ensure process isolation, optimize allocation speed.</li>
+                        <li><strong>Virtual Memory:</strong> Maps virtual addresses to physical memory, enabling large address spaces.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Memory Allocation in C++</h3>
+                    <p>In C++, memory is allocated dynamically on the heap using <code>new</code> and deallocated with <code>delete</code>. Stack allocation is automatic for local variables.</p>
+                    <div class="code-block">
+                        <p><strong>Example (Dynamic Allocation):</strong></p>
+                        <pre>
+#include <iostream>
+int main() {
+    int* arr = new int[5]; // Allocate array on heap
+    for (int i = 0; i < 5; i++) {
+        arr[i] = i + 1;
+        std::cout << arr[i] << " "; // Prints: 1 2 3 4 5
+    }
+    delete[] arr; // Deallocate array
+    return 0;
+}
+                        </pre>
+                        <p><strong>Example (Smart Pointers):</strong></p>
+                        <pre>
+#include <memory>
+#include <iostream>
+int main() {
+    std::unique_ptr<int> ptr = std::make_unique<int>(42); // Smart pointer
+    std::cout << "Value: " << *ptr << std::endl; // Prints: 42
+    // Automatically deallocated when out of scope
+    return 0;
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Virtual Memory and Paging</h3>
+                    <p>Virtual memory allows processes to use more memory than physically available by swapping data to disk. Paging divides memory into fixed-size pages, mapped via page tables.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Page Table:</strong> Maps virtual addresses to physical memory.</li>
+                        <li><strong>Page Fault:</strong> Occurs when a page is not in RAM; OS loads it from disk.</li>
+                        <li><strong>TLB:</strong> Translation Lookaside Buffer caches page table entries for speed.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Memory Management</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Process Isolation:</strong> Prevent processes from accessing unauthorized memory.</li>
+                        <li><strong>Virtual Memory:</strong> Run large programs on limited RAM.</li>
+                        <li><strong>Efficiency:</strong> Optimize memory allocation for multitasking.</li>
+                        <li><strong>Dynamic Allocation:</strong> Support runtime memory needs (e.g., heap allocation).</li>
+                        <li><strong>Memory Protection:</strong> Enforce access controls via memory management units (MMU).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Fragmentation:</strong> Internal (unused space in allocated blocks) vs. external (gaps between blocks).</li>
+                        <li><strong>Garbage Collection:</strong> Java’s JVM automatically reclaims unused memory, unlike C++’s manual management.</li>
+                        <li><strong>Page Replacement:</strong> Algorithms like LRU (Least Recently Used) manage page faults.</li>
+                        <li><strong>Best Practices:</strong> Avoid memory leaks in C++; use smart pointers or RAII for safety.</li>
+                        <li><strong>Real-World Example:</strong> Memory management enables running multiple apps on smartphones or virtual machines in cloud systems.</li>
+                    </ul>
+                </div>
+            </div>
+                    </div>
+        </section>
+        <section id="file-systems">
+            <div class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">File Systems</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is a File System?</h3>
+                    <p>A file system organizes, stores, and retrieves data on storage devices like hard drives or SSDs. It manages files, directories, and metadata, providing a structured way to access data. The OS interacts with the file system to perform operations like reading, writing, and deleting files.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Types:</strong> FAT32 (simple, portable), NTFS (Windows, advanced features), ext4 (Linux, efficient).</li>
+                        <li><strong>Components:</strong> Directory structure (tree-like), file metadata (size, permissions), data blocks (actual content).</li>
+                        <li><strong>Features:</strong> Permissions, journaling, hierarchical organization.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">File Operations in Java</h3>
+                    <p>Java’s <code>java.io</code> and <code>java.nio.file</code> packages provide robust file handling capabilities.</p>
+                    <div class="code-block">
+                        <p><strong>Example (File Read/Write):</strong></p>
+                        <pre>
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class FileExample {
+    public static void main(String[] args) {
+        // Write to file
+        try (FileWriter writer = new FileWriter("example.txt")) {
+            writer.write("Hello, Operating Systems!\n");
+        } catch (IOException e) {
+            System.out.println("Write error: " + e.getMessage());
+        }
+        // Read from file
+        try (BufferedReader reader = new BufferedReader(new FileReader("example.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line); // Prints: Hello, Operating Systems!
+            }
+        } catch (IOException e) {
+            System.out.println("Read error: " + e.getMessage());
+        }
+    }
+}
+                        </pre>
+                        <p><strong>Example (File Attributes):</strong></p>
+                        <pre>
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.io.IOException;
+
+public class FileAttributes {
+    public static void main(String[] args) {
+        Path path = Path.of("example.txt");
+        try {
+            BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
+            System.out.println("Size: " + attrs.size() + " bytes");
+            System.out.println("Last Modified: " + attrs.lastModifiedTime());
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">File System Structure</h3>
+                    <p>File systems use a hierarchical structure, with a root directory and nested subdirectories. Metadata includes permissions, timestamps, and ownership.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Inodes (Unix):</strong> Store file metadata except name; used in ext4.</li>
+                        <li><strong>Journaling:</strong> Logs changes to prevent data loss (e.g., NTFS, ext4).</li>
+                        <li><strong>Allocation Methods:</strong> Contiguous, linked, or indexed allocation for data blocks.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of File Systems</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Data Persistence:</strong> Store user files, configurations, or databases.</li>
+                        <li><strong>Hierarchical Organization:</strong> Manage files in directories for easy navigation.</li>
+                        <li><strong>Access Control:</strong> Enforce permissions for security (e.g., read-only for users).</li>
+                        <li><strong>Data Integrity:</strong> Journaling ensures reliability during crashes.</li>
+                        <li><strong>Backup and Recovery:</strong> Support snapshots or versioning (e.g., ZFS).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>File System Types:</strong> Choose based on use case (e.g., FAT32 for USB drives, NTFS for Windows).</li>
+                        <li><strong>Performance:</strong> Use buffered I/O to reduce disk access overhead.</li>
+                        <li><strong>Security:</strong> Implement file permissions and encryption for sensitive data.</li>
+                        <li><strong>Best Practices:</strong> Always handle I/O exceptions; close resources using try-with-resources.</li>
+                        <li><strong>Real-World Example:</strong> File systems manage user data in cloud storage (e.g., Google Drive) or OS file explorers.</li>
+                    </ul>
+                </div>
+            </div>
+                    </div>
+        </section>
+        <section id="synchronization">
+            <div class="section-card">
+            <h2 class="text-2xl font-semibold mb-4">Synchronization</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">What is Synchronization?</h3>
+                    <p>Synchronization ensures orderly access to shared resources in concurrent environments, preventing race conditions and ensuring data consistency. It’s critical in multi-threaded or multi-process systems where multiple entities access shared data.</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Mechanisms:</strong> Locks (mutexes), semaphores, monitors, condition variables.</li>
+                        <li><strong>Issues:</strong> Race conditions, deadlocks, starvation, priority inversion.</li>
+                        <li><strong>Goals:</strong> Ensure mutual exclusion, avoid data corruption, maintain system fairness.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Synchronization in Java</h3>
+                    <p>Java provides synchronization via the <code>synchronized</code> keyword, <code>Lock</code> interface, and concurrent utilities like <code>ReentrantLock</code>.</p>
+                    <div class="code-block">
+                        <p><strong>Example (Synchronized Block):</strong></p>
+                        <pre>
+public class SharedResource {
+    private int count = 0;
+    public void increment() {
+        synchronized (this) { // Synchronize on object
+            count++;
+            System.out.println(Thread.currentThread().getName() + ": " + count);
+        }
+    }
+    public static void main(String[] args) {
+        SharedResource resource = new SharedResource();
+        Runnable task = () -> {
+            for (int i = 0; i < 5; i++) {
+                resource.increment();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread t1 = new Thread(task, "Thread-1");
+        Thread t2 = new Thread(task, "Thread-2");
+        t1.start();
+        t2.start();
+    }
+}
+                        </pre>
+                        <p><strong>Example (ReentrantLock):</strong></p>
+                        <pre>
+import java.util.concurrent.locks.ReentrantLock;
+
+public class LockExample {
+    private int count = 0;
+    private final ReentrantLock lock = new ReentrantLock();
+    public void increment() {
+        lock.lock();
+        try {
+            count++;
+            System.out.println(Thread.currentThread().getName() + ": " + count);
+        } finally {
+            lock.unlock();
+        }
+    }
+    public static void main(String[] args) {
+        LockExample example = new LockExample();
+        Runnable task = () -> {
+            for (int i = 0; i < 5; i++) example.increment();
+        };
+        Thread t1 = new Thread(task, "Thread-1");
+        Thread t2 = new Thread(task, "Thread-2");
+        t1.start();
+        t2.start();
+    }
+}
+                        </pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Synchronization Primitives</h3>
+                    <p>Common synchronization tools include:</p>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Mutex:</strong> Ensures only one thread accesses a resource (mutual exclusion).</li>
+                        <li><strong>Semaphore:</strong> Controls access by multiple threads with a counter (e.g., for limited resources).</li>
+                        <li><strong>Condition Variables:</strong> Allow threads to wait for specific conditions (e.g., <code>wait()/notify()</code> in Java).</li>
+                        <li><strong>Monitors:</strong> Combine mutex and condition variables; Java’s <code>synchronized</code> implements monitors.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Uses of Synchronization</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Data Consistency:</strong> Protect shared data like counters or buffers.</li>
+                        <li><strong>Thread Coordination:</strong> Ensure tasks execute in the correct order.</li>
+                        <li><strong>Resource Sharing:</strong> Manage access to limited resources (e.g., database connections).</li>
+                        <li><strong>Concurrent Systems:</strong> Enable safe multi-threading in servers or applications.</li>
+                        <li><strong>Producer-Consumer:</strong> Coordinate producers (adding data) and consumers (processing data).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Additional Notes</h3>
+                    <ul class="list-disc ml-6 space-y-1">
+                        <li><strong>Deadlock Avoidance:</strong> Use resource ordering, timeouts, or deadlock detection algorithms.</li>
+                        <li><strong>Java Concurrent Utilities:</strong> <code>ConcurrentHashMap</code>, <code>BlockingQueue</code> for thread-safe collections.</li>
+                        <li><strong>Performance:</strong> Minimize synchronized code to reduce contention; prefer fine-grained locks.</li>
+                        <li><strong>Best Practices:</strong> Use <code>try-finally</code> with locks; test for race conditions in concurrent code.</li>
+                        <li><strong>Real-World Example:</strong> Synchronization ensures thread safety in web servers (e.g., Apache), databases (e.g., transaction locks), and OS kernels.</li>
+                    </ul>
+                </div>
+            </div>
+                    </div>
+        </section>
+    </div>
+    <script>
+        // Get all navigation links
+        const navLinks = document.querySelectorAll('#sidebar-nav a');
+
+        // Add click event listener to each link
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                // Handle in-page links (starting with #)
+                if (this.getAttribute('href').startsWith('#')) {
+                    event.preventDefault(); // Prevent default anchor jump
+                    const targetId = this.getAttribute('href').substring(1); // Get ID without #
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        // Get the section's top position relative to the document
+                        const rect = targetSection.getBoundingClientRect();
+                        const offsetTop = rect.top + window.pageYOffset - 40; // Adjust for content padding
+                        // Scroll to the exact position
+                        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                        console.log(`Scrolling to ${targetId} at offsetTop: ${offsetTop}`);
+                    } else {
+                        console.log(`Section ${targetId} not found`);
+                    }
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                }
+                // External links (e.g., assessment.html) will navigate normally
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,9 +1,11 @@
+from os import abort
 from flask import Flask, render_template, redirect, url_for, flash, session, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length
 import logging
 from datetime import datetime
+from jinja2.exceptions import TemplateNotFound
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '1a2b3c4d5e6f7g8h9i0j'
@@ -109,6 +111,22 @@ def create_test():
         return redirect(url_for('classroom', classroom_id=1))
         
     return render_template('create_test.html')
+
+# ========== NEW DYNAMIC ROUTE FOR COURSES ==========
+@app.route('/course/<string:course_name>')
+def course(course_name):
+    """ Renders a specific course page based on the name. """
+    if 'user_role' not in session:
+        flash('You must be logged in to view courses.', 'error')
+        return redirect(url_for('login'))
+    
+    try:
+        # Dynamically create the template path, e.g., "courses/dsa.html"
+        template_path = f"courses/{course_name}.html"
+        return render_template(template_path)
+    except TemplateNotFound:
+        # If the HTML file doesn't exist, show a 404 error
+        abort(404)
 
 
 @app.route('/logout')
