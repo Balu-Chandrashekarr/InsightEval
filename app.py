@@ -1,5 +1,4 @@
-from os import abort
-from flask import Flask, render_template, redirect, url_for, flash, session, request
+from flask import Flask, render_template, redirect, url_for, flash, session, request, abort, send_from_directory
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length
@@ -80,7 +79,22 @@ def classroom(classroom_id):
     posts = session.get('posts', [])
     return render_template('classroom.html', classroom_id=classroom_id, posts=posts)
     
-
+@app.route('/courses/assessment')
+def assessment():
+    """Renders the assessment page."""
+    try:
+        return render_template('courses/assessment.html')
+    except TemplateNotFound:
+        abort(404)
+        
+@app.route('/courses/<course_name>')
+def course(course_name):
+    template_path = f'courses/{course_name}.html'
+    try:
+        return render_template(template_path)
+    except TemplateNotFound:
+        abort(404)
+        
 @app.route('/create_test', methods=['GET', 'POST'])
 def create_test():
     """Renders the page for creating a new test and handles submission."""
@@ -112,22 +126,10 @@ def create_test():
         
     return render_template('create_test.html')
 
-# ========== NEW DYNAMIC ROUTE FOR COURSES ==========
-@app.route('/course/<string:course_name>')
-def course(course_name):
-    """ Renders a specific course page based on the name. """
-    if 'user_role' not in session:
-        flash('You must be logged in to view courses.', 'error')
-        return redirect(url_for('login'))
-    
-    try:
-        # Dynamically create the template path, e.g., "courses/dsa.html"
-        template_path = f"courses/{course_name}.html"
-        return render_template(template_path)
-    except TemplateNotFound:
-        # If the HTML file doesn't exist, show a 404 error
-        abort(404)
-
+@app.route('/json/<path:filename>')
+def serve_json(filename):
+    """Serve JSON files from the templates/json directory."""
+    return send_from_directory('templates/json', filename)
 
 @app.route('/logout')
 def logout():
@@ -138,4 +140,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-

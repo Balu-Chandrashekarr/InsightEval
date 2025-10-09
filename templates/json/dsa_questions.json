@@ -1,0 +1,604 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary principle that a stack follows?",
+      "options": ["a) First-In-First-Out (FIFO)", "b) Last-In-First-Out (LIFO)", "c) First-In-Last-Out (FILO)", "d) Last-In-Last-Out (LILO)"],
+      "answer": "b) Last-In-First-Out (LIFO)"
+    },
+    {
+      "id": 2,
+      "question": "Which data structure stores elements in contiguous memory locations with a fixed size in Java?",
+      "options": ["a) Vector", "b) List", "c) Array", "d) Stack"],
+      "answer": "c) Array"
+    },
+    {
+      "id": 3,
+      "question": "In C++, what is the correct header to include for using the `std::vector` class?",
+      "options": ["a) <array>", "b) <vector>", "c) <list>", "d) <queue>"],
+      "answer": "b) <vector>"
+    },
+    {
+      "id": 4,
+      "question": "What method is used to add an element to the end of a Python list?",
+      "options": ["a) add()", "b) append()", "c) push()", "d) insert()"],
+      "answer": "b) append()"
+    },
+    {
+      "id": 5,
+      "question": "Which loop is used in Java to iterate through an array without using an index?",
+      "options": ["a) for loop", "b) while loop", "c) enhanced for loop", "d) do-while loop"],
+      "answer": "c) enhanced for loop"
+    },
+    {
+      "id": 6,
+      "question": "What is the time complexity for accessing an element by index in an array?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1)", "d) O(n log n)"],
+      "answer": "c) O(1)"
+    },
+    {
+      "id": 7,
+      "question": "In Python, what is the syntax to declare an empty list?",
+      "options": ["a) list = {}", "b) list = []", "c) list = ()", "d) list = set()"],
+      "answer": "b) list = []"
+    },
+    {
+      "id": 8,
+      "question": "Which Java class provides the `sort()` method for arrays?",
+      "options": ["a) java.util.Array", "b) java.util.Arrays", "c) java.util.Sort", "d) java.util.List"],
+      "answer": "b) java.util.Arrays"
+    },
+    {
+      "id": 9,
+      "question": "What is the purpose of the `push()` method in Java's `Stack` class?",
+      "options": ["a) Remove the top element", "b) Add an element to the top", "c) Check if the stack is empty", "d) Return the top element"],
+      "answer": "b) Add an element to the top"
+    },
+    {
+      "id": 10,
+      "question": "Which data structure follows the First-In-First-Out (FIFO) principle?",
+      "options": ["a) Stack", "b) Queue", "c) Array", "d) Vector"],
+      "answer": "b) Queue"
+    },
+    {
+      "id": 11,
+      "question": "In C++, what method is used to remove the last element from a `std::vector`?",
+      "options": ["a) pop()", "b) pop_back()", "c) remove()", "d) delete()"],
+      "answer": "b) pop_back()"
+    },
+    {
+      "id": 12,
+      "question": "What is the time complexity of the `sort()` method in Java's `Arrays` class?",
+      "options": ["a) O(n)", "b) O(n log n)", "c) O(log n)", "d) O(n^2)"],
+      "answer": "b) O(n log n)"
+    },
+    {
+      "id": 13,
+      "question": "Which traversal method prints nodes in sorted order for a Binary Search Tree (BST)?",
+      "options": ["a) Pre-order", "b) In-order", "c) Post-order", "d) Level-order"],
+      "answer": "b) In-order"
+    },
+    {
+      "id": 14,
+      "question": "In Python, what method removes and returns the last element of a list?",
+      "options": ["a) pop()", "b) remove()", "c) delete()", "d) shift()"],
+      "answer": "a) pop()"
+    },
+    {
+      "id": 15,
+      "question": "What is the default initial value of elements in a newly created Java array of integers?",
+      "options": ["a) 0", "b) null", "c) 1", "d) undefined"],
+      "answer": "a) 0"
+    },
+    {
+      "id": 16,
+      "question": "Which C++ `std::vector` method checks the current number of elements?",
+      "options": ["a) length()", "b) size()", "c) count()", "d) capacity()"],
+      "answer": "b) size()"
+    },
+    {
+      "id": 17,
+      "question": "What is the purpose of the `peek()` method in Java's `Stack` class?",
+      "options": ["a) Remove the top element", "b) Add an element to the top", "c) Return the top element without removing it", "d) Check the stack size"],
+      "answer": "c) Return the top element without removing it"
+    },
+    {
+      "id": 18,
+      "question": "Which Java implementation of the `Queue` interface is recommended for better performance?",
+      "options": ["a) LinkedList", "b) ArrayDeque", "c) Stack", "d) Vector"],
+      "answer": "b) ArrayDeque"
+    },
+    {
+      "id": 19,
+      "question": "In a graph, what does an adjacency matrix represent?",
+      "options": ["a) Node data", "b) Edge connections between vertices", "c) Tree hierarchy", "d) Queue order"],
+      "answer": "b) Edge connections between vertices"
+    },
+    {
+      "id": 20,
+      "question": "What is the time complexity of adding an element to the end of a Python list?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1) amortized", "d) O(n log n)"],
+      "answer": "c) O(1) amortized"
+    },
+    {
+      "id": 21,
+      "question": "What is the syntax to declare an array in Java?",
+      "options": ["a) int array[];", "b) int[] array;", "c) array int[];", "d) int array{}"],
+      "answer": "b) int[] array;"
+    },
+    {
+      "id": 22,
+      "question": "In C++, what method doubles the vector's capacity when it is full?",
+      "options": ["a) resize()", "b) reserve()", "c) push_back()", "d) capacity()"],
+      "answer": "c) push_back()"
+    },
+    {
+      "id": 23,
+      "question": "Which Python method inserts an element at a specific index in a list?",
+      "options": ["a) insert()", "b) add()", "c) push()", "d) append()"],
+      "answer": "a) insert()"
+    },
+    {
+      "id": 24,
+      "question": "What is the purpose of the `java.util.Arrays.fill()` method?",
+      "options": ["a) Sort the array", "b) Fill the array with a specified value", "c) Search the array", "d) Copy the array"],
+      "answer": "b) Fill the array with a specified value"
+    },
+    {
+      "id": 25,
+      "question": "Which method in Java's `Stack` class checks if the stack is empty?",
+      "options": ["a) isEmpty()", "b) empty()", "c) isFull()", "d) size()"],
+      "answer": "b) empty()"
+    },
+    {
+      "id": 26,
+      "question": "What is the default implementation of the `Queue` interface used in the BFS example?",
+      "options": ["a) Stack", "b) LinkedList", "c) ArrayDeque", "d) Vector"],
+      "answer": "b) LinkedList"
+    },
+    {
+      "id": 27,
+      "question": "In a binary tree, what is the maximum number of children per node?",
+      "options": ["a) 1", "b) 2", "c) 3", "d) Unlimited"],
+      "answer": "b) 2"
+    },
+    {
+      "id": 28,
+      "question": "Which graph traversal method uses a queue?",
+      "options": ["a) DFS", "b) BFS", "c) In-order", "d) Pre-order"],
+      "answer": "b) BFS"
+    },
+    {
+      "id": 29,
+      "question": "What is the time complexity of the `pop()` method in Python when removing the last element?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1)", "d) O(n log n)"],
+      "answer": "c) O(1)"
+    },
+    {
+      "id": 30,
+      "question": "In C++, what does the `at()` method of `std::vector` provide?",
+      "options": ["a) Bounds checking", "b) Fast access without checking", "c) Memory allocation", "d) Element removal"],
+      "answer": "a) Bounds checking"
+    },
+    {
+      "id": 31,
+      "question": "Which data structure is used to implement a stack in Java by default?",
+      "options": ["a) Array", "b) Vector", "c) LinkedList", "d) ArrayDeque"],
+      "answer": "b) Vector"
+    },
+    {
+      "id": 32,
+      "question": "What is the purpose of the `offer()` method in Java's `Queue` interface?",
+      "options": ["a) Remove the front element", "b) Add an element to the rear with optional failure", "c) Check the queue size", "d) Return the front element"],
+      "answer": "b) Add an element to the rear with optional failure"
+    },
+    {
+      "id": 33,
+      "question": "In a tree, what is the node called that has no children?",
+      "options": ["a) Root", "b) Leaf", "c) Parent", "d) Child"],
+      "answer": "b) Leaf"
+    },
+    {
+      "id": 34,
+      "question": "Which method in Python returns the index of the first occurrence of an element?",
+      "options": ["a) find()", "b) index()", "c) search()", "d) locate()"],
+      "answer": "b) index()"
+    },
+    {
+      "id": 35,
+      "question": "What is the time complexity of the `binarySearch()` method in Java's `Arrays` class?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1)", "d) O(n log n)"],
+      "answer": "b) O(log n)"
+    },
+    {
+      "id": 36,
+      "question": "In C++, what does the `resize()` method of `std::vector` do?",
+      "options": ["a) Changes the capacity", "b) Changes the size with optional default values", "c) Removes all elements", "d) Adds elements to the end"],
+      "answer": "b) Changes the size with optional default values"
+    },
+    {
+      "id": 37,
+      "question": "Which Java method is used to add an element to a queue without throwing an exception?",
+      "options": ["a) add()", "b) offer()", "c) put()", "d) enqueue()"],
+      "answer": "b) offer()"
+    },
+    {
+      "id": 38,
+      "question": "What is the purpose of the `search()` method in Java's `Stack` class?",
+      "options": ["a) Returns the top element", "b) Returns the position from the top", "c) Removes an element", "d) Checks the stack size"],
+      "answer": "b) Returns the position from the top"
+    },
+    {
+      "id": 39,
+      "question": "In a graph, what does an adjacency list represent?",
+      "options": ["a) Node weights", "b) Edge connections as lists per vertex", "c) Tree levels", "d) Queue order"],
+      "answer": "b) Edge connections as lists per vertex"
+    },
+    {
+      "id": 40,
+      "question": "What is the time complexity of the `push()` method in Java's `Stack` class?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1)", "d) O(n log n)"],
+      "answer": "c) O(1)"
+    },
+    {
+      "id": 41,
+      "question": "Which Python method reverses a list in-place?",
+      "options": ["a) reverse()", "b) invert()", "c) flip()", "d) turn()"],
+      "answer": "a) reverse()"
+    },
+    {
+      "id": 42,
+      "question": "In Java, what exception might occur if an array index is out of bounds?",
+      "options": ["a) NullPointerException", "b) ArrayIndexOutOfBoundsException", "c) IndexOutOfRangeException", "d) BoundsException"],
+      "answer": "b) ArrayIndexOutOfBoundsException"
+    },
+    {
+      "id": 43,
+      "question": "What is the purpose of the `extend()` method in Python lists?",
+      "options": ["a) Adds a single element", "b) Adds multiple elements from an iterable", "c) Removes elements", "d) Sorts the list"],
+      "answer": "b) Adds multiple elements from an iterable"
+    },
+    {
+      "id": 44,
+      "question": "In C++, what does the `begin()` method of `std::vector` return?",
+      "options": ["a) Last element", "b) Iterator to the first element", "c) Size of the vector", "d) End of the vector"],
+      "answer": "b) Iterator to the first element"
+    },
+    {
+      "id": 45,
+      "question": "Which Java class is used to implement a queue with double-ended operations?",
+      "options": ["a) Stack", "b) ArrayDeque", "c) LinkedList", "d) Vector"],
+      "answer": "b) ArrayDeque"
+    },
+    {
+      "id": 46,
+      "question": "What is the time complexity of the `pop()` method in C++ `std::vector` when removing the last element?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1)", "d) O(n log n)"],
+      "answer": "c) O(1)"
+    },
+    {
+      "id": 47,
+      "question": "In a tree, what is the topmost node called?",
+      "options": ["a) Leaf", "b) Root", "c) Child", "d) Parent"],
+      "answer": "b) Root"
+    },
+    {
+      "id": 48,
+      "question": "Which method in Python counts the occurrences of an element in a list?",
+      "options": ["a) count()", "b) frequency()", "c) occurrences()", "d) tally()"],
+      "answer": "a) count()"
+    },
+    {
+      "id": 49,
+      "question": "What is the purpose of the `copyOf()` method in Java's `Arrays` class?",
+      "options": ["a) Sorts the array", "b) Creates a copy with a new length", "c) Fills the array", "d) Searches the array"],
+      "answer": "b) Creates a copy with a new length"
+    },
+    {
+      "id": 50,
+      "question": "In C++, what does the `clear()` method of `std::vector` do?",
+      "options": ["a) Removes all elements", "b) Sets all elements to zero", "c) Resizes the vector", "d) Adds a new element"],
+      "answer": "a) Removes all elements"
+    },
+    {
+      "id": 51,
+      "question": "Which Java method removes and returns the front element of a queue?",
+      "options": ["a) poll()", "b) remove()", "c) pop()", "d) delete()"],
+      "answer": "b) remove()"
+    },
+    {
+      "id": 52,
+      "question": "What is the time complexity of the `insert()` method in Python when adding at the beginning?",
+      "options": ["a) O(1)", "b) O(log n)", "c) O(n)", "d) O(n log n)"],
+      "answer": "c) O(n)"
+    },
+    {
+      "id": 53,
+      "question": "In a graph, what is the space complexity of an adjacency matrix?",
+      "options": ["a) O(V)", "b) O(E)", "c) O(V^2)", "d) O(V + E)"],
+      "answer": "c) O(V^2)"
+    },
+    {
+      "id": 54,
+      "question": "What is the purpose of the `peek()` method in Java's `Queue` interface?",
+      "options": ["a) Adds an element", "b) Removes the front element", "c) Returns the front element without removing it", "d) Checks the size"],
+      "answer": "c) Returns the front element without removing it"
+    },
+    {
+      "id": 55,
+      "question": "In Java, what is the default implementation of the `Stack` class based on?",
+      "options": ["a) Array", "b) Vector", "c) LinkedList", "d) ArrayDeque"],
+      "answer": "b) Vector"
+    },
+    {
+      "id": 56,
+      "question": "Which Python method sorts a list in-place?",
+      "options": ["a) sort()", "b) order()", "c) arrange()", "d) sequence()"],
+      "answer": "a) sort()"
+    },
+    {
+      "id": 57,
+      "question": "What is the time complexity of the `push_back()` method in C++ `std::vector`?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1) amortized", "d) O(n log n)"],
+      "answer": "c) O(1) amortized"
+    },
+    {
+      "id": 58,
+      "question": "In a tree, which traversal visits the root after its left and right subtrees?",
+      "options": ["a) Pre-order", "b) In-order", "c) Post-order", "d) Level-order"],
+      "answer": "c) Post-order"
+    },
+    {
+      "id": 59,
+      "question": "What is the purpose of the `remove()` method in Python lists?",
+      "options": ["a) Removes the last element", "b) Removes the first occurrence of a value", "c) Removes by index", "d) Clears the list"],
+      "answer": "b) Removes the first occurrence of a value"
+    },
+    {
+      "id": 60,
+      "question": "In Java, what does the `equals()` method in `Arrays` class do?",
+      "options": ["a) Sorts two arrays", "b) Compares two arrays for equality", "c) Copies one array to another", "d) Fills two arrays"],
+      "answer": "b) Compares two arrays for equality"
+    },
+    {
+      "id": 61,
+      "question": "Which C++ method returns the storage capacity of a `std::vector`?",
+      "options": ["a) size()", "b) capacity()", "c) length()", "d) count()"],
+      "answer": "b) capacity()"
+    },
+    {
+      "id": 62,
+      "question": "What is the time complexity of the `poll()` method in Java's `Queue` interface?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1)", "d) O(n log n)"],
+      "answer": "c) O(1)"
+    },
+    {
+      "id": 63,
+      "question": "In a graph, what is the space complexity of an adjacency list?",
+      "options": ["a) O(V)", "b) O(E)", "c) O(V^2)", "d) O(V + E)"],
+      "answer": "d) O(V + E)"
+    },
+    {
+      "id": 64,
+      "question": "What is the purpose of the `iterator()` method in Java collections?",
+      "options": ["a) Sorts the collection", "b) Provides a way to traverse the collection", "c) Adds elements", "d) Removes all elements"],
+      "answer": "b) Provides a way to traverse the collection"
+    },
+    {
+      "id": 65,
+      "question": "In Python, what does the `split()` method do when used with input?",
+      "options": ["a) Joins strings", "b) Splits a string into a list", "c) Sorts the list", "d) Reverses the list"],
+      "answer": "b) Splits a string into a list"
+    },
+    {
+      "id": 66,
+      "question": "Which Java method is used to create a copy of an array with a new length?",
+      "options": ["a) copy()", "b) copyOf()", "c) clone()", "d) duplicate()"],
+      "answer": "b) copyOf()"
+    },
+    {
+      "id": 67,
+      "question": "In C++, what does the `end()` method of `std::vector` return?",
+      "options": ["a) First element", "b) Iterator past the last element", "c) Last element", "d) Size of the vector"],
+      "answer": "b) Iterator past the last element"
+    },
+    {
+      "id": 68,
+      "question": "Which Java interface is implemented by `LinkedList` for queue operations?",
+      "options": ["a) Stack", "b) Queue", "c) List", "d) Set"],
+      "answer": "b) Queue"
+    },
+    {
+      "id": 69,
+      "question": "What is the time complexity of the `insert()` method in C++ `std::vector` at the beginning?",
+      "options": ["a) O(1)", "b) O(log n)", "c) O(n)", "d) O(n log n)"],
+      "answer": "c) O(n)"
+    },
+    {
+      "id": 70,
+      "question": "In a tree, what is the purpose of the `height()` operation?",
+      "options": ["a) Counts nodes", "b) Calculates the maximum depth", "c) Sorts nodes", "d) Adds nodes"],
+      "answer": "b) Calculates the maximum depth"
+    },
+    {
+      "id": 71,
+      "question": "Which Python method removes an element by index in a list?",
+      "options": ["a) remove()", "b) pop()", "c) delete()", "d) erase()"],
+      "answer": "b) pop()"
+    },
+    {
+      "id": 72,
+      "question": "In Java, what is the time complexity of the `toString()` method in `Arrays` class?",
+      "options": ["a) O(1)", "b) O(n)", "c) O(log n)", "d) O(n log n)"],
+      "answer": "b) O(n)"
+    },
+    {
+      "id": 73,
+      "question": "What is the purpose of the `reserve()` method in C++ `std::vector`?",
+      "options": ["a) Resizes the vector", "b) Pre-allocates memory to avoid reallocation", "c) Removes elements", "d) Sorts the vector"],
+      "answer": "b) Pre-allocates memory to avoid reallocation"
+    },
+    {
+      "id": 74,
+      "question": "Which Java method checks if a queue is empty?",
+      "options": ["a) isEmpty()", "b) empty()", "c) isFull()", "d) size() == 0"],
+      "answer": "a) isEmpty()"
+    },
+    {
+      "id": 75,
+      "question": "In a graph, which traversal method explores as far as possible along each branch?",
+      "options": ["a) BFS", "b) DFS", "c) In-order", "d) Post-order"],
+      "answer": "b) DFS"
+    },
+    {
+      "id": 76,
+      "question": "What is the time complexity of the `extend()` method in Python?",
+      "options": ["a) O(1)", "b) O(k) where k is the iterable length", "c) O(n log n)", "d) O(n)"],
+      "answer": "b) O(k) where k is the iterable length"
+    },
+    {
+      "id": 77,
+      "question": "In Java, what does the `element()` method in `Queue` do?",
+      "options": ["a) Adds an element", "b) Removes the front element", "c) Returns the front element with exception if empty", "d) Checks the size"],
+      "answer": "c) Returns the front element with exception if empty"
+    },
+    {
+      "id": 78,
+      "question": "Which C++ method removes all elements from a `std::vector`?",
+      "options": ["a) clear()", "b) erase()", "c) remove()", "d) delete()"],
+      "answer": "a) clear()"
+    },
+    {
+      "id": 79,
+      "question": "In a tree, which traversal visits the root before its subtrees?",
+      "options": ["a) In-order", "b) Pre-order", "c) Post-order", "d) Level-order"],
+      "answer": "b) Pre-order"
+    },
+    {
+      "id": 80,
+      "question": "What is the purpose of the `enumerate()` function in Python when iterating a list?",
+      "options": ["a) Sorts the list", "b) Provides index and value pairs", "c) Reverses the list", "d) Counts elements"],
+      "answer": "b) Provides index and value pairs"
+    },
+    {
+      "id": 81,
+      "question": "In Java, what is the time complexity of the `fill()` method in `Arrays` class?",
+      "options": ["a) O(1)", "b) O(n)", "c) O(log n)", "d) O(n log n)"],
+      "answer": "b) O(n)"
+    },
+    {
+      "id": 82,
+      "question": "Which C++ method adds an element to the end of a `std::vector`?",
+      "options": ["a) add()", "b) push()", "c) push_back()", "d) append()"],
+      "answer": "c) push_back()"
+    },
+    {
+      "id": 83,
+      "question": "What is the time complexity of the `remove()` method in Python lists?",
+      "options": ["a) O(1)", "b) O(log n)", "c) O(n)", "d) O(n log n)"],
+      "answer": "c) O(n)"
+    },
+    {
+      "id": 84,
+      "question": "In a graph, what is the time complexity of DFS traversal?",
+      "options": ["a) O(V)", "b) O(E)", "c) O(V + E)", "d) O(V^2)"],
+      "answer": "c) O(V + E)"
+    },
+    {
+      "id": 85,
+      "question": "Which Java method returns the number of elements in a queue?",
+      "options": ["a) length()", "b) size()", "c) count()", "d) capacity()"],
+      "answer": "b) size()"
+    },
+    {
+      "id": 86,
+      "question": "In C++, what does the `at()` method throw if the index is out of bounds?",
+      "options": ["a) NullPointerException", "b) OutOfBoundsException", "c) std::out_of_range", "d) IndexError"],
+      "answer": "c) std::out_of_range"
+    },
+    {
+      "id": 87,
+      "question": "What is the purpose of the `poll()` method in Java's `Queue` interface?",
+      "options": ["a) Adds an element", "b) Removes and returns the front element with null if empty", "c) Checks the size", "d) Returns the rear element"],
+      "answer": "b) Removes and returns the front element with null if empty"
+    },
+    {
+      "id": 88,
+      "question": "In a tree, what is the time complexity of an in-order traversal?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(n log n)", "d) O(1)"],
+      "answer": "a) O(n)"
+    },
+    {
+      "id": 89,
+      "question": "Which Python method combines two lists into one?",
+      "options": ["a) join()", "b) extend()", "c) merge()", "d) combine()"],
+      "answer": "b) extend()"
+    },
+    {
+      "id": 90,
+      "question": "In Java, what is the time complexity of the `copyOf()` method in `Arrays` class?",
+      "options": ["a) O(1)", "b) O(n)", "c) O(log n)", "d) O(n log n)"],
+      "answer": "b) O(n)"
+    },
+    {
+      "id": 91,
+      "question": "Which C++ method returns an iterator to the end of a `std::vector`?",
+      "options": ["a) end()", "b) last()", "c) finish()", "d) tail()"],
+      "answer": "a) end()"
+    },
+    {
+      "id": 92,
+      "question": "What is the time complexity of the `add()` method in Java's `Queue` interface?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(1)", "d) O(n log n)"],
+      "answer": "c) O(1)"
+    },
+    {
+      "id": 93,
+      "question": "In a graph, which data structure is used for BFS traversal?",
+      "options": ["a) Stack", "b) Queue", "c) Array", "d) List"],
+      "answer": "b) Queue"
+    },
+    {
+      "id": 94,
+      "question": "What is the purpose of the `resize()` method in Python lists?",
+      "options": ["a) Changes the capacity", "b) Adds new elements", "c) Truncates or extends the list", "d) Sorts the list"],
+      "answer": "c) Truncates or extends the list"
+    },
+    {
+      "id": 95,
+      "question": "In Java, what does the `peek()` method in `Queue` return if the queue is empty?",
+      "options": ["a) null", "b) 0", "c) Throws exception", "d) -1"],
+      "answer": "c) Throws exception"
+    },
+    {
+      "id": 96,
+      "question": "Which C++ method checks if a `std::vector` is empty?",
+      "options": ["a) isEmpty()", "b) empty()", "c) isNull()", "d) size() == 0"],
+      "answer": "b) empty()"
+    },
+    {
+      "id": 97,
+      "question": "In a tree, what is the time complexity of a level-order traversal?",
+      "options": ["a) O(n)", "b) O(log n)", "c) O(n log n)", "d) O(1)"],
+      "answer": "a) O(n)"
+    },
+    {
+      "id": 98,
+      "question": "What is the purpose of the `index()` method in Python lists?",
+      "options": ["a) Counts occurrences", "b) Returns the first index of a value", "c) Sorts the list", "d) Removes an element"],
+      "answer": "b) Returns the first index of a value"
+    },
+    {
+      "id": 99,
+      "question": "In Java, what is the time complexity of the `sort()` method with a custom comparator?",
+      "options": ["a) O(n)", "b) O(n log n)", "c) O(log n)", "d) O(n^2)"],
+      "answer": "b) O(n log n)"
+    },
+    {
+      "id": 100,
+      "question": "Which graph representation uses O(V + E) space complexity?",
+      "options": ["a) Adjacency matrix", "b) Adjacency list", "c) Array", "d) Stack"],
+      "answer": "b) Adjacency list"
+    }
+  ]
+}
