@@ -1,0 +1,604 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary purpose of Object-Oriented Programming (OOP)?",
+      "options": ["a) Optimize memory usage", "b) Organize code around objects and data", "c) Increase processing speed", "d) Simplify database queries"],
+      "answer": "b) Organize code around objects and data"
+    },
+    {
+      "id": 2,
+      "question": "Which keyword is used to create an object in Java?",
+      "options": ["a) class", "b) new", "c) create", "d) instance"],
+      "answer": "b) new"
+    },
+    {
+      "id": 3,
+      "question": "What defines a class in Java?",
+      "options": ["a) A variable", "b) A blueprint for objects", "c) A method", "d) An interface"],
+      "answer": "b) A blueprint for objects"
+    },
+    {
+      "id": 4,
+      "question": "Which keyword is used to declare a class in Java?",
+      "options": ["a) object", "b) class", "c) interface", "d) public"],
+      "answer": "b) class"
+    },
+    {
+      "id": 5,
+      "question": "What is the purpose of the `this` keyword in Java?",
+      "options": ["a) Refers to the superclass", "b) Refers to the current object", "c) Creates a new object", "d) Declares a variable"],
+      "answer": "b) Refers to the current object"
+    },
+    {
+      "id": 6,
+      "question": "Which method initializes an object in Java?",
+      "options": ["a) Constructor", "b) Destructor", "c) Initializer", "d) Setter"],
+      "answer": "a) Constructor"
+    },
+    {
+      "id": 7,
+      "question": "What is the output of `myCar.displayInfo()` in the Car class example?",
+      "options": ["a) Model: Toyota, Year: 2020", "b) Car: Toyota", "c) 2020 Toyota", "d) Error"],
+      "answer": "a) Model: Toyota, Year: 2020"
+    },
+    {
+      "id": 8,
+      "question": "Which OOP pillar is demonstrated by a class modeling a real-world entity like a car?",
+      "options": ["a) Encapsulation", "b) Abstraction", "c) Classes and Objects", "d) Inheritance"],
+      "answer": "c) Classes and Objects"
+    },
+    {
+      "id": 9,
+      "question": "What is the purpose of inheritance in Java?",
+      "options": ["a) Hide data", "b) Inherit fields and methods from a superclass", "c) Create multiple interfaces", "d) Optimize memory"],
+      "answer": "b) Inherit fields and methods from a superclass"
+    },
+    {
+      "id": 10,
+      "question": "Which keyword is used to inherit a class in Java?",
+      "options": ["a) implements", "b) extends", "c) inherits", "d) super"],
+      "answer": "b) extends"
+    },
+    {
+      "id": 11,
+      "question": "What does the `super` keyword do in a subclass constructor?",
+      "options": ["a) Creates a new object", "b) Calls the superclass constructor", "c) Overrides a method", "d) Declares a field"],
+      "answer": "b) Calls the superclass constructor"
+    },
+    {
+      "id": 12,
+      "question": "What is the output of `myCar.display()` in the Vehicle-Car example?",
+      "options": ["a) Brand: Honda, Doors: 4", "b) Brand: Honda", "c) Doors: 4", "d) Error"],
+      "answer": "b) Brand: Honda"
+    },
+    {
+      "id": 13,
+      "question": "Which type of inheritance does Java support?",
+      "options": ["a) Multiple inheritance", "b) Multilevel inheritance", "c) Single inheritance", "d) Hybrid inheritance"],
+      "answer": "c) Single inheritance"
+    },
+    {
+      "id": 14,
+      "question": "What is an example of an 'is-a' relationship in inheritance?",
+      "options": ["a) Car has a Wheel", "b) Car is a Vehicle", "c) Wheel has a Car", "d) Vehicle has a Car"],
+      "answer": "b) Car is a Vehicle"
+    },
+    {
+      "id": 15,
+      "question": "What is polymorphism in Java?",
+      "options": ["a) Hiding data", "b) Treating objects as a common superclass", "c) Inheriting multiple classes", "d) Declaring private fields"],
+      "answer": "b) Treating objects as a common superclass"
+    },
+    {
+      "id": 16,
+      "question": "Which technique is an example of runtime polymorphism?",
+      "options": ["a) Method overloading", "b) Method overriding", "c) Constructor overloading", "d) Encapsulation"],
+      "answer": "b) Method overriding"
+    },
+    {
+      "id": 17,
+      "question": "What is the output of `myDog.sound()` in the Animal-Dog example?",
+      "options": ["a) Some sound", "b) Woof", "c) Error", "d) Null"],
+      "answer": "b) Woof"
+    },
+    {
+      "id": 18,
+      "question": "Which annotation ensures a method is overridden in Java?",
+      "options": ["a) @Override", "b) @Inherit", "c) @Polymorphic", "d) @Extend"],
+      "answer": "a) @Override"
+    },
+    {
+      "id": 19,
+      "question": "What is method overloading in Java?",
+      "options": ["a) Same method name with different parameters", "b) Same method name with same parameters", "c) Hiding a method", "d) Removing a method"],
+      "answer": "a) Same method name with different parameters"
+    },
+    {
+      "id": 20,
+      "question": "What is the output of `calc.add(5.5, 3.3)` in the Calculator example?",
+      "options": ["a) 8", "b) 8.8", "c) 5.5", "d) Error"],
+      "answer": "b) 8.8"
+    },
+    {
+      "id": 21,
+      "question": "What is encapsulation in Java?",
+      "options": ["a) Inheriting from multiple classes", "b) Bundling data and methods with restricted access", "c) Overriding methods", "d) Defining abstract classes"],
+      "answer": "b) Bundling data and methods with restricted access"
+    },
+    {
+      "id": 22,
+      "question": "Which access modifier hides a field from outside the class?",
+      "options": ["a) public", "b) protected", "c) private", "d) default"],
+      "answer": "c) private"
+    },
+    {
+      "id": 23,
+      "question": "What is the purpose of a getter method in encapsulation?",
+      "options": ["a) Modify a private field", "b) Access a private field", "c) Create an object", "d) Delete a field"],
+      "answer": "b) Access a private field"
+    },
+    {
+      "id": 24,
+      "question": "What is the output of `person.getAge()` in the Person example?",
+      "options": ["a) Alice", "b) 30", "c) 31", "d) Error"],
+      "answer": "c) 31"
+    },
+    {
+      "id": 25,
+      "question": "Which keyword can make a class immutable in Java?",
+      "options": ["a) private", "b) final", "c) public", "d) abstract"],
+      "answer": "b) final"
+    },
+    {
+      "id": 26,
+      "question": "What is abstraction in Java?",
+      "options": ["a) Hiding complex details and showing essentials", "b) Inheriting multiple classes", "c) Overloading methods", "d) Encapsulating data"],
+      "answer": "a) Hiding complex details and showing essentials"
+    },
+    {
+      "id": 27,
+      "question": "Which keyword is used to declare an abstract class?",
+      "options": ["a) interface", "b) abstract", "c) extends", "d) implements"],
+      "answer": "b) abstract"
+    },
+    {
+      "id": 28,
+      "question": "Can an abstract class be instantiated in Java?",
+      "options": ["a) Yes", "b) No", "c) Only with a constructor", "d) Only with an interface"],
+      "answer": "b) No"
+    },
+    {
+      "id": 29,
+      "question": "What is the output of `circle.area()` in the Shape-Circle example?",
+      "options": ["a) 0", "b) 78.539...", "c) This is a shape", "d) Error"],
+      "answer": "b) 78.539..."
+    },
+    {
+      "id": 30,
+      "question": "Which keyword is used to define an interface in Java?",
+      "options": ["a) abstract", "b) interface", "c) extends", "d) implements"],
+      "answer": "b) interface"
+    },
+    {
+      "id": 31,
+      "question": "What is the purpose of the `draw()` method in the Drawable interface?",
+      "options": ["a) Calculate area", "b) Define drawing behavior", "c) Create an object", "d) Hide data"],
+      "answer": "b) Define drawing behavior"
+    },
+    {
+      "id": 32,
+      "question": "Which OOP principle improves code reusability?",
+      "options": ["a) Abstraction", "b) Inheritance", "c) Encapsulation", "d) Polymorphism"],
+      "answer": "b) Inheritance"
+    },
+    {
+      "id": 33,
+      "question": "What is the main benefit of using classes and objects?",
+      "options": ["a) Faster execution", "b) Code organization and modularity", "c) Reduced memory usage", "d) Direct hardware access"],
+      "answer": "b) Code organization and modularity"
+    },
+    {
+      "id": 34,
+      "question": "Which method is called when an object is created in Java?",
+      "options": ["a) main()", "b) constructor", "c) init()", "d) start()"],
+      "answer": "b) constructor"
+    },
+    {
+      "id": 35,
+      "question": "What is the default constructor in Java?",
+      "options": ["a) A constructor with parameters", "b) A constructor with no parameters", "c) A method with return type", "d) A destructor"],
+      "answer": "b) A constructor with no parameters"
+    },
+    {
+      "id": 36,
+      "question": "Which OOP pillar allows adding specific features to a subclass?",
+      "options": ["a) Polymorphism", "b) Inheritance", "c) Encapsulation", "d) Abstraction"],
+      "answer": "b) Inheritance"
+    },
+    {
+      "id": 37,
+      "question": "What is the purpose of method overriding in polymorphism?",
+      "options": ["a) Define multiple methods with the same name", "b) Provide a specific implementation in a subclass", "c) Hide a method", "d) Create an interface"],
+      "answer": "b) Provide a specific implementation in a subclass"
+    },
+    {
+      "id": 38,
+      "question": "Which type of polymorphism occurs at compile time?",
+      "options": ["a) Method overriding", "b) Method overloading", "c) Inheritance", "d) Abstraction"],
+      "answer": "b) Method overloading"
+    },
+    {
+      "id": 39,
+      "question": "What is the purpose of a setter method in encapsulation?",
+      "options": ["a) Access a private field", "b) Modify a private field with validation", "c) Create an object", "d) Delete a field"],
+      "answer": "b) Modify a private field with validation"
+    },
+    {
+      "id": 40,
+      "question": "Which access modifier is used for fields to allow access within the same package?",
+      "options": ["a) private", "b) protected", "c) public", "d) default"],
+      "answer": "d) default"
+    },
+    {
+      "id": 41,
+      "question": "What is the purpose of an abstract method in Java?",
+      "options": ["a) Provide a complete implementation", "b) Define a method without implementation", "c) Create an object", "d) Hide data"],
+      "answer": "b) Define a method without implementation"
+    },
+    {
+      "id": 42,
+      "question": "Which OOP principle separates interface from implementation?",
+      "options": ["a) Encapsulation", "b) Abstraction", "c) Inheritance", "d) Polymorphism"],
+      "answer": "b) Abstraction"
+    },
+    {
+      "id": 43,
+      "question": "What is the output of `rect.draw()` in the Rectangle-Drawable example?",
+      "options": ["a) Drawing rectangle with length 4, width 3", "b) Area: 12", "c) This is a shape", "d) Error"],
+      "answer": "a) Drawing rectangle with length 4, width 3"
+    },
+    {
+      "id": 44,
+      "question": "Which Java feature supports multiple inheritance?",
+      "options": ["a) Abstract class", "b) Interface", "c) Class", "d) Constructor"],
+      "answer": "b) Interface"
+    },
+    {
+      "id": 45,
+      "question": "What is the purpose of the `display()` method in the Shape abstract class?",
+      "options": ["a) Calculate area", "b) Provide a concrete method", "c) Define an abstract method", "d) Create an object"],
+      "answer": "b) Provide a concrete method"
+    },
+    {
+      "id": 46,
+      "question": "Which OOP principle protects data with validation?",
+      "options": ["a) Polymorphism", "b) Encapsulation", "c) Abstraction", "d) Inheritance"],
+      "answer": "b) Encapsulation"
+    },
+    {
+      "id": 47,
+      "question": "What is the purpose of the `area()` method in the Shape abstract class?",
+      "options": ["a) Display shape details", "b) Define an abstract method for area calculation", "c) Create a shape", "d) Hide data"],
+      "answer": "b) Define an abstract method for area calculation"
+    },
+    {
+      "id": 48,
+      "question": "Which keyword is used to implement an interface in Java?",
+      "options": ["a) extends", "b) implements", "c) super", "d) abstract"],
+      "answer": "b) implements"
+    },
+    {
+      "id": 49,
+      "question": "What is the main benefit of method overloading?",
+      "options": ["a) Reduce code size", "b) Allow multiple methods with the same name", "c) Hide implementation", "d) Create objects"],
+      "answer": "b) Allow multiple methods with the same name"
+    },
+    {
+      "id": 50,
+      "question": "Which OOP principle allows generic code to work with multiple types?",
+      "options": ["a) Encapsulation", "b) Polymorphism", "c) Abstraction", "d) Inheritance"],
+      "answer": "b) Polymorphism"
+    },
+    {
+      "id": 51,
+      "question": "What is the purpose of the `setAge()` method in the Person example?",
+      "options": ["a) Access the age", "b) Modify the age with validation", "c) Create a person", "d) Delete the age"],
+      "answer": "b) Modify the age with validation"
+    },
+    {
+      "id": 52,
+      "question": "Which access modifier allows access from any class?",
+      "options": ["a) private", "b) protected", "c) public", "d) default"],
+      "answer": "c) public"
+    },
+    {
+      "id": 53,
+      "question": "What is the purpose of the `getName()` method in the Person example?",
+      "options": ["a) Modify the name", "b) Access the name", "c) Create a person", "d) Validate the name"],
+      "answer": "b) Access the name"
+    },
+    {
+      "id": 54,
+      "question": "Which OOP principle is used to model a bank account system?",
+      "options": ["a) Abstraction", "b) Classes and Objects", "c) Encapsulation", "d) Polymorphism"],
+      "answer": "b) Classes and Objects"
+    },
+    {
+      "id": 55,
+      "question": "What is the purpose of the `super(brand)` call in the Car class?",
+      "options": ["a) Creates a new object", "b) Calls the Vehicle constructor", "c) Overrides a method", "d) Declares a field"],
+      "answer": "b) Calls the Vehicle constructor"
+    },
+    {
+      "id": 56,
+      "question": "Which OOP principle is used in GUI frameworks like buttons?",
+      "options": ["a) Inheritance", "b) Encapsulation", "c) Abstraction", "d) Polymorphism"],
+      "answer": "a) Inheritance"
+    },
+    {
+      "id": 57,
+      "question": "What is the purpose of the `@Override` annotation?",
+      "options": ["a) Define an interface", "b) Ensure method overriding is intentional", "c) Create a constructor", "d) Hide data"],
+      "answer": "b) Ensure method overriding is intentional"
+    },
+    {
+      "id": 58,
+      "question": "Which OOP principle is used in event handling systems?",
+      "options": ["a) Polymorphism", "b) Encapsulation", "c) Abstraction", "d) Inheritance"],
+      "answer": "a) Polymorphism"
+    },
+    {
+      "id": 59,
+      "question": "What is the purpose of the `private` modifier in encapsulation?",
+      "options": ["a) Allow public access", "b) Restrict direct access to fields", "c) Inherit methods", "d) Define an abstract method"],
+      "answer": "b) Restrict direct access to fields"
+    },
+    {
+      "id": 60,
+      "question": "Which OOP principle is used in JDBC drivers?",
+      "options": ["a) Abstraction", "b) Inheritance", "c) Encapsulation", "d) Polymorphism"],
+      "answer": "a) Abstraction"
+    },
+    {
+      "id": 61,
+      "question": "What is the purpose of the `displayCar()` method in the Car class?",
+      "options": ["a) Inherit from Vehicle", "b) Display specific car details", "c) Calculate area", "d) Create an object"],
+      "answer": "b) Display specific car details"
+    },
+    {
+      "id": 62,
+      "question": "Which OOP principle improves maintainability by hiding implementation?",
+      "options": ["a) Encapsulation", "b) Abstraction", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Encapsulation"
+    },
+    {
+      "id": 63,
+      "question": "What is the purpose of the `area()` method override in the Circle class?",
+      "options": ["a) Define a new method", "b) Provide a specific area calculation", "c) Hide the superclass method", "d) Create an object"],
+      "answer": "b) Provide a specific area calculation"
+    },
+    {
+      "id": 64,
+      "question": "Which OOP principle allows adding new subclasses without changing code?",
+      "options": ["a) Polymorphism", "b) Inheritance", "c) Encapsulation", "d) Abstraction"],
+      "answer": "a) Polymorphism"
+    },
+    {
+      "id": 65,
+      "question": "What is the purpose of the `if (age > 0)` check in the `setAge()` method?",
+      "options": ["a) Initialize the age", "b) Validate the age", "c) Create an object", "d) Access the age"],
+      "answer": "b) Validate the age"
+    },
+    {
+      "id": 66,
+      "question": "Which OOP principle defines contracts for multiple implementations?",
+      "options": ["a) Abstraction", "b) Encapsulation", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Abstraction"
+    },
+    {
+      "id": 67,
+      "question": "What is the purpose of the `sound()` method override in the Dog class?",
+      "options": ["a) Define a new method", "b) Provide a specific sound implementation", "c) Hide the superclass method", "d) Create an object"],
+      "answer": "b) Provide a specific sound implementation"
+    },
+    {
+      "id": 68,
+      "question": "Which OOP principle is used to represent a vehicle hierarchy?",
+      "options": ["a) Inheritance", "b) Encapsulation", "c) Abstraction", "d) Polymorphism"],
+      "answer": "a) Inheritance"
+    },
+    {
+      "id": 69,
+      "question": "What is the purpose of the `add()` method overload in the Calculator class?",
+      "options": ["a) Define a single method", "b) Handle different parameter types", "c) Hide the method", "d) Create an object"],
+      "answer": "b) Handle different parameter types"
+    },
+    {
+      "id": 70,
+      "question": "Which OOP principle protects sensitive data in user profiles?",
+      "options": ["a) Encapsulation", "b) Abstraction", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Encapsulation"
+    },
+    {
+      "id": 71,
+      "question": "What is the purpose of the `display()` method in the Shape class?",
+      "options": ["a) Calculate area", "b) Provide a common display behavior", "c) Define an abstract method", "d) Create a shape"],
+      "answer": "b) Provide a common display behavior"
+    },
+    {
+      "id": 72,
+      "question": "Which OOP principle is used in plugin systems with abstract classes?",
+      "options": ["a) Abstraction", "b) Inheritance", "c) Encapsulation", "d) Polymorphism"],
+      "answer": "a) Abstraction"
+    },
+    {
+      "id": 73,
+      "question": "What is the purpose of the `getAge()` method in the Person class?",
+      "options": ["a) Modify the age", "b) Access the age", "c) Validate the age", "d) Create a person"],
+      "answer": "b) Access the age"
+    },
+    {
+      "id": 74,
+      "question": "Which OOP principle allows flexible code with multiple types?",
+      "options": ["a) Polymorphism", "b) Encapsulation", "c) Abstraction", "d) Inheritance"],
+      "answer": "a) Polymorphism"
+    },
+    {
+      "id": 75,
+      "question": "What is the purpose of the `setName()` method in the Person example?",
+      "options": ["a) Access the name", "b) Modify the name", "c) Create a person", "d) Validate the name"],
+      "answer": "b) Modify the name"
+    },
+    {
+      "id": 76,
+      "question": "Which OOP principle is used to define a common behavior for shapes?",
+      "options": ["a) Abstraction", "b) Encapsulation", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Abstraction"
+    },
+    {
+      "id": 77,
+      "question": "What is the purpose of the `super` keyword in the Car class?",
+      "options": ["a) Creates a new object", "b) Accesses the Vehicle class members", "c) Overrides a method", "d) Declares a field"],
+      "answer": "b) Accesses the Vehicle class members"
+    },
+    {
+      "id": 78,
+      "question": "Which OOP principle improves code extensibility?",
+      "options": ["a) Polymorphism", "b) Encapsulation", "c) Inheritance", "d) Abstraction"],
+      "answer": "a) Polymorphism"
+    },
+    {
+      "id": 79,
+      "question": "What is the purpose of the `draw()` method in the Rectangle class?",
+      "options": ["a) Calculate area", "b) Implement the Drawable interface", "c) Create a rectangle", "d) Hide data"],
+      "answer": "b) Implement the Drawable interface"
+    },
+    {
+      "id": 80,
+      "question": "Which OOP principle is used to hide implementation details in a database model?",
+      "options": ["a) Encapsulation", "b) Abstraction", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Encapsulation"
+    },
+    {
+      "id": 81,
+      "question": "What is the purpose of the `add(int a, int b)` method in the Calculator class?",
+      "options": ["a) Handle double parameters", "b) Add two integers", "c) Create a calculator", "d) Override a method"],
+      "answer": "b) Add two integers"
+    },
+    {
+      "id": 82,
+      "question": "Which OOP principle allows reusing code across classes?",
+      "options": ["a) Inheritance", "b) Encapsulation", "c) Abstraction", "d) Polymorphism"],
+      "answer": "a) Inheritance"
+    },
+    {
+      "id": 83,
+      "question": "What is the purpose of the `Circle` class extending `Shape`?",
+      "options": ["a) Hide data", "b) Provide a specific shape implementation", "c) Create an interface", "d) Define a constructor"],
+      "answer": "b) Provide a specific shape implementation"
+    },
+    {
+      "id": 84,
+      "question": "Which OOP principle is used to validate data in setters?",
+      "options": ["a) Encapsulation", "b) Abstraction", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Encapsulation"
+    },
+    {
+      "id": 85,
+      "question": "What is the purpose of the `Rectangle` class implementing `Drawable`?",
+      "options": ["a) Inherit from Shape", "b) Define drawing behavior", "c) Create an abstract class", "d) Hide data"],
+      "answer": "b) Define drawing behavior"
+    },
+    {
+      "id": 86,
+      "question": "Which OOP principle is used to expose only necessary functionality?",
+      "options": ["a) Abstraction", "b) Encapsulation", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Abstraction"
+    },
+    {
+      "id": 87,
+      "question": "What is the purpose of the `model` field in the Vehicle class?",
+      "options": ["a) Calculate area", "b) Store the brand name", "c) Create an object", "d) Define a method"],
+      "answer": "b) Store the brand name"
+    },
+    {
+      "id": 88,
+      "question": "Which OOP principle is used in graphics rendering with common draw methods?",
+      "options": ["a) Polymorphism", "b) Encapsulation", "c) Abstraction", "d) Inheritance"],
+      "answer": "a) Polymorphism"
+    },
+    {
+      "id": 89,
+      "question": "What is the purpose of the `doors` field in the Car class?",
+      "options": ["a) Store the brand", "b) Store the number of doors", "c) Calculate area", "d) Define a method"],
+      "answer": "b) Store the number of doors"
+    },
+    {
+      "id": 90,
+      "question": "Which OOP principle improves code organization in simulations?",
+      "options": ["a) Classes and Objects", "b) Encapsulation", "c) Abstraction", "d) Polymorphism"],
+      "answer": "a) Classes and Objects"
+    },
+    {
+      "id": 91,
+      "question": "What is the purpose of the `radius` field in the Circle class?",
+      "options": ["a) Store the area", "b) Store the radius value", "c) Create a shape", "d) Define a method"],
+      "answer": "b) Store the radius value"
+    },
+    {
+      "id": 92,
+      "question": "Which OOP principle is used to define a contract in a plugin system?",
+      "options": ["a) Abstraction", "b) Inheritance", "c) Encapsulation", "d) Polymorphism"],
+      "answer": "a) Abstraction"
+    },
+    {
+      "id": 93,
+      "question": "What is the purpose of the `length` and `width` fields in the Rectangle class?",
+      "options": ["a) Calculate area", "b) Store dimensions", "c) Create a shape", "d) Define a method"],
+      "answer": "b) Store dimensions"
+    },
+    {
+      "id": 94,
+      "question": "Which OOP principle is used to protect sensitive data in banking apps?",
+      "options": ["a) Encapsulation", "b) Abstraction", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Encapsulation"
+    },
+    {
+      "id": 95,
+      "question": "What is the purpose of the `brand` field in the Vehicle class?",
+      "options": ["a) Store the model", "b) Store the brand name", "c) Calculate area", "d) Define a method"],
+      "answer": "b) Store the brand name"
+    },
+    {
+      "id": 96,
+      "question": "Which OOP principle is used to represent game characters?",
+      "options": ["a) Classes and Objects", "b) Encapsulation", "c) Abstraction", "d) Polymorphism"],
+      "answer": "a) Classes and Objects"
+    },
+    {
+      "id": 97,
+      "question": "What is the purpose of the `year` field in the Car class?",
+      "options": ["a) Store the model", "b) Store the manufacturing year", "c) Calculate area", "d) Define a method"],
+      "answer": "b) Store the manufacturing year"
+    },
+    {
+      "id": 98,
+      "question": "Which OOP principle is used to define a common interface for buttons?",
+      "options": ["a) Inheritance", "b) Encapsulation", "c) Abstraction", "d) Polymorphism"],
+      "answer": "a) Inheritance"
+    },
+    {
+      "id": 99,
+      "question": "What is the purpose of the `name` field in the Person class?",
+      "options": ["a) Store the age", "b) Store the person's name", "c) Calculate area", "d) Define a method"],
+      "answer": "b) Store the person's name"
+    },
+    {
+      "id": 100,
+      "question": "Which OOP principle is used to manage user profiles with protected data?",
+      "options": ["a) Encapsulation", "b) Abstraction", "c) Inheritance", "d) Polymorphism"],
+      "answer": "a) Encapsulation"
+    }
+  ]
+}

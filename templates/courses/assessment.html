@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DSA Assessment</title>
+    <title>Assessment</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
@@ -58,15 +58,39 @@
 <body>
     <div class="container">
         <div class="section-card">
-            <h1 class="mb-4">Final Assessment: DSA</h1>
+            <h1 id="course-title" class="mb-4"></h1>
             <form id="assessment-form"></form>
             <div id="result" class="result"></div>
         </div>
     </div>
 
     <script>
-        // Fetch and display questions from dsa_questions.json
-        fetch('/json/dsa_questions.json')
+        // Get course from URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const course = urlParams.get('course')?.toLowerCase() || 'dsa'; // Default to 'dsa' if not provided
+        console.log("Current course:", course); // Debug the course value
+
+        // Map course to title and JSON file
+        const courseTitles = {
+            'dsa': 'Final Assessment: Data Structures and Algorithms',
+            'oops': 'Final Assessment: Object-Oriented Programming',
+            'dbms': 'Final Assessment: Database Management Systems',
+            'os': 'Final Assessment: Operating Systems',
+            'dmml': 'Final Assessment: Data Mining and Machine Learning'
+        };
+        const courseJson = {
+            'dsa': '/json/dsa_questions.json',
+            'oops': '/json/oops_questions.json',
+            'dbms': '/json/dbms_questions.json',
+            'os': '/json/os_questions.json',
+            'dmml': '/json/dmml_questions.json'
+        };
+
+        // Set the course title
+        document.getElementById('course-title').textContent = courseTitles[course] || 'Final Assessment';
+
+        // Fetch and display questions based on course
+        fetch(courseJson[course])
             .then(response => {
                 if (!response.ok) throw new Error('Failed to load questions');
                 return response.json();

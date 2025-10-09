@@ -1,0 +1,604 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary role of an operating system?",
+      "options": ["a) Enhance graphics rendering", "b) Act as an intermediary between hardware and software", "c) Process image files", "d) Create user interfaces"],
+      "answer": "b) Act as an intermediary between hardware and software"
+    },
+    {
+      "id": 2,
+      "question": "Which language is used for low-level operations in this OS course?",
+      "options": ["a) Python", "b) C++", "c) JavaScript", "d) Java"],
+      "answer": "b) C++"
+    },
+    {
+      "id": 3,
+      "question": "What is a process in an operating system?",
+      "options": ["a) A hardware component", "b) A program in execution with code and data", "c) A file system structure", "d) A synchronization mechanism"],
+      "answer": "b) A program in execution with code and data"
+    },
+    {
+      "id": 4,
+      "question": "What does the Process Control Block (PCB) store?",
+      "options": ["a) File metadata", "b) Process ID, state, and resource usage", "c) Thread priorities", "d) Memory page tables"],
+      "answer": "b) Process ID, state, and resource usage"
+    },
+    {
+      "id": 5,
+      "question": "Which system call creates a child process on Unix?",
+      "options": ["a) exec()", "b) fork()", "c) wait()", "d) sleep()"],
+      "answer": "b) fork()"
+    },
+    {
+      "id": 6,
+      "question": "What does the `execl()` function do in the process creation example?",
+      "options": ["a) Creates a new process", "b) Replaces the child process with a new program", "c) Waits for a process", "d) Allocates memory"],
+      "answer": "b) Replaces the child process with a new program"
+    },
+    {
+      "id": 7,
+      "question": "Which scheduling algorithm executes processes in arrival order?",
+      "options": ["a) Round-Robin", "b) Priority Scheduling", "c) First-Come-First-Serve", "d) Shortest Job Next"],
+      "answer": "c) First-Come-First-Serve"
+    },
+    {
+      "id": 8,
+      "question": "What is the purpose of the `wait()` function in the C++ example?",
+      "options": ["a) Creates a process", "b) Waits for the child process to finish", "c) Allocates memory", "d) Starts a thread"],
+      "answer": "b) Waits for the child process to finish"
+    },
+    {
+      "id": 9,
+      "question": "What is a thread in an operating system?",
+      "options": ["a) A separate process", "b) The smallest unit of execution within a process", "c) A memory allocation unit", "d) A file system component"],
+      "answer": "b) The smallest unit of execution within a process"
+    },
+    {
+      "id": 10,
+      "question": "Which interface is used to create threads in the Java example?",
+      "options": ["a) Thread", "b) Runnable", "c) Executor", "d) Lock"],
+      "answer": "b) Runnable"
+    },
+    {
+      "id": 11,
+      "question": "What does the `ExecutorService` manage in the Java thread pool example?",
+      "options": ["a) Memory allocation", "b) Thread pools for task execution", "c) File operations", "d) Process states"],
+      "answer": "b) Thread pools for task execution"
+    },
+    {
+      "id": 12,
+      "question": "Which method starts a thread in Java?",
+      "options": ["a) run()", "b) start()", "c) sleep()", "d) join()"],
+      "answer": "b) start()"
+    },
+    {
+      "id": 13,
+      "question": "What is the purpose of memory management in an OS?",
+      "options": ["a) Manage file systems", "b) Allocate, track, and deallocate memory", "c) Schedule processes", "d) Synchronize threads"],
+      "answer": "b) Allocate, track, and deallocate memory"
+    },
+    {
+      "id": 14,
+      "question": "Which C++ operator allocates memory on the heap?",
+      "options": ["a) delete", "b) new", "c) malloc", "d) free"],
+      "answer": "b) new"
+    },
+    {
+      "id": 15,
+      "question": "What does virtual memory enable?",
+      "options": ["a) Faster file access", "b) Large address spaces using disk storage", "c) Thread creation", "d) Process isolation"],
+      "answer": "b) Large address spaces using disk storage"
+    },
+    {
+      "id": 16,
+      "question": "What occurs during a page fault?",
+      "options": ["a) Memory is deallocated", "b) OS loads a page from disk into RAM", "c) A thread is created", "d) A file is written"],
+      "answer": "b) OS loads a page from disk into RAM"
+    },
+    {
+      "id": 17,
+      "question": "What is a file system responsible for?",
+      "options": ["a) Managing CPU", "b) Organizing and retrieving data on storage devices", "c) Scheduling threads", "d) Allocating memory"],
+      "answer": "b) Organizing and retrieving data on storage devices"
+    },
+    {
+      "id": 18,
+      "question": "Which file system type is efficient for Linux?",
+      "options": ["a) FAT32", "b) NTFS", "c) ext4", "d) exFAT"],
+      "answer": "c) ext4"
+    },
+    {
+      "id": 19,
+      "question": "What does the `FileWriter` class do in the Java file example?",
+      "options": ["a) Reads a file", "b) Writes to a file", "c) Deletes a file", "d) Lists files"],
+      "answer": "b) Writes to a file"
+    },
+    {
+      "id": 20,
+      "question": "What is the purpose of synchronization in an OS?",
+      "options": ["a) Allocate memory", "b) Ensure orderly access to shared resources", "c) Create processes", "d) Manage files"],
+      "answer": "b) Ensure orderly access to shared resources"
+    },
+    {
+      "id": 21,
+      "question": "Which mechanism ensures mutual exclusion in synchronization?",
+      "options": ["a) Semaphore", "b) Mutex", "c) Condition Variable", "d) Monitor"],
+      "answer": "b) Mutex"
+    },
+    {
+      "id": 22,
+      "question": "What does the `synchronized` keyword do in Java?",
+      "options": ["a) Creates a thread", "b) Synchronizes access to a block or method", "c) Allocates memory", "d) Reads a file"],
+      "answer": "b) Synchronizes access to a block or method"
+    },
+    {
+      "id": 23,
+      "question": "Which scheduling algorithm uses a fixed time quantum?",
+      "options": ["a) First-Come-First-Serve", "b) Round-Robin", "c) Priority Scheduling", "d) Shortest Job Next"],
+      "answer": "b) Round-Robin"
+    },
+    {
+      "id": 24,
+      "question": "What is a component of a process’s stack?",
+      "options": ["a) Code segment", "b) Function calls", "c) Global variables", "d) File metadata"],
+      "answer": "b) Function calls"
+    },
+    {
+      "id": 25,
+      "question": "Which thread type is managed by the OS?",
+      "options": ["a) User thread", "b) Kernel thread", "c) Runnable thread", "d) Executor thread"],
+      "answer": "b) Kernel thread"
+    },
+    {
+      "id": 26,
+      "question": "What does the `sleep()` method do in Java?",
+      "options": ["a) Starts a thread", "b) Pauses a thread for a specified time", "c) Joins threads", "d) Interrupts a thread"],
+      "answer": "b) Pauses a thread for a specified time"
+    },
+    {
+      "id": 27,
+      "question": "Which memory management technique uses variable-size segments?",
+      "options": ["a) Paging", "b) Segmentation", "c) Virtual Memory", "d) Swapping"],
+      "answer": "b) Segmentation"
+    },
+    {
+      "id": 28,
+      "question": "What does the `delete[]` operator do in C++?",
+      "options": ["a) Allocates an array", "b) Deallocates an array", "c) Creates a pointer", "d) Reads memory"],
+      "answer": "b) Deallocates an array"
+    },
+    {
+      "id": 29,
+      "question": "Which component caches page table entries?",
+      "options": ["a) Page Table", "b) TLB", "c) MMU", "d) Heap"],
+      "answer": "b) TLB"
+    },
+    {
+      "id": 30,
+      "question": "Which file system supports journaling?",
+      "options": ["a) FAT32", "b) NTFS", "c) ext4", "d) Both b and c"],
+      "answer": "d) Both b and c"
+    },
+    {
+      "id": 31,
+      "question": "What does the `BufferedReader` class do in the Java file example?",
+      "options": ["a) Writes to a file", "b) Reads from a file", "c) Deletes a file", "d) Lists files"],
+      "answer": "b) Reads from a file"
+    },
+    {
+      "id": 32,
+      "question": "Which synchronization tool controls access with a counter?",
+      "options": ["a) Mutex", "b) Semaphore", "c) Condition Variable", "d) Monitor"],
+      "answer": "b) Semaphore"
+    },
+    {
+      "id": 33,
+      "question": "What does the `ReentrantLock` provide in Java?",
+      "options": ["a) Thread creation", "b) A reentrant mutual exclusion lock", "c) Memory allocation", "d) File reading"],
+      "answer": "b) A reentrant mutual exclusion lock"
+    },
+    {
+      "id": 34,
+      "question": "Which process state is awaiting CPU allocation?",
+      "options": ["a) Running", "b) Ready", "c) Waiting", "d) Terminated"],
+      "answer": "b) Ready"
+    },
+    {
+      "id": 35,
+      "question": "What is a disadvantage of Priority Scheduling?",
+      "options": ["a) Fairness", "b) Starvation for low-priority processes", "c) High overhead", "d) Slow execution"],
+      "answer": "b) Starvation for low-priority processes"
+    },
+    {
+      "id": 36,
+      "question": "Which thread state is blocked waiting for an event?",
+      "options": ["a) Runnable", "b) Blocked", "c) Timed Waiting", "d) Terminated"],
+      "answer": "b) Blocked"
+    },
+    {
+      "id": 37,
+      "question": "What does the `join()` method do in Java?",
+      "options": ["a) Starts a thread", "b) Waits for a thread to complete", "c) Pauses a thread", "d) Interrupts a thread"],
+      "answer": "b) Waits for a thread to complete"
+    },
+    {
+      "id": 38,
+      "question": "Which memory management goal prevents process interference?",
+      "options": ["a) Minimize fragmentation", "b) Ensure process isolation", "c) Optimize allocation speed", "d) Enable virtual memory"],
+      "answer": "b) Ensure process isolation"
+    },
+    {
+      "id": 39,
+      "question": "What does the `std::unique_ptr` provide in C++?",
+      "options": ["a) Manual memory allocation", "b) Automatic memory deallocation", "c) Thread creation", "d) File handling"],
+      "answer": "b) Automatic memory deallocation"
+    },
+    {
+      "id": 40,
+      "question": "Which allocation method uses linked lists for data blocks?",
+      "options": ["a) Contiguous", "b) Linked", "c) Indexed", "d) Segmented"],
+      "answer": "b) Linked"
+    },
+    {
+      "id": 41,
+      "question": "What does the `Files.readAttributes()` method do in Java?",
+      "options": ["a) Writes file attributes", "b) Reads file attributes like size and last modified time", "c) Deletes a file", "d) Creates a directory"],
+      "answer": "b) Reads file attributes like size and last modified time"
+    },
+    {
+      "id": 42,
+      "question": "Which synchronization issue occurs when threads wait indefinitely?",
+      "options": ["a) Race condition", "b) Deadlock", "c) Starvation", "d) Priority inversion"],
+      "answer": "b) Deadlock"
+    },
+    {
+      "id": 43,
+      "question": "What does the `try-with-resources` ensure in Java file operations?",
+      "options": ["a) Thread safety", "b) Automatic resource closure", "c) Memory allocation", "d) Process creation"],
+      "answer": "b) Automatic resource closure"
+    },
+    {
+      "id": 44,
+      "question": "Which process component stores dynamic memory?",
+      "options": ["a) Stack", "b) Heap", "c) Code segment", "d) Data segment"],
+      "answer": "b) Heap"
+    },
+    {
+      "id": 45,
+      "question": "What is a benefit of using threads over processes?",
+      "options": ["a) Separate memory space", "b) Lighter weight and faster context switching", "c) Better isolation", "d) Independent resource usage"],
+      "answer": "b) Lighter weight and faster context switching"
+    },
+    {
+      "id": 46,
+      "question": "Which memory management technique divides memory into fixed-size pages?",
+      "options": ["a) Segmentation", "b) Paging", "c) Swapping", "d) Virtual Memory"],
+      "answer": "b) Paging"
+    },
+    {
+      "id": 47,
+      "question": "What does the `interrupt()` method do in Java?",
+      "options": ["a) Starts a thread", "b) Signals a thread to stop", "c) Pauses a thread", "d) Joins threads"],
+      "answer": "b) Signals a thread to stop"
+    },
+    {
+      "id": 48,
+      "question": "Which file system type is portable for USB drives?",
+      "options": ["a) NTFS", "b) ext4", "c) FAT32", "d) ZFS"],
+      "answer": "c) FAT32"
+    },
+    {
+      "id": 49,
+      "question": "What does the `lock.lock()` method do in Java?",
+      "options": ["a) Releases a lock", "b) Acquires a lock for mutual exclusion", "c) Creates a thread", "d) Reads a file"],
+      "answer": "b) Acquires a lock for mutual exclusion"
+    },
+    {
+      "id": 50,
+      "question": "Which synchronization mechanism combines mutex and condition variables?",
+      "options": ["a) Semaphore", "b) Monitor", "c) Mutex", "d) Condition Variable"],
+      "answer": "b) Monitor"
+    },
+    {
+      "id": 51,
+      "question": "What is a disadvantage of First-Come-First-Serve scheduling?",
+      "options": ["a) Fairness", "b) May cause delays due to long processes", "c) High overhead", "d) Starvation"],
+      "answer": "b) May cause delays due to long processes"
+    },
+    {
+      "id": 52,
+      "question": "Which thread resource is not shared among threads?",
+      "options": ["a) Code", "b) Stack", "c) Data", "d) Files"],
+      "answer": "b) Stack"
+    },
+    {
+      "id": 53,
+      "question": "What does the `Page Table` map in virtual memory?",
+      "options": ["a) Threads to processes", "b) Virtual addresses to physical memory", "c) Files to directories", "d) CPU registers"],
+      "answer": "b) Virtual addresses to physical memory"
+    },
+    {
+      "id": 54,
+      "question": "Which file system component stores actual file content?",
+      "options": ["a) Directory structure", "b) File metadata", "c) Data blocks", "d) Inodes"],
+      "answer": "c) Data blocks"
+    },
+    {
+      "id": 55,
+      "question": "What does the `finally` block ensure with `lock.unlock()`?",
+      "options": ["a) Thread start", "b) Lock release even if an exception occurs", "c) Memory allocation", "d) File writing"],
+      "answer": "b) Lock release even if an exception occurs"
+    },
+    {
+      "id": 56,
+      "question": "Which process state is executing on the CPU?",
+      "options": ["a) Ready", "b) Running", "c) Waiting", "d) Terminated"],
+      "answer": "b) Running"
+    },
+    {
+      "id": 57,
+      "question": "What is a benefit of using `ExecutorService` over raw threads?",
+      "options": ["a) Separate memory", "b) Reduces overhead of thread creation", "c) Slower execution", "d) Less concurrency"],
+      "answer": "b) Reduces overhead of thread creation"
+    },
+    {
+      "id": 58,
+      "question": "Which memory management issue is internal fragmentation?",
+      "options": ["a) Gaps between blocks", "b) Unused space in allocated blocks", "c) Page faults", "d) TLB misses"],
+      "answer": "b) Unused space in allocated blocks"
+    },
+    {
+      "id": 59,
+      "question": "What does the `Inodes` store in a Unix file system?",
+      "options": ["a) File names", "b) File metadata except name", "c) Data blocks", "d) Directory structure"],
+      "answer": "b) File metadata except name"
+    },
+    {
+      "id": 60,
+      "question": "Which synchronization issue occurs when a low-priority thread is delayed?",
+      "options": ["a) Race condition", "b) Deadlock", "c) Priority inversion", "d) Starvation"],
+      "answer": "c) Priority inversion"
+    },
+    {
+      "id": 61,
+      "question": "What is a use of processes in multitasking?",
+      "options": ["a) Manage threads", "b) Run multiple applications simultaneously", "c) Allocate memory", "d) Synchronize files"],
+      "answer": "b) Run multiple applications simultaneously"
+    },
+    {
+      "id": 62,
+      "question": "Which thread method simulates work with a delay?",
+      "options": ["a) start()", "b) sleep()", "c) join()", "d) interrupt()"],
+      "answer": "b) sleep()"
+    },
+    {
+      "id": 63,
+      "question": "What does the `newFixedThreadPool(2)` create?",
+      "options": ["a) One thread", "b) A pool of 2 threads", "c) Infinite threads", "d) A process"],
+      "answer": "b) A pool of 2 threads"
+    },
+    {
+      "id": 64,
+      "question": "Which memory management technique uses disk storage?",
+      "options": ["a) Paging", "b) Segmentation", "c) Virtual Memory", "d) Contiguous Allocation"],
+      "answer": "c) Virtual Memory"
+    },
+    {
+      "id": 65,
+      "question": "What does the `Files` class provide in Java?",
+      "options": ["a) Thread management", "b) File and directory operations", "c) Process creation", "d) Memory allocation"],
+      "answer": "b) File and directory operations"
+    },
+    {
+      "id": 66,
+      "question": "Which synchronization tool allows waiting for conditions?",
+      "options": ["a) Mutex", "b) Condition Variable", "c) Semaphore", "d) Monitor"],
+      "answer": "b) Condition Variable"
+    },
+    {
+      "id": 67,
+      "question": "What is a use of threads in server applications?",
+      "options": ["a) Manage files", "b) Handle multiple client requests concurrently", "c) Allocate memory", "d) Schedule processes"],
+      "answer": "b) Handle multiple client requests concurrently"
+    },
+    {
+      "id": 68,
+      "question": "Which process state is waiting for an I/O event?",
+      "options": ["a) Ready", "b) Running", "c) Waiting", "d) Terminated"],
+      "answer": "c) Waiting"
+    },
+    {
+      "id": 69,
+      "question": "What does the `new int[5]` allocate in C++?",
+      "options": ["a) Stack memory", "b) Heap memory for an array of 5 integers", "c) Thread pool", "d) File buffer"],
+      "answer": "b) Heap memory for an array of 5 integers"
+    },
+    {
+      "id": 70,
+      "question": "Which file system feature prevents data loss during crashes?",
+      "options": ["a) Permissions", "b) Journaling", "c) Hierarchical organization", "d) Allocation methods"],
+      "answer": "b) Journaling"
+    },
+    {
+      "id": 71,
+      "question": "What does the `lock.unlock()` method do in Java?",
+      "options": ["a) Acquires a lock", "b) Releases a lock", "c) Creates a thread", "d) Reads a file"],
+      "answer": "b) Releases a lock"
+    },
+    {
+      "id": 72,
+      "question": "Which synchronization issue can corrupt shared data?",
+      "options": ["a) Deadlock", "b) Race condition", "c) Starvation", "d) Priority inversion"],
+      "answer": "b) Race condition"
+    },
+    {
+      "id": 73,
+      "question": "What is a use of memory management in process isolation?",
+      "options": ["a) Run large programs", "b) Prevent processes from accessing unauthorized memory", "c) Schedule threads", "d) Manage files"],
+      "answer": "b) Prevent processes from accessing unauthorized memory"
+    },
+    {
+      "id": 74,
+      "question": "Which thread state is terminated after completion?",
+      "options": ["a) Runnable", "b) Blocked", "c) Terminated", "d) Timed Waiting"],
+      "answer": "c) Terminated"
+    },
+    {
+      "id": 75,
+      "question": "What does the `getpid()` function return in C++?",
+      "options": ["a) Parent process ID", "b) Current process ID", "c) Thread ID", "d) Memory address"],
+      "answer": "b) Current process ID"
+    },
+    {
+      "id": 76,
+      "question": "Which scheduling algorithm prioritizes high-priority processes?",
+      "options": ["a) First-Come-First-Serve", "b) Round-Robin", "c) Priority Scheduling", "d) Shortest Job Next"],
+      "answer": "c) Priority Scheduling"
+    },
+    {
+      "id": 77,
+      "question": "What is a use of file systems in data persistence?",
+      "options": ["a) Manage CPU", "b) Store user files and configurations", "c) Schedule processes", "d) Synchronize threads"],
+      "answer": "b) Store user files and configurations"
+    },
+    {
+      "id": 78,
+      "question": "Which memory management issue is external fragmentation?",
+      "options": ["a) Unused space in allocated blocks", "b) Gaps between blocks", "c) Page faults", "d) TLB misses"],
+      "answer": "b) Gaps between blocks"
+    },
+    {
+      "id": 79,
+      "question": "What does the `Thread.currentThread().getName()` return in Java?",
+      "options": ["a) Process ID", "b) Thread name", "c) Memory address", "d) File path"],
+      "answer": "b) Thread name"
+    },
+    {
+      "id": 80,
+      "question": "Which synchronization mechanism is implemented by Java’s `synchronized`?",
+      "options": ["a) Semaphore", "b) Monitor", "c) Mutex", "d) Condition Variable"],
+      "answer": "b) Monitor"
+    },
+    {
+      "id": 81,
+      "question": "What is a use of processes in parallel processing?",
+      "options": ["a) Manage threads", "b) Divide tasks across processes", "c) Allocate memory", "d) Synchronize files"],
+      "answer": "b) Divide tasks across processes"
+    },
+    {
+      "id": 82,
+      "question": "Which thread resource is shared among threads?",
+      "options": ["a) Stack", "b) Registers", "c) Code", "d) Local variables"],
+      "answer": "c) Code"
+    },
+    {
+      "id": 83,
+      "question": "What does the `Page Fault` indicate in virtual memory?",
+      "options": ["a) Memory overflow", "b) Page not in RAM", "c) Thread termination", "d) File corruption"],
+      "answer": "b) Page not in RAM"
+    },
+    {
+      "id": 84,
+      "question": "Which file system component stores permissions?",
+      "options": ["a) Data blocks", "b) File metadata", "c) Directory structure", "d) Inodes"],
+      "answer": "b) File metadata"
+    },
+    {
+      "id": 85,
+      "question": "What does the `interrupt()` method handle in Java?",
+      "options": ["a) Thread start", "b) Thread stop signal (application-handled)", "c) Memory allocation", "d) File writing"],
+      "answer": "b) Thread stop signal (application-handled)"
+    },
+    {
+      "id": 86,
+      "question": "Which process attribute includes open files?",
+      "options": ["a) Process ID", "b) Priority", "c) Memory limits", "d) Open files"],
+      "answer": "d) Open files"
+    },
+    {
+      "id": 87,
+      "question": "What is a use of threads in responsiveness?",
+      "options": ["a) Manage files", "b) Keep GUIs responsive during background tasks", "c) Allocate memory", "d) Schedule processes"],
+      "answer": "b) Keep GUIs responsive during background tasks"
+    },
+    {
+      "id": 88,
+      "question": "Which memory management unit enforces access controls?",
+      "options": ["a) TLB", "b) MMU", "c) Page Table", "d) Heap"],
+      "answer": "b) MMU"
+    },
+    {
+      "id": 89,
+      "question": "What does the `getppid()` function return in C++?",
+      "options": ["a) Current process ID", "b) Parent process ID", "c) Thread ID", "d) Memory address"],
+      "answer": "b) Parent process ID"
+    },
+    {
+      "id": 90,
+      "question": "Which file system supports versioning?",
+      "options": ["a) FAT32", "b) NTFS", "c) ZFS", "d) ext4"],
+      "answer": "c) ZFS"
+    },
+    {
+      "id": 91,
+      "question": "What does the `lock()` method ensure in Java?",
+      "options": ["a) Thread safety", "b) Mutual exclusion", "c) Memory allocation", "d) File access"],
+      "answer": "b) Mutual exclusion"
+    },
+    {
+      "id": 92,
+      "question": "Which synchronization issue delays a low-priority thread?",
+      "options": ["a) Race condition", "b) Deadlock", "c) Starvation", "d) Priority inversion"],
+      "answer": "d) Priority inversion"
+    },
+    {
+      "id": 93,
+      "question": "What is a use of file systems in access control?",
+      "options": ["a) Manage CPU", "b) Enforce permissions for security", "c) Schedule processes", "d) Synchronize threads"],
+      "answer": "b) Enforce permissions for security"
+    },
+    {
+      "id": 94,
+      "question": "Which thread priority setting depends on the OS?",
+      "options": ["a) Thread name", "b) Thread state", "c) Thread priority", "d) Thread stack"],
+      "answer": "c) Thread priority"
+    },
+    {
+      "id": 95,
+      "question": "What does the `shutdown()` method do in `ExecutorService`?",
+      "options": ["a) Starts threads", "b) Shuts down the thread pool", "c) Allocates memory", "d) Reads files"],
+      "answer": "b) Shuts down the thread pool"
+    },
+    {
+      "id": 96,
+      "question": "Which memory management technique optimizes multitasking?",
+      "options": ["a) Paging", "b) Segmentation", "c) Virtual Memory", "d) Efficiency"],
+      "answer": "c) Virtual Memory"
+    },
+    {
+      "id": 97,
+      "question": "What does the `Thread.sleep(100)` do in Java?",
+      "options": ["a) Starts a thread", "b) Pauses a thread for 100 milliseconds", "c) Joins threads", "d) Interrupts a thread"],
+      "answer": "b) Pauses a thread for 100 milliseconds"
+    },
+    {
+      "id": 98,
+      "question": "Which process state is newly created?",
+      "options": ["a) New", "b) Ready", "c) Running", "d) Waiting"],
+      "answer": "a) New"
+    },
+    {
+      "id": 99,
+      "question": "What is a use of synchronization in producer-consumer models?",
+      "options": ["a) Manage files", "b) Coordinate producers and consumers", "c) Allocate memory", "d) Schedule processes"],
+      "answer": "b) Coordinate producers and consumers"
+    },
+    {
+      "id": 100,
+      "question": "Which memory management algorithm manages page faults?",
+      "options": ["a) LRU", "b) FCFS", "c) Round-Robin", "d) Priority Scheduling"],
+      "answer": "a) LRU"
+    }
+  ]
+}

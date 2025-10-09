@@ -1,0 +1,604 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What does Data Mining primarily focus on?",
+      "options": ["a) Building user interfaces", "b) Extracting patterns from large datasets", "c) Managing hardware resources", "d) Creating operating systems"],
+      "answer": "b) Extracting patterns from large datasets"
+    },
+    {
+      "id": 2,
+      "question": "Which language is used in this DMML course for practical implementation?",
+      "options": ["a) Java", "b) Python", "c) C++", "d) R"],
+      "answer": "b) Python"
+    },
+    {
+      "id": 3,
+      "question": "What is the purpose of Data Preprocessing?",
+      "options": ["a) Predict continuous values", "b) Prepare raw data for analysis", "c) Cluster data points", "d) Evaluate model performance"],
+      "answer": "b) Prepare raw data for analysis"
+    },
+    {
+      "id": 4,
+      "question": "Which method is used to handle missing values in the preprocessing example?",
+      "options": ["a) Drop rows", "b) Fill with mean or mode", "c) Ignore missing data", "d) Scale values"],
+      "answer": "b) Fill with mean or mode"
+    },
+    {
+      "id": 5,
+      "question": "What does the `StandardScaler` do in the preprocessing example?",
+      "options": ["a) Encodes categorical data", "b) Scales numerical features", "c) Removes duplicates", "d) Detects outliers"],
+      "answer": "b) Scales numerical features"
+    },
+    {
+      "id": 6,
+      "question": "What is Classification in machine learning?",
+      "options": ["a) Predicting continuous values", "b) Predicting categorical labels", "c) Grouping similar data", "d) Finding association rules"],
+      "answer": "b) Predicting categorical labels"
+    },
+    {
+      "id": 7,
+      "question": "Which algorithm is used in the classification example?",
+      "options": ["a) K-Means", "b) Logistic Regression", "c) Linear Regression", "d) Apriori"],
+      "answer": "b) Logistic Regression"
+    },
+    {
+      "id": 8,
+      "question": "What does `train_test_split` do in the classification example?",
+      "options": ["a) Trains the model", "b) Splits data into training and test sets", "c) Evaluates accuracy", "d) Scales features"],
+      "answer": "b) Splits data into training and test sets"
+    },
+    {
+      "id": 9,
+      "question": "What is Regression used for?",
+      "options": ["a) Predicting categorical labels", "b) Predicting continuous numerical values", "c) Grouping data points", "d) Mining association rules"],
+      "answer": "b) Predicting continuous numerical values"
+    },
+    {
+      "id": 10,
+      "question": "Which dataset is used in the regression example?",
+      "options": ["a) Iris", "b) California Housing", "c) MNIST", "d) Titanic"],
+      "answer": "b) California Housing"
+    },
+    {
+      "id": 11,
+      "question": "What metric is used to evaluate regression in the example?",
+      "options": ["a) Accuracy", "b) Mean Squared Error", "c) Silhouette Score", "d) Lift"],
+      "answer": "b) Mean Squared Error"
+    },
+    {
+      "id": 12,
+      "question": "What is Clustering in machine learning?",
+      "options": ["a) Predicting labels", "b) Grouping similar data points without labels", "c) Mining rules", "d) Evaluating models"],
+      "answer": "b) Grouping similar data points without labels"
+    },
+    {
+      "id": 13,
+      "question": "Which algorithm is used in the clustering example?",
+      "options": ["a) Logistic Regression", "b) K-Means", "c) Linear Regression", "d) Apriori"],
+      "answer": "b) K-Means"
+    },
+    {
+      "id": 14,
+      "question": "What does `StandardScaler` do in the clustering example?",
+      "options": ["a) Encodes data", "b) Scales features for consistency", "c) Removes outliers", "d) Splits data"],
+      "answer": "b) Scales features for consistency"
+    },
+    {
+      "id": 15,
+      "question": "What is Association Rule Mining used for?",
+      "options": ["a) Predicting values", "b) Discovering relationships between items", "c) Grouping data", "d) Evaluating models"],
+      "answer": "b) Discovering relationships between items"
+    },
+    {
+      "id": 16,
+      "question": "Which algorithm is used in the association rule mining example?",
+      "options": ["a) K-Means", "b) Apriori", "c) Logistic Regression", "d) Linear Regression"],
+      "answer": "b) Apriori"
+    },
+    {
+      "id": 17,
+      "question": "What does `min_support=0.5` indicate in the Apriori example?",
+      "options": ["a) Minimum confidence", "b) Minimum support threshold", "c) Maximum lift", "d) Number of clusters"],
+      "answer": "b) Minimum support threshold"
+    },
+    {
+      "id": 18,
+      "question": "What are Evaluation Metrics used for?",
+      "options": ["a) Preprocessing data", "b) Assessing model performance", "c) Grouping data", "d) Mining rules"],
+      "answer": "b) Assessing model performance"
+    },
+    {
+      "id": 19,
+      "question": "Which metric measures the proportion of correct predictions?",
+      "options": ["a) Precision", "b) Recall", "c) Accuracy", "d) F1-Score"],
+      "answer": "c) Accuracy"
+    },
+    {
+      "id": 20,
+      "question": "What does `confusion_matrix` visualize in the evaluation example?",
+      "options": ["a) Cluster quality", "b) True positives and false positives", "c) Support and lift", "d) R² score"],
+      "answer": "b) True positives and false positives"
+    },
+    {
+      "id": 21,
+      "question": "Which library is used for data manipulation in preprocessing?",
+      "options": ["a) NumPy", "b) Pandas", "c) Scikit-learn", "d) Matplotlib"],
+      "answer": "b) Pandas"
+    },
+    {
+      "id": 22,
+      "question": "What does `LabelEncoder` do in the preprocessing example?",
+      "options": ["a) Scales data", "b) Encodes categorical data to numerical", "c) Handles missing values", "d) Visualizes data"],
+      "answer": "b) Encodes categorical data to numerical"
+    },
+    {
+      "id": 23,
+      "question": "Which step involves normalizing data in preprocessing?",
+      "options": ["a) Data Cleaning", "b) Data Transformation", "c) Data Reduction", "d) Data Integration"],
+      "answer": "b) Data Transformation"
+    },
+    {
+      "id": 24,
+      "question": "Which classification algorithm uses a tree structure?",
+      "options": ["a) Logistic Regression", "b) Decision Trees", "c) Support Vector Machines", "d) Random Forest"],
+      "answer": "b) Decision Trees"
+    },
+    {
+      "id": 25,
+      "question": "What does `accuracy_score` measure in the classification example?",
+      "options": ["a) Precision", "b) Proportion of correct predictions", "c) Recall", "d) F1-Score"],
+      "answer": "b) Proportion of correct predictions"
+    },
+    {
+      "id": 26,
+      "question": "Which regression algorithm models linear relationships?",
+      "options": ["a) Polynomial Regression", "b) Linear Regression", "c) Random Forest Regressor", "d) K-Means"],
+      "answer": "b) Linear Regression"
+    },
+    {
+      "id": 27,
+      "question": "What does `r2_score` indicate in the regression example?",
+      "options": ["a) Error magnitude", "b) Proportion of variance explained", "c) Cluster quality", "d) Support level"],
+      "answer": "b) Proportion of variance explained"
+    },
+    {
+      "id": 28,
+      "question": "Which clustering algorithm is sensitive to outliers?",
+      "options": ["a) DBSCAN", "b) K-Means", "c) Hierarchical Clustering", "d) Apriori"],
+      "answer": "b) K-Means"
+    },
+    {
+      "id": 29,
+      "question": "What does `n_clusters=3` specify in the K-Means example?",
+      "options": ["a) Number of features", "b) Number of clusters", "c) Number of iterations", "d) Support threshold"],
+      "answer": "b) Number of clusters"
+    },
+    {
+      "id": 30,
+      "question": "Which metric measures the strength of an association rule?",
+      "options": ["a) Support", "b) Confidence", "c) Lift", "d) Accuracy"],
+      "answer": "c) Lift"
+    },
+    {
+      "id": 31,
+      "question": "What does `association_rules` generate in the mining example?",
+      "options": ["a) Clusters", "b) If-then rules", "c) Predictions", "d) Metrics"],
+      "answer": "b) If-then rules"
+    },
+    {
+      "id": 32,
+      "question": "Which metric measures the proportion of true positives identified?",
+      "options": ["a) Precision", "b) Recall", "c) Accuracy", "d) F1-Score"],
+      "answer": "b) Recall"
+    },
+    {
+      "id": 33,
+      "question": "What does `precision_score` indicate in the evaluation example?",
+      "options": ["a) True positives among predictions", "b) Total correct predictions", "c) Cluster quality", "d) Error magnitude"],
+      "answer": "a) True positives among predictions"
+    },
+    {
+      "id": 34,
+      "question": "Which preprocessing step removes duplicates?",
+      "options": ["a) Data Cleaning", "b) Data Transformation", "c) Data Reduction", "d) Data Integration"],
+      "answer": "a) Data Cleaning"
+    },
+    {
+      "id": 35,
+      "question": "Which classification type involves two classes?",
+      "options": ["a) Multi-Class", "b) Binary Classification", "c) Regression", "d) Clustering"],
+      "answer": "b) Binary Classification"
+    },
+    {
+      "id": 36,
+      "question": "What does `fit_transform` do in the preprocessing example?",
+      "options": ["a) Trains the model", "b) Fits and transforms data", "c) Splits data", "d) Visualizes data"],
+      "answer": "b) Fits and transforms data"
+    },
+    {
+      "id": 37,
+      "question": "Which regression type captures complex patterns?",
+      "options": ["a) Linear Regression", "b) Non-Linear Regression", "c) K-Means", "d) Apriori"],
+      "answer": "b) Non-Linear Regression"
+    },
+    {
+      "id": 38,
+      "question": "What does `fit_predict` do in the clustering example?",
+      "options": ["a) Trains and predicts clusters", "b) Scales data", "c) Evaluates accuracy", "d) Mines rules"],
+      "answer": "a) Trains and predicts clusters"
+    },
+    {
+      "id": 39,
+      "question": "Which association rule metric indicates frequency?",
+      "options": ["a) Confidence", "b) Support", "c) Lift", "d) Recall"],
+      "answer": "b) Support"
+    },
+    {
+      "id": 40,
+      "question": "What does `f1_score` combine in the evaluation example?",
+      "options": ["a) Accuracy and Recall", "b) Precision and Recall", "c) Support and Lift", "d) MSE and R²"],
+      "answer": "b) Precision and Recall"
+    },
+    {
+      "id": 41,
+      "question": "Which library is used for visualization in the clustering example?",
+      "options": ["a) Pandas", "b) Matplotlib", "c) Scikit-learn", "d) NumPy"],
+      "answer": "b) Matplotlib"
+    },
+    {
+      "id": 42,
+      "question": "What does `min_threshold=0.7` specify in the mining example?",
+      "options": ["a) Minimum support", "b) Minimum confidence", "c) Number of clusters", "d) Accuracy"],
+      "answer": "b) Minimum confidence"
+    },
+    {
+      "id": 43,
+      "question": "Which metric is used for cluster quality?",
+      "options": ["a) Silhouette Score", "b) Precision", "c) MSE", "d) Lift"],
+      "answer": "a) Silhouette Score"
+    },
+    {
+      "id": 44,
+      "question": "What does `sns.heatmap` visualize in the evaluation example?",
+      "options": ["a) Clusters", "b) Confusion Matrix", "c) Association rules", "d) Regression lines"],
+      "answer": "b) Confusion Matrix"
+    },
+    {
+      "id": 45,
+      "question": "Which preprocessing step reduces dimensionality?",
+      "options": ["a) Data Cleaning", "b) Data Transformation", "c) Data Reduction", "d) Data Integration"],
+      "answer": "c) Data Reduction"
+    },
+    {
+      "id": 46,
+      "question": "Which classification algorithm uses support vectors?",
+      "options": ["a) Logistic Regression", "b) Support Vector Machines", "c) Decision Trees", "d) Random Forest"],
+      "answer": "b) Support Vector Machines"
+    },
+    {
+      "id": 47,
+      "question": "What does `random_state=42` ensure in data splitting?",
+      "options": ["a) Random data order", "b) Reproducible splits", "c) Model accuracy", "d) Feature scaling"],
+      "answer": "b) Reproducible splits"
+    },
+    {
+      "id": 48,
+      "question": "Which regression algorithm uses regularization?",
+      "options": ["a) Linear Regression", "b) Ridge", "c) K-Means", "d) Apriori"],
+      "answer": "b) Ridge"
+    },
+    {
+      "id": 49,
+      "question": "What does `elbow method` help determine in clustering?",
+      "options": ["a) Number of clusters", "b) Support threshold", "c) Accuracy", "d) Precision"],
+      "answer": "a) Number of clusters"
+    },
+    {
+      "id": 50,
+      "question": "Which association rule algorithm is efficient for large datasets?",
+      "options": ["a) K-Means", "b) FP-Growth", "c) Logistic Regression", "d) Linear Regression"],
+      "answer": "b) FP-Growth"
+    },
+    {
+      "id": 51,
+      "question": "What does `test_size=0.2` indicate in data splitting?",
+      "options": ["a) 20% test data", "b) 20% training data", "c) 80% test data", "d) 80% training data"],
+      "answer": "a) 20% test data"
+    },
+    {
+      "id": 52,
+      "question": "Which evaluation metric is the harmonic mean?",
+      "options": ["a) Accuracy", "b) F1-Score", "c) Precision", "d) Recall"],
+      "answer": "b) F1-Score"
+    },
+    {
+      "id": 53,
+      "question": "Which preprocessing step combines data sources?",
+      "options": ["a) Data Cleaning", "b) Data Transformation", "c) Data Reduction", "d) Data Integration"],
+      "answer": "d) Data Integration"
+    },
+    {
+      "id": 54,
+      "question": "Which classification algorithm ensembles multiple trees?",
+      "options": ["a) Logistic Regression", "b) Random Forest", "c) Support Vector Machines", "d) Decision Trees"],
+      "answer": "b) Random Forest"
+    },
+    {
+      "id": 55,
+      "question": "What does `fit` do in the regression example?",
+      "options": ["a) Predicts values", "b) Trains the model", "c) Scales data", "d) Visualizes data"],
+      "answer": "b) Trains the model"
+    },
+    {
+      "id": 56,
+      "question": "Which clustering algorithm handles noise well?",
+      "options": ["a) K-Means", "b) DBSCAN", "c) Hierarchical Clustering", "d) Apriori"],
+      "answer": "b) DBSCAN"
+    },
+    {
+      "id": 57,
+      "question": "What does `antecedents` represent in association rules?",
+      "options": ["a) Consequences", "b) Preconditions", "c) Clusters", "d) Metrics"],
+      "answer": "b) Preconditions"
+    },
+    {
+      "id": 58,
+      "question": "Which evaluation metric is used for imbalanced data?",
+      "options": ["a) ROC-AUC", "b) Accuracy", "c) MSE", "d) Silhouette Score"],
+      "answer": "a) ROC-AUC"
+    },
+    {
+      "id": 59,
+      "question": "Which preprocessing technique creates new features?",
+      "options": ["a) Data Cleaning", "b) Feature Engineering", "c) Data Reduction", "d) Data Integration"],
+      "answer": "b) Feature Engineering"
+    },
+    {
+      "id": 60,
+      "question": "Which classification use case involves text analysis?",
+      "options": ["a) Spam Detection", "b) Sentiment Analysis", "c) Fraud Detection", "d) Medical Diagnosis"],
+      "answer": "b) Sentiment Analysis"
+    },
+    {
+      "id": 61,
+      "question": "What does `predict` do in the classification example?",
+      "options": ["a) Trains the model", "b) Generates predictions", "c) Scales data", "d) Evaluates metrics"],
+      "answer": "b) Generates predictions"
+    },
+    {
+      "id": 62,
+      "question": "Which regression use case involves weather prediction?",
+      "options": ["a) Price Prediction", "b) Sales Forecasting", "c) Risk Assessment", "d) Weather Prediction"],
+      "answer": "d) Weather Prediction"
+    },
+    {
+      "id": 63,
+      "question": "What does `cmap='viridis'` do in the clustering example?",
+      "options": ["a) Sets cluster colors", "b) Scales data", "c) Trains the model", "d) Mines rules"],
+      "answer": "a) Sets cluster colors"
+    },
+    {
+      "id": 64,
+      "question": "Which association rule use case involves cross-selling?",
+      "options": ["a) Market Basket Analysis", "b) Recommendation Systems", "c) Inventory Management", "d) Web Analytics"],
+      "answer": "b) Recommendation Systems"
+    },
+    {
+      "id": 65,
+      "question": "What does `seaborn` provide in the evaluation example?",
+      "options": ["a) Data manipulation", "b) Visualization tools", "c) Model training", "d) Data scaling"],
+      "answer": "b) Visualization tools"
+    },
+    {
+      "id": 66,
+      "question": "Which preprocessing challenge involves imbalanced data?",
+      "options": ["a) Missing Values", "b) Imbalanced Datasets", "c) Outliers", "d) Duplicates"],
+      "answer": "b) Imbalanced Datasets"
+    },
+    {
+      "id": 67,
+      "question": "Which classification algorithm avoids overfitting with cross-validation?",
+      "options": ["a) Logistic Regression", "b) Random Forest", "c) Support Vector Machines", "d) Decision Trees"],
+      "answer": "b) Random Forest"
+    },
+    {
+      "id": 68,
+      "question": "What does `mean_squared_error` measure in regression?",
+      "options": ["a) Variance explained", "b) Average squared difference", "c) Cluster distance", "d) Rule strength"],
+      "answer": "b) Average squared difference"
+    },
+    {
+      "id": 69,
+      "question": "Which clustering use case involves gene analysis?",
+      "options": ["a) Customer Segmentation", "b) Image Segmentation", "c) Bioinformatics", "d) Market Research"],
+      "answer": "c) Bioinformatics"
+    },
+    {
+      "id": 70,
+      "question": "What does `consequents` represent in association rules?",
+      "options": ["a) Preconditions", "b) Outcomes", "c) Clusters", "d) Metrics"],
+      "answer": "b) Outcomes"
+    },
+    {
+      "id": 71,
+      "question": "Which evaluation metric justifies model deployment?",
+      "options": ["a) Accuracy", "b) Business Decisions", "c) Precision", "d) Recall"],
+      "answer": "b) Business Decisions"
+    },
+    {
+      "id": 72,
+      "question": "Which preprocessing tool is used for data manipulation?",
+      "options": ["a) Scikit-learn", "b) Pandas", "c) Matplotlib", "d) NumPy"],
+      "answer": "b) Pandas"
+    },
+    {
+      "id": 73,
+      "question": "Which classification use case involves credit scoring?",
+      "options": ["a) Spam Detection", "b) Medical Diagnosis", "c) Fraud Detection", "d) Customer Churn"],
+      "answer": "c) Fraud Detection"
+    },
+    {
+      "id": 74,
+      "question": "What does `cross-validation` help avoid in classification?",
+      "options": ["a) Overfitting", "b) Data leakage", "c) Missing values", "d) Outliers"],
+      "answer": "a) Overfitting"
+    },
+    {
+      "id": 75,
+      "question": "Which regression use case involves real estate?",
+      "options": ["a) Price Prediction", "b) Sales Forecasting", "c) Risk Assessment", "d) Energy Consumption"],
+      "answer": "a) Price Prediction"
+    },
+    {
+      "id": 76,
+      "question": "What does `silhouette_score` measure in clustering?",
+      "options": ["a) Prediction accuracy", "b) Cluster quality", "c) Rule strength", "d) Error magnitude"],
+      "answer": "b) Cluster quality"
+    },
+    {
+      "id": 77,
+      "question": "Which association rule use case involves navigation patterns?",
+      "options": ["a) Market Basket Analysis", "b) Web Analytics", "c) Inventory Management", "d) Healthcare"],
+      "answer": "b) Web Analytics"
+    },
+    {
+      "id": 78,
+      "question": "What does `ROC-AUC` measure in evaluation?",
+      "options": ["a) Cluster distance", "b) Classification performance for imbalanced data", "c) Regression error", "d) Rule confidence"],
+      "answer": "b) Classification performance for imbalanced data"
+    },
+    {
+      "id": 79,
+      "question": "Which preprocessing step detects outliers?",
+      "options": ["a) Data Cleaning", "b) Data Transformation", "c) Outlier Detection", "d) Data Reduction"],
+      "answer": "c) Outlier Detection"
+    },
+    {
+      "id": 80,
+      "question": "Which classification use case involves image recognition?",
+      "options": ["a) Spam Detection", "b) Medical Diagnosis", "c) Fraud Detection", "d) Sentiment Analysis"],
+      "answer": "b) Medical Diagnosis"
+    },
+    {
+      "id": 81,
+      "question": "What does `hyperparameter tuning` use in evaluation?",
+      "options": ["a) Metric feedback", "b) Data splitting", "c) Feature scaling", "d) Rule mining"],
+      "answer": "a) Metric feedback"
+    },
+    {
+      "id": 82,
+      "question": "Which regression use case involves financial risks?",
+      "options": ["a) Price Prediction", "b) Sales Forecasting", "c) Risk Assessment", "d) Energy Consumption"],
+      "answer": "c) Risk Assessment"
+    },
+    {
+      "id": 83,
+      "question": "What does `Hierarchical Clustering` build?",
+      "options": ["a) Trees of clusters", "b) Linear models", "c) Association rules", "d) Confusion matrices"],
+      "answer": "a) Trees of clusters"
+    },
+    {
+      "id": 84,
+      "question": "Which association rule use case involves co-purchases?",
+      "options": ["a) Market Basket Analysis", "b) Recommendation Systems", "c) Inventory Management", "d) Web Analytics"],
+      "answer": "a) Market Basket Analysis"
+    },
+    {
+      "id": 85,
+      "question": "What does `interpret results` involve in evaluation?",
+      "options": ["a) Training models", "b) Assessing performance based on metrics", "c) Scaling data", "d) Mining rules"],
+      "answer": "b) Assessing performance based on metrics"
+    },
+    {
+      "id": 86,
+      "question": "Which preprocessing challenge involves choosing imputation?",
+      "options": ["a) Missing Values", "b) Imbalanced Datasets", "c) Outliers", "d) Duplicates"],
+      "answer": "a) Missing Values"
+    },
+    {
+      "id": 87,
+      "question": "Which classification use case involves customer retention?",
+      "options": ["a) Spam Detection", "b) Medical Diagnosis", "c) Customer Churn", "d) Fraud Detection"],
+      "answer": "c) Customer Churn"
+    },
+    {
+      "id": 88,
+      "question": "What does `regularization` prevent in regression?",
+      "options": ["a) Overfitting", "b) Data leakage", "c) Missing values", "d) Outliers"],
+      "answer": "a) Overfitting"
+    },
+    {
+      "id": 89,
+      "question": "Which clustering use case involves marketing?",
+      "options": ["a) Customer Segmentation", "b) Image Segmentation", "c) Anomaly Detection", "d) Market Research"],
+      "answer": "a) Customer Segmentation"
+    },
+    {
+      "id": 90,
+      "question": "What does `FP-Growth` improve over Apriori?",
+      "options": ["a) Accuracy", "b) Efficiency for large datasets", "c) Cluster quality", "d) Visualization"],
+      "answer": "b) Efficiency for large datasets"
+    },
+    {
+      "id": 91,
+      "question": "Which evaluation use case involves medical diagnosis?",
+      "options": ["a) Fraud Detection", "b) Marketing", "c) Medical Diagnosis", "d) Sentiment Analysis"],
+      "answer": "c) Medical Diagnosis"
+    },
+    {
+      "id": 92,
+      "question": "Which preprocessing step ensures consistent formats?",
+      "options": ["a) Data Cleaning", "b) Data Transformation", "c) Data Reduction", "d) Data Integration"],
+      "answer": "b) Data Transformation"
+    },
+    {
+      "id": 93,
+      "question": "Which classification algorithm is probabilistic?",
+      "options": ["a) Logistic Regression", "b) Support Vector Machines", "c) Decision Trees", "d) Random Forest"],
+      "answer": "a) Logistic Regression"
+    },
+    {
+      "id": 94,
+      "question": "What does `cross-validation` ensure in regression?",
+      "options": ["a) Data splitting", "b) Robust evaluation", "c) Feature scaling", "d) Rule mining"],
+      "answer": "b) Robust evaluation"
+    },
+    {
+      "id": 95,
+      "question": "Which clustering use case involves object detection?",
+      "options": ["a) Customer Segmentation", "b) Image Segmentation", "c) Anomaly Detection", "d) Bioinformatics"],
+      "answer": "b) Image Segmentation"
+    },
+    {
+      "id": 96,
+      "question": "What does `lift` compare in association rules?",
+      "options": ["a) Support to confidence", "b) Rule strength to random chance", "c) Precision to recall", "d) Clusters to data"],
+      "answer": "b) Rule strength to random chance"
+    },
+    {
+      "id": 97,
+      "question": "Which evaluation metric identifies model weaknesses?",
+      "options": ["a) Accuracy", "b) Debugging", "c) Precision", "d) Recall"],
+      "answer": "b) Debugging"
+    },
+    {
+      "id": 98,
+      "question": "Which preprocessing tool handles numerical operations?",
+      "options": ["a) Pandas", "b) NumPy", "c) Scikit-learn", "d) Matplotlib"],
+      "answer": "b) NumPy"
+    },
+    {
+      "id": 99,
+      "question": "Which classification use case involves email filtering?",
+      "options": ["a) Spam Detection", "b) Medical Diagnosis", "c) Fraud Detection", "d) Customer Churn"],
+      "answer": "a) Spam Detection"
+    },
+    {
+      "id": 100,
+      "question": "What does `k-fold cross-validation` improve in evaluation?",
+      "options": ["a) Data splitting", "b) Model generalization", "c) Feature scaling", "d) Rule mining"],
+      "answer": "b) Model generalization"
+    }
+  ]
+}
