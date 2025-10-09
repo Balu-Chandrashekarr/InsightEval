@@ -649,25 +649,76 @@ plt.show()
     </section>
   </div>
 
-  <script>
-    // Sidebar navigation active state + smooth scroll
-    const navLinks = document.querySelectorAll('#sidebar-nav a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', function(event) {
-        if (this.getAttribute('href').startsWith('#')) {
-          event.preventDefault();
-          const targetId = this.getAttribute('href').substring(1);
-          const targetSection = document.getElementById(targetId);
-          if (targetSection) {
-            const rect = targetSection.getBoundingClientRect();
-            const offsetTop = rect.top + window.pageYOffset - 60;
-            window.scrollTo({ top: offsetTop, behavior: 'smooth' });
-          }
-          navLinks.forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
+    <script>
+        // Get all navigation links
+        const navLinks = document.querySelectorAll('#sidebar-nav a');
+
+        // Add click event listener to each link
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                // Handle in-page links (starting with #)
+                if (this.getAttribute('href').startsWith('#')) {
+                    event.preventDefault(); // Prevent default anchor jump
+                    const targetId = this.getAttribute('href').substring(1); // Get ID without #
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        // Get the section's top position relative to the document
+                        const rect = targetSection.getBoundingClientRect();
+                        const offsetTop = rect.top + window.pageYOffset - 40; // Adjust for content padding
+                        // Scroll to the exact position
+                        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                        console.log(`Scrolling to ${targetId} at offsetTop: ${offsetTop}`);
+                    } else {
+                        console.log(`Section ${targetId} not found`);
+                    }
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                }
+                // External links (e.g., assessment.html) will navigate normally
+            });
+        });
+
+        // Get all sections
+        const sections = document.querySelectorAll('section[id]');
+
+        // Function to update active link based on scroll position
+        function updateActiveLink() {
+            let currentSection = null;
+            const scrollPosition = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+
+            // Find the section currently in view
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - 60; // Adjust for scroll-margin-top
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                // Check if section is in view (partially or fully)
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    currentSection = section;
+                }
+            });
+
+            // Special case: if scrolled past the last section, highlight the last section
+            if (!currentSection && scrollPosition + windowHeight >= document.body.scrollHeight - 10) {
+                currentSection = sections[sections.length - 1];
+            }
+
+            // Update active class
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (currentSection && link.getAttribute('href') === `#${currentSection.id}`) {
+                    link.classList.add('active');
+                }
+            });
         }
-      });
-    });
-  </script>
+
+        // Update active link on scroll
+        window.addEventListener('scroll', updateActiveLink);
+
+        // Initial call to set active link on page load
+        updateActiveLink();
+    </script>
 </body>
 </html>

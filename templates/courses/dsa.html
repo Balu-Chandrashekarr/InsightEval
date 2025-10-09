@@ -1184,7 +1184,7 @@ graph.addEdge(3, 4); // Adds edge between 3 and 4
             </div>
         </section>
     </div>
-    <script>
+     <script>
         // Get all navigation links
         const navLinks = document.querySelectorAll('#sidebar-nav a');
 
@@ -1202,6 +1202,9 @@ graph.addEdge(3, 4); // Adds edge between 3 and 4
                         const offsetTop = rect.top + window.pageYOffset - 40; // Adjust for content padding
                         // Scroll to the exact position
                         window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                        console.log(`Scrolling to ${targetId} at offsetTop: ${offsetTop}`);
+                    } else {
+                        console.log(`Section ${targetId} not found`);
                     }
                     // Remove active class from all links
                     navLinks.forEach(l => l.classList.remove('active'));
@@ -1211,6 +1214,46 @@ graph.addEdge(3, 4); // Adds edge between 3 and 4
                 // External links (e.g., assessment.html) will navigate normally
             });
         });
+
+        // Get all sections
+        const sections = document.querySelectorAll('section[id]');
+
+        // Function to update active link based on scroll position
+        function updateActiveLink() {
+            let currentSection = null;
+            const scrollPosition = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+
+            // Find the section currently in view
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - 60; // Adjust for scroll-margin-top
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                // Check if section is in view (partially or fully)
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    currentSection = section;
+                }
+            });
+
+            // Special case: if scrolled past the last section, highlight the last section
+            if (!currentSection && scrollPosition + windowHeight >= document.body.scrollHeight - 10) {
+                currentSection = sections[sections.length - 1];
+            }
+
+            // Update active class
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (currentSection && link.getAttribute('href') === `#${currentSection.id}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Update active link on scroll
+        window.addEventListener('scroll', updateActiveLink);
+
+        // Initial call to set active link on page load
+        updateActiveLink();
     </script>
 </body>
 </html>

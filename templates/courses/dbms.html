@@ -798,6 +798,46 @@ SELECT title FROM Books WHERE title = '1984';
                 // External links (e.g., assessment.html) will navigate normally
             });
         });
+
+        // Get all sections
+        const sections = document.querySelectorAll('section[id]');
+
+        // Function to update active link based on scroll position
+        function updateActiveLink() {
+            let currentSection = null;
+            const scrollPosition = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+
+            // Find the section currently in view
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - 60; // Adjust for scroll-margin-top
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                // Check if section is in view (partially or fully)
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    currentSection = section;
+                }
+            });
+
+            // Special case: if scrolled past the last section, highlight the last section
+            if (!currentSection && scrollPosition + windowHeight >= document.body.scrollHeight - 10) {
+                currentSection = sections[sections.length - 1];
+            }
+
+            // Update active class
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (currentSection && link.getAttribute('href') === `#${currentSection.id}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Update active link on scroll
+        window.addEventListener('scroll', updateActiveLink);
+
+        // Initial call to set active link on page load
+        updateActiveLink();
     </script>
 </body>
 </html>
