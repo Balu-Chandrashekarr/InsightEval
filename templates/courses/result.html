@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .result-wrapper {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        .result-section {
+            margin-bottom: 20px;
+        }
+        .result-section p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        .evaluation-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #6b7280;
+        }
+        .evaluation-summary ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+        .evaluation-summary li {
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+        .back-btn {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-wrapper">
+            <h1 id="course-title"></h1>
+            <div class="result-section" id="result-content"></div>
+            <a href="/dashboard" class="back-btn">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        // Get course and result data from URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const course = urlParams.get('course');
+        const score = urlParams.get('score');
+        const percentage = urlParams.get('percentage');
+        const answersJson = urlParams.get('answers');
+        const answers = JSON.parse(decodeURIComponent(answersJson));
+
+        // Map course to title
+        const courseTitles = {
+            'dsa': 'Final Assessment: Data Structures and Algorithms',
+            'oops': 'Final Assessment: Object-Oriented Programming',
+            'dbms': 'Final Assessment: Database Management Systems',
+            'os': 'Final Assessment: Operating Systems',
+            'dmml': 'Final Assessment: Data Mining and Machine Learning'
+        };
+
+        // Set the course title
+        document.getElementById('course-title').textContent = courseTitles[course] || 'Final Assessment';
+
+        // Display result
+        const resultContent = document.getElementById('result-content');
+        resultContent.innerHTML = `
+            <p class="mb-2">Marks Obtained: <span class="font-semibold">${score}/20</span> (${percentage}%)</p>
+            ${parseFloat(percentage) >= 80 ? '<p class="text-green-700 mb-4">Congratulations! You have passed the assessment.</p>' : '<p class="text-red-700 mb-4">You did not pass. Please review the material and retry.</p>'}
+            <div class="evaluation-summary">
+                <p class="font-bold mb-2">Review of All Questions:</p>
+                <ul>
+                    ${Object.entries(answers).map(([key, value]) => `
+                        <li>${key.replace('q', 'Question ')}: ${value.selected !== 'Not answered' ? `Selected: ${value.selected}, ` : ''}Correct Answer: ${value.answer}${value.correct ? ' (Correct)' : value.selected !== 'Not answered' ? ' (Incorrect)' : ''}</li>
+                    `).join('')}
+                </ul>
+            </div>
+        `;
+    </script>
+</body>
+</html>

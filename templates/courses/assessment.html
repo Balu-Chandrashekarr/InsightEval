@@ -7,60 +7,117 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            background-color: #f9fafb;
+            background-color: #f3f4f6;
+            color: #1f2937;
         }
         .container {
-            max-width: 800px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
         }
-        .section-card {
+        .assessment-wrapper {
             background: #ffffff;
             border-radius: 12px;
-            padding: 25px 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            min-height: 70vh;
+        }
+        .question-nav {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-right: 1px solid #e0e7ff;
+        }
+        .question-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        .question-nav li {
+            padding: 10px;
+            cursor: pointer;
+            color: #3b82f6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .question-nav li:hover, .question-nav li.active {
+            background-color: #e0e7ff;
+            color: #2563eb;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+        .question-nav li.answered {
+            background-color: #d1fae5;
+            color: #065f46;
+            font-weight: 600;
+        }
+        .question-content {
+            padding: 30px;
         }
         h1 {
             font-size: 2.25rem;
-            font-weight: 700;
-            color: #1f2937;
-        }
-        h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1f2937;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e7ff;
         }
         .question {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .question h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 15px;
         }
         .option {
+            display: flex;
+            align-items: center;
             margin: 10px 0;
+            padding-left: 10px;
         }
-        .result {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
+        .option input[type="radio"] {
+            margin-right: 12px;
+            accent-color: #3b82f6;
+            transform: scale(1.2);
+        }
+        .option label {
+            font-size: 1rem;
+            color: #4b5563;
+        }
+        .submit-btn {
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 24px;
             border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            display: none; /* Hidden by default */
         }
-        .result.success {
-            background: #d1fae5;
-            color: #065f46;
+        .submit-btn.visible {
+            display: inline-block;
         }
-        .result.fail {
-            background: #fee2e2;
-            color: #991b1b;
+        .submit-btn:hover {
+            background-color: #2563eb;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="section-card">
-            <h1 id="course-title" class="mb-4"></h1>
-            <form id="assessment-form"></form>
-            <div id="result" class="result"></div>
+        <div class="assessment-wrapper">
+            <div class="question-nav">
+                <ul id="question-list"></ul>
+            </div>
+            <div class="question-content">
+                <h1 id="course-title"></h1>
+                <form id="assessment-form"></form>
+            </div>
         </div>
     </div>
 
@@ -104,51 +161,101 @@
                 }
                 const selectedQuestions = questions.slice(0, 20);
 
-                // Generate form
-                const form = document.getElementById('assessment-form');
+                // Generate question navigation and content
+                const questionList = document.getElementById('question-list');
+                const assessmentForm = document.getElementById('assessment-form');
                 selectedQuestions.forEach((q, index) => {
+                    const questionNum = index + 1;
+                    // Add to navigation
+                    const li = document.createElement('li');
+                    li.textContent = `Question ${questionNum}`;
+                    li.dataset.index = index;
+                    li.addEventListener('click', () => {
+                        document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+                        document.getElementById(`question-${index}`).classList.add('active');
+                        document.querySelectorAll('.question-nav li').forEach(li => li.classList.remove('active'));
+                        li.classList.add('active');
+                    });
+                    questionList.appendChild(li);
+
+                    // Add question content
                     const questionDiv = document.createElement('div');
+                    questionDiv.id = `question-${index}`;
                     questionDiv.className = 'question';
                     questionDiv.innerHTML = `
-                        <h3>${index + 1}. ${q.question}</h3>
+                        <h3>${q.question}</h3>
                         ${q.options.map((option, i) => `
                             <div class="option">
-                                <input type="radio" name="q${index + 1}" value="${option}" id="q${index + 1}_opt${i}">
-                                <label for="q${index + 1}_opt${i}">${option}</label>
+                                <input type="radio" name="q${questionNum}" value="${option}" id="q${questionNum}_opt${i}">
+                                <label for="q${questionNum}_opt${i}">${option}</label>
                             </div>
                         `).join('')}
                     `;
-                    form.appendChild(questionDiv);
-                });
-                const submitButton = document.createElement('button');
-                submitButton.type = 'submit';
-                submitButton.className = 'bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600';
-                submitButton.textContent = 'Submit';
-                form.appendChild(submitButton);
+                    assessmentForm.appendChild(questionDiv);
 
-                // Handle form submission
-                form.addEventListener('submit', (e) => {
+                    // Add event listener for answering
+                    const radios = questionDiv.querySelectorAll('input[type="radio"]');
+                    radios.forEach(radio => {
+                        radio.addEventListener('change', () => {
+                            const navItem = questionList.children[index];
+                            if (!navItem.classList.contains('answered')) {
+                                navItem.classList.add('answered');
+                            }
+                        });
+                    });
+                });
+
+                // Show the first question by default
+                if (selectedQuestions.length > 0) {
+                    document.getElementById('question-0').classList.add('active');
+                    questionList.firstChild.classList.add('active');
+                }
+
+                // Add submit button only to the 20th question
+                const lastQuestionIndex = selectedQuestions.length - 1;
+                const lastQuestionDiv = document.getElementById(`question-${lastQuestionIndex}`);
+                if (lastQuestionDiv) {
+                    const submitButton = document.createElement('button');
+                    submitButton.type = 'submit';
+                    submitButton.className = 'submit-btn visible'; // Visible only for the 20th question
+                    submitButton.textContent = 'Submit Assessment';
+                    lastQuestionDiv.appendChild(submitButton);
+                }
+
+                // Handle form submission to redirect to result page
+                const assessmentFormElement = document.getElementById('assessment-form');
+                assessmentFormElement.addEventListener('submit', (e) => {
                     e.preventDefault();
                     let score = 0;
+                    const answers = {};
                     selectedQuestions.forEach((q, index) => {
-                        const selected = document.querySelector(`input[name="q${index + 1}"]:checked`);
-                        if (selected && selected.value === q.answer) {
-                            score++;
+                        const questionNum = index + 1;
+                        const selected = document.querySelector(`input[name="q${questionNum}"]:checked`);
+                        if (selected) {
+                            if (selected.value === q.answer) {
+                                score++;
+                                answers[`q${questionNum}`] = { selected: selected.value, correct: true };
+                            } else {
+                                answers[`q${questionNum}`] = { selected: selected.value, correct: false, answer: q.answer };
+                            }
+                        } else {
+                            answers[`q${questionNum}`] = { selected: 'Not answered', correct: false, answer: q.answer };
                         }
                     });
                     const percentage = (score / 20) * 100;
-                    const resultElement = document.getElementById('result');
-                    resultElement.style.display = 'block';
-                    resultElement.textContent = `Score: ${score}/20 (${percentage.toFixed(2)}%)`;
-                    resultElement.classList.add(percentage >= 80 ? 'success' : 'fail');
-                    // Disable form after submission
-                    form.querySelectorAll('input').forEach(input => input.disabled = true);
-                    submitButton.disabled = true;
+
+                    // Construct query parameters for redirect
+                    const params = new URLSearchParams();
+                    params.append('score', score);
+                    params.append('percentage', percentage.toFixed(2));
+                    params.append('answers', JSON.stringify(answers));
+                    params.append('course', course);
+                    window.location.href = `/courses/result?${params.toString()}`;
                 });
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('assessment-form').innerHTML = '<p>Error loading questions. Please try again.</p>';
+                document.getElementById('assessment-form').innerHTML = '<p class="text-red-600">Error loading questions. Please try again later.</p>';
             });
     </script>
 </body>
