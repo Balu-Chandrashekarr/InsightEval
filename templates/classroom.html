@@ -18,32 +18,69 @@
             transform: translateY(0);
             opacity: 1;
         }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .request-item {
+            transition: all 0.3s ease;
+        }
+        .request-item.removing {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .notification-dropdown {
+            transform: translateY(-10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .notification-dropdown.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+        .tab-badge {
+            @apply absolute -top-1 -right-2 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
     <main class="p-8 w-full h-screen flex flex-col">
         <header class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Advanced Algorithms</h1>
-                <p class="text-md text-gray-600">CS-404 | Dr. Evelyn Reed</p>
+                <h1 id="classroom-name" class="text-3xl font-bold text-gray-800"></h1>
+                <p id="subcode" class="text-md text-gray-600"></p>
             </div>
-            <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-2 text-sm font-semibold text-blue-600 hover:underline">
-                <i class="fas fa-arrow-left"></i>
-                <span>Back to Dashboard</span>
-            </a>
+
+            <!-- NOTIFICATION BELL (ONLY) -->
+            <div class="relative">
+                <button id="notification-bell" class="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
+                   <i id="notibell" class="fas fa-bell text-gray-600 text-lg"></i>
+                    <span id="notification-badge" class="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">2</span>
+                </button>
+                <div id="notification-dropdown" class="notification-dropdown absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 z-50">
+                    <div class="p-4 border-b border-gray-100">
+                        <h3 class="font-bold text-gray-800">Notifications</h3>
+                    </div>
+                    <div id="notification-list" class="max-h-96 overflow-y-auto">
+                        <!-- JS fills -->
+                    </div>
+                    <div class="p-3 border-t border-gray-100 text-center">
+                        <a href="#" class="text-sm text-blue-600 hover:underline">View all</a>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <div class="flex gap-8 flex-1 overflow-hidden">
-            <!-- Left Column: Classroom Feed -->
-            <div class="w-2/3 flex flex-col">
+            <!-- Left: Feed -->
+            <div class="flex-1 flex flex-col">
                 <div id="classroom-feed" class="space-y-6 overflow-y-auto flex-1 pr-4">
-                    <!-- Posts will appear here -->
+                    <!-- Posts -->
                 </div>
 
-                <!-- Gemini-style Message Box -->
+                <!-- Message Box -->
                 <div class="mt-6 relative">
                     <div class="bg-white rounded-full shadow-lg p-2 flex items-center gap-2">
-                        <!-- Plus Button & Popup Menu -->
                         <div class="relative">
                             <button id="plus-btn" class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors">
                                 <i class="fas fa-plus text-gray-600"></i>
@@ -60,9 +97,7 @@
                                 </label>
                             </div>
                         </div>
-                        
                         <textarea id="message-input" placeholder="Enter a message..." rows="1" class="flex-1 bg-transparent p-2 resize-none focus:outline-none text-gray-800"></textarea>
-                        
                         <button id="send-btn" class="h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
                             <i class="fas fa-arrow-up text-white"></i>
                         </button>
@@ -70,39 +105,325 @@
                 </div>
             </div>
 
-            <!-- Right Column: Members Canvas -->
-            <div class="w-1/3">
-                 <div class="bg-white rounded-lg shadow-md p-5 sticky top-0 h-full overflow-y-auto">
-                    <h2 class="text-xl font-bold text-gray-800 mb-5 border-b pb-3">Members</h2>
-                    <div class="space-y-4">
-                        <!-- Teacher Section -->
-                        <div>
-                            <h3 class="font-semibold text-purple-700 mb-3">TEACHER</h3>
-                            <div class="flex items-center space-x-3 member-entry">
-                                <div class="member-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                <span class="member-name font-semibold text-gray-700">Ms. Senthil Anandhi</span>
+            <!-- Right: Sidebar (320px) -->
+            <div class="w-96">
+                <div class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden h-full flex flex-col">
+                    <div id="neon-bar" class="absolute top-0 left-0 w-1.5 h-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    <!-- TABS -->
+                    <div class="flex border-b border-gray-200 relative">
+                        <button id="tab-members" class="flex-1 py-3 text-sm font-semibold text-gray-700 border-b-2 border-transparent hover:text-blue-600 transition-colors">
+                            Members
+                        </button>
+                        <button id="tab-requests" class="flex-1 py-3 text-sm font-semibold text-gray-700 border-b-2 border-transparent hover:text-purple-600 transition-colors hidden relative">
+                            Requests
+                            <span id="requests-badge" class="tab-badge hidden"></span>
+                        </button>
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <!-- Members -->
+                        <div id="content-members" class="tab-content active space-y-6">
+                            <div>
+                                <h3 class="font-semibold text-purple-700 mb-3 text-sm tracking-wider">TEACHER</h3>
+                                <div class="flex items-center space-x-3 member-entry">
+                                    <div class="member-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
+                                    <span class="member-name font-semibold text-gray-700">Ms. Senthil Anandhi</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-blue-700 mb-3 mt-5 text-sm tracking-wider">STUDENTS</h3>
+                                <div id="student-list" class="space-y-3">
+                                    <!-- All students shown, no "View all" -->
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Students Section -->
-                        <div>
-                            <h3 class="font-semibold text-blue-700 mb-3 mt-5">STUDENTS</h3>
-                            <div id="short-student-list" class="space-y-3">
-                                <!-- Student items will be dynamically generated by script -->
-                            </div>
-                            <div id="full-student-list" class="hidden space-y-3 max-h-80 overflow-y-auto pr-2">
-                                 <!-- Full student list will be dynamically generated by script -->
-                            </div>
+                        <!-- Requests -->
+                        <div id="content-requests" class="tab-content space-y-3">
+                            <div id="requests-container"></div>
                         </div>
                     </div>
-                 </div>
+                </div>
             </div>
         </div>
     </main>
 
     <script>
+
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Gemini Message Box Logic ---
+            // === USER & DATA ===
+            const pathParts = window.location.pathname.split('/');
+            const classroomId = pathParts[pathParts.length - 1];
+            const classroom_details = JSON.parse(localStorage.getItem('selectedClassroom'));
+            
+            if (!classroom_details) {
+                console.error("No classroom data found in localStorage");
+                return;
+            }
+
+            const user_email = classroom_details.userEmail || "";
+            const owner_email = classroom_details.ownerEmail || "";
+            document.getElementById("classroom-name").textContent = classroom_details.name || "Untitled Class";
+            document.getElementById("subcode").textContent = classroom_details.subjectCode+" | "+classroom_details.owner || "yxt-000 | Unknown";
+
+            
+
+            // Demo join requests
+            let joinRequests = [];
+            async function loadJoinRequests() {
+                try {
+                    const resp = await fetch(`/get_join_requests/${classroomId}`);
+                    if (!resp.ok) throw new Error('Failed to load join requests');
+
+                    const data = await resp.json();
+                    joinRequests = data.map((req, index) => ({
+                        id: index + 1,
+                        name: req.name,
+                        email: req.email,
+                        avatar: req.name.charAt(0).toUpperCase()
+                    }));
+
+                    renderRequests();
+                    updateRequestsBadge();
+                } catch (err) {
+                    console.error('Error loading join requests:', err);
+                }
+            }
+
+
+            // === NOTIFICATIONS (NO JOIN REQUESTS) ===
+            let notifications = [
+                { id: 1, type: 'assignment', message: 'Assignment #3 due tomorrow', time: '1 hour ago', read: false },
+                { id: 2, type: 'post', message: 'New announcement posted', time: '3 hours ago', read: false }
+            ];
+
+            const notificationBell = document.getElementById('notification-bell');
+            const notificationDropdown = document.getElementById('notification-dropdown');
+            const notificationList = document.getElementById('notification-list');
+            const notificationBadge = document.getElementById('notification-badge');
+
+            function updateNotificationBadge() {
+                const unread = notifications.filter(n => !n.read).length;
+                notificationBadge.textContent = unread;
+                notificationBadge.style.display = unread > 0 ? 'flex' : 'none';
+            }
+
+            function renderNotifications() {
+                if (notifications.length === 0) {
+                    notificationList.innerHTML = `<p class="p-4 text-center text-sm text-gray-500">No notifications</p>`;
+                    return;
+                }
+                notificationList.innerHTML = notifications.map(notif => `
+                    <div class="notification-item p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${!notif.read ? 'bg-blue-50' : ''}" data-id="${notif.id}">
+                        <div class="flex items-start space-x-3">
+                            <div class="mt-1">
+                                ${notif.type === 'assignment' ? '<i class="fas fa-clipboard-list text-red-600"></i>' : 
+                                  '<i class="fas fa-bullhorn text-blue-600"></i>'}
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">${notif.message}</p>
+                                <p class="text-xs text-gray-500">${notif.time}</p>
+                            </div>
+                            ${!notif.read ? '<div class="w-2 h-2 bg-blue-600 rounded-full"></div>' : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            notificationBell.addEventListener('click', (e) => {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('show');
+            });
+
+            window.addEventListener('click', () => {
+                if (notificationDropdown.classList.contains('show')) {
+                    notificationDropdown.classList.remove('show');
+                }
+            });
+
+            notificationList.addEventListener('click', function(e) {
+                const item = e.target.closest('.notification-item');
+                if (!item) return;
+                const id = parseInt(item.dataset.id);
+                const notif = notifications.find(n => n.id === id);
+                if (notif && !notif.read) {
+                    notif.read = true;
+                    updateNotificationBadge();
+                    renderNotifications();
+                }
+            });
+
+            updateNotificationBadge();
+            renderNotifications();
+
+            // === RANDOM NEON ===
+            function randomNeon() {
+                const neons = [
+                    'from-pink-400 to-rose-500',
+                    'from-cyan-400 to-blue-500',
+                    'from-emerald-400 to-teal-500',
+                    'from-purple-400 to-indigo-500',
+                    'from-orange-400 to-red-500',
+                    'from-lime-400 to-green-500',
+                    'from-fuchsia-400 to-purple-500'
+                ];
+                return neons[Math.floor(Math.random() * neons.length)];
+            }
+
+            const neonGradient = randomNeon();
+            document.getElementById('neon-bar').className = `absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b ${neonGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`;
+            document.getElementById('notibell').className = `fas fa-bell text-lg bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent`;
+
+            // === TABS & RED BADGE ON REQUESTS ===
+            const tabMembers = document.getElementById('tab-members');
+            const tabRequests = document.getElementById('tab-requests');
+            const contentMembers = document.getElementById('content-members');
+            const contentRequests = document.getElementById('content-requests');
+            const requestsContainer = document.getElementById('requests-container');
+            const requestsBadge = document.getElementById('requests-badge');
+
+            function updateRequestsBadge() {
+                const count = joinRequests.length;
+                requestsBadge.textContent = count;
+                requestsBadge.classList.toggle('hidden', count === 0);
+            }
+
+            if (user_email === owner_email) {
+                tabRequests.classList.remove('hidden');
+                loadJoinRequests();
+            }
+
+            function renderRequests() {
+                if (joinRequests.length === 0) {
+                    requestsContainer.innerHTML = `<p class="text-sm text-gray-500 italic">No pending join requests.</p>`;
+                    return;
+                }
+                requestsContainer.innerHTML = joinRequests.map(req =>`
+        <div class="request-item group flex items-center justify-between p-5 bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300">
+            
+            <!-- Left: Avatar + Info -->
+            <div class="flex items-center space-x-4 flex-1 min-w-0">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                    ${req.avatar}
+                </div>
+                <div class="min-w-0">
+                    <p class="text-xs font-medium text-gray-700 truncate">${req.name}</p>
+                    <p class="email-textfeild text-xs text-gray-400 truncate">${req.email}</p>
+                </div>
+            </div>
+
+            <!-- Right: Tick / X Buttons -->
+            <div class="flex items-center gap-2">
+                <button class="accept-btn p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-all duration-200 group-hover:scale-110" data-id="${req.id}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </button>
+                <button class="decline-btn p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition-all duration-200 group-hover:scale-110" data-id="${req.id}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `).join('');
+            }
+
+            requestsContainer.addEventListener('click', async function(e) {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+
+    const isDecline = btn.classList.contains('decline-btn');
+    const isAccept = btn.classList.contains('accept-btn');
+    const item = btn.closest('.request-item');
+    const email = item.querySelector('.email-textfeild').textContent.trim();
+
+    if (isDecline) {
+        if (!confirm(`Reject ${email}?`)) return;
+
+        try {
+            const resp = await fetch('/reject_join_request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    classroom_id: classroom_details.id,
+                    email: email
+                })
+            });
+            const result = await resp.json();
+
+            if (resp.ok && result.success) {
+                item.style.transition = 'opacity 0.3s ease';
+                item.style.opacity = '0';
+                setTimeout(() => item.remove(), 300);
+                joinRequests = joinRequests.filter(r => r.email !== email);
+                updateRequestsBadge();
+            } else {
+                alert(result.error || 'Failed to reject request');
+            }
+
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Error rejecting request');
+        }
+    }
+
+    // We'll add Accept logic later
+    if (isAccept) {
+    if (!confirm(`Accept ${email} into this classroom?`)) return;
+
+    try {
+        const resp = await fetch('/accept_join_request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                classroom_id: classroom_details.id,
+                email: email
+            })
+        });
+        const result = await resp.json();
+
+        if (resp.ok && result.success) {
+            item.style.transition = 'opacity 0.3s ease';
+            item.style.opacity = '0';
+            setTimeout(() => item.remove(), 300);
+            joinRequests = joinRequests.filter(r => r.email !== email);
+            updateRequestsBadge();
+        } else {
+            alert(result.error || 'Failed to accept request');
+        }
+
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Error accepting request');
+    }
+    }
+
+});
+
+
+            tabMembers.addEventListener('click', () => {
+                tabMembers.classList.add('border-blue-600', 'text-blue-600');
+                tabMembers.classList.remove('border-transparent', 'text-gray-700');
+                tabRequests.classList.remove('border-purple-600', 'text-purple-600');
+                tabRequests.classList.add('border-transparent', 'text-gray-700');
+                contentMembers.classList.add('active');
+                contentRequests.classList.remove('active');
+            });
+
+            tabRequests.addEventListener('click', () => {
+                tabRequests.classList.add('border-purple-600', 'text-purple-600');
+                tabRequests.classList.remove('border-transparent', 'text-gray-700');
+                tabMembers.classList.remove('border-blue-600', 'text-blue-600');
+                tabMembers.classList.add('border-transparent', 'text-gray-700');
+                contentRequests.classList.add('active');
+                contentMembers.classList.remove('active');
+            });
+
+            // === ORIGINAL SCRIPT (unchanged) ===
             const plusBtn = document.getElementById('plus-btn');
             const plusPopup = document.getElementById('plus-popup');
             const messageInput = document.getElementById('message-input');
@@ -110,28 +431,24 @@
             const materialUpload = document.getElementById('material-upload');
             const classroomFeed = document.getElementById('classroom-feed');
 
-            // Toggle popup menu
             plusBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 plusPopup.classList.toggle('hidden');
-                setTimeout(() => plusPopup.classList.toggle('show'), 10); // Delay for transition
+                setTimeout(() => plusPopup.classList.toggle('show'), 10);
             });
 
-            // Close popup if clicking outside
             window.addEventListener('click', () => {
                 if (!plusPopup.classList.contains('hidden')) {
                     plusPopup.classList.remove('show');
-                    setTimeout(() => plusPopup.classList.add('hidden'), 300); // Allow transition to finish
+                    setTimeout(() => plusPopup.classList.add('hidden'), 300);
                 }
             });
 
-            // Auto-resize textarea
             messageInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
 
-            // Handle sending a message (as announcement)
             sendBtn.addEventListener('click', () => {
                 const content = messageInput.value.trim();
                 if (content) {
@@ -140,10 +457,20 @@
                     classroomFeed.scrollTop = classroomFeed.scrollHeight;
                     messageInput.value = '';
                     messageInput.style.height = 'auto';
+
+                    // Add to notifications
+                    notifications.unshift({
+                        id: Date.now(),
+                        type: 'post',
+                        message: 'New announcement posted',
+                        time: 'just now',
+                        read: false
+                    });
+                    updateNotificationBadge();
+                    renderNotifications();
                 }
             });
-            
-            // Handle sending on Enter key press
+
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -151,7 +478,6 @@
                 }
             });
 
-            // Handle uploading study material
             materialUpload.addEventListener('change', function() {
                 const file = this.files[0];
                 if (file) {
@@ -160,8 +486,7 @@
                     classroomFeed.scrollTop = classroomFeed.scrollHeight;
                 }
             });
-            
-            // --- Post Card Creation Function ---
+
             function createPostCard(type, content, dueDate, file) {
                 const postDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 let iconClass, colorClass, title, actionButton = '';
@@ -194,11 +519,9 @@
                 </div>`;
             }
 
-            // --- Student List & Initials Logic ---
-            const memberEntries = document.querySelectorAll('.member-entry');
-            const studentNames = ["Adarsh T Nambiar", "Balu Chandrashekar", "Eric Alexander Varghese", "K Nandan", "Student Five", "Student Six", "Student Seven"];
-            const shortListContainer = document.getElementById('short-student-list');
-            const fullListContainer = document.getElementById('full-student-list');
+            // === STUDENTS (NO VIEW MORE) ===
+            const studentNames = [];
+            const studentList = document.getElementById('student-list');
             
             function generateHslColor(name) {
                 let hash = 0;
@@ -206,44 +529,24 @@
                 return `hsl(${hash % 360}, 60%, 50%)`;
             }
 
-            const createStudentHTML = (name) => `
-                <div class="flex items-center space-x-3 member-entry">
+            studentNames.forEach(name => {
+                const entry = document.createElement('div');
+                entry.className = 'flex items-center space-x-3 member-entry';
+                entry.innerHTML = `
                     <div class="member-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
                     <span class="member-name text-gray-700">${name}</span>
-                </div>`;
-
-            studentNames.forEach(name => {
-                const studentHTML = createStudentHTML(name);
-                if (shortListContainer.children.length < 4) {
-                     shortListContainer.innerHTML += studentHTML;
-                }
-                fullListContainer.innerHTML += studentHTML;
+                `;
+                studentList.appendChild(entry);
             });
 
-            shortListContainer.innerHTML += `<a href="#" id="view-all-link" class="text-sm text-blue-600 hover:underline pt-2 inline-block">View all...</a>`;
-            fullListContainer.innerHTML += `<a href="#" id="show-less-link" class="text-sm text-blue-600 hover:underline pt-2 inline-block">Show less...</a>`;
-            
-             document.querySelectorAll('.member-entry').forEach(entry => {
+            document.querySelectorAll('.member-entry').forEach(entry => {
                 const nameSpan = entry.querySelector('.member-name');
                 const initialDiv = entry.querySelector('.member-initial');
                 const name = nameSpan.textContent.trim();
                 initialDiv.textContent = name.charAt(0).toUpperCase();
                 initialDiv.style.backgroundColor = generateHslColor(name);
             });
-            
-            document.getElementById('view-all-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                shortListContainer.classList.add('hidden');
-                fullListContainer.classList.remove('hidden');
-            });
-            
-            document.getElementById('show-less-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                fullListContainer.classList.add('hidden');
-                shortListContainer.classList.remove('hidden');
-            });
         });
     </script>
 </body>
 </html>
-

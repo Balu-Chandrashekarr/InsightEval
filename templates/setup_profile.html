@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup Profile - InsightEval</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Roboto', sans-serif; min-height:100vh; background: linear-gradient(to bottom, #1e3a8a 75%, #ffffff 25%); display:flex; justify-content:center; align-items:center; overflow-x:hidden; }
+    .profile-setup-container { background:#ffffff; padding:1.5rem; border-radius:12px; box-shadow:0 6px 25px rgba(0,0,0,0.1); width:100%; max-width:400px; text-align:center; }
+    .profile-setup-container h2 { color:#1f2937; font-size:1.8rem; font-weight:700; margin-bottom:1rem; }
+    .profile-pic-container { margin-bottom:1rem; text-align:center; }
+    .profile-pic { width:128px; height:128px; border-radius:50%; object-fit:cover; border:2px solid #1e3a8a; cursor:pointer; transition:border-color 0.3s ease, box-shadow 0.3s ease; }
+    .profile-pic:hover { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+    .file-info { margin-top:0.25rem; font-size:0.85rem; color:#6b7280; }
+    .input-group { margin-bottom:0.75rem; text-align:left; }
+    .input-group label { display:block; color:#374151; font-size:0.9rem; margin-bottom:0.25rem; font-weight:400; }
+    .input-field, .textarea-field { width:100%; padding:0.6rem; font-size:0.95rem; border:1px solid #d1d5db; border-radius:8px; transition:border-color 0.3s ease, box-shadow 0.3s ease; }
+    .textarea-field { resize:none; min-height:80px; }
+    .input-field:focus, .textarea-field:focus { outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+    .publish-button { width:100%; padding:0.65rem; font-size:1rem; color:#ffffff; background:#1e3a8a; border:none; border-radius:8px; cursor:pointer; font-weight:700; transition:background 0.3s ease, transform 0.2s ease; }
+    .publish-button:hover { background:#1d4ed8; transform:translateY(-1px); }
+    .output-container { margin-top:1rem; text-align:center; }
+    .output-container img { width:80px; height:80px; border-radius:50%; border:2px solid #2563eb; object-fit:cover; margin-bottom:0.5rem; }
+    .output-container p { font-size:0.9rem; color:#374151; margin-bottom:0.25rem; }
+    .output-container p b { color:#1e3a8a; font-weight:700; }
+    .error-text { color:#ef4444; font-size:0.85rem; margin-top:0.25rem; display:block; }
+    @media (max-width:768px) { 
+        .profile-setup-container { padding:1rem; max-width:90%; }
+        .profile-pic { width:100px; height:100px; }
+    }
+</style>
+</head>
+<body>
+<div class="profile-setup-container">
+    <h2>Setup Your Profile</h2>
+
+    <!-- Profile Picture -->
+    <div class="profile-pic-container">
+        <label style="cursor:pointer;">
+            <img id="profile-pic" src="https://via.placeholder.com/128" alt="Profile Picture" class="profile-pic">
+            <input type="file" id="profile-input" accept="image/*" style="display:none;" onchange="previewImage(event)">
+        </label>
+        <div class="file-info">Choose File / No file chosen</div>
+    </div>
+
+    <!-- Form -->
+            <form method="POST" action="{{ url_for('setup_profile') }}">
+                {{ form.hidden_tag() }}
+
+                <div class="input-group">
+                    {{ form.name.label }}
+                    {{ form.name(class="input-field", placeholder="Enter your name") }}
+                    {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="input-group">
+                    {{ form.student_id.label }}
+                    {{ form.student_id(class="input-field", placeholder="Enter your ID") }}
+                    {% if form.student_id.errors %}
+                        {% for error in form.student_id.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="input-group">
+                    {{ form.department.label }}
+                    {{ form.department(class="input-field", placeholder="Enter your department") }}
+                    {% if form.department.errors %}
+                        {% for error in form.department.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="input-group">
+                    {{ form.bio.label }}
+                    {{ form.bio(class="textarea-field", placeholder="Write something about yourself") }}
+                    {% if form.bio.errors %}
+                        {% for error in form.bio.errors %}
+                            <span class="error-text">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="publish-button">{{ form.submit.label.text }}</button>
+            </form>
+
+    <div id="output" class="output-container"></div>
+</div>
+
+<script>
+function previewImage(event) {
+    const img = document.getElementById('profile-pic');
+    img.src = URL.createObjectURL(event.target.files[0]);
+    document.querySelector('.file-info').textContent =
+        event.target.files[0].name || "Choose File / No file chosen";
+}
+
+async function publishProfile() {
+    const name = document.getElementById('name').value.trim();
+    const id = document.getElementById('id').value.trim();
+    const department = document.getElementById('department').value.trim();
+    const bio = document.getElementById('bio').value.trim();
+    const output = document.getElementById('output');
+
+    // Validate
+    if (!name || !id) {
+        output.innerHTML = '<span class="error-text">Please fill out Name and ID.</span>';
+        return;
+    }
+
+    // Prepare data
+    const profileData = {
+        name: name,
+        id: id,
+        department: department,
+        bio: bio
+    };
+
+    try {
+        const response = await fetch('/setup_profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(profileData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === 'success') {
+            window.location.href = '/dashboard';
+        } else {
+            output.innerHTML = `<span class="error-text">${result.message || 'Error saving profile.'}</span>`;
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        output.innerHTML = '<span class="error-text">Something went wrong. Try again later.</span>';
+    }
+}
+</script>
+
+</body>
+</html>

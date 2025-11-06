@@ -22,45 +22,11 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
-        /* Search panel alignment and animation */
-        #search-panel {
-            left: -300px; /* Initially off-screen, matching panel width */
-            width: 300px; /* Fixed width for the search panel */
-            z-index: 20; /* Above navigation (z-10) */
-            transition: left 0.3s ease; /* Smooth slide animation */
-            top: 0;
-            height: 100vh; /* Full viewport height */
-            box-sizing: border-box; /* Include padding in width */
-        }
-        .search-active #search-panel {
-            left: 224px; /* Align flush with nav (56px * 4 = 224px, as w-56 in Tailwind is 224px) */
-        }
-        .search-active #main-content {
-            margin-left: 524px; /* Nav (224px) + search panel (300px) */
-            transition: margin-left 0.3s ease; /* Smooth shift */
-        }
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            #search-panel {
-                width: 100%; /* Full width on small screens */
-                left: -100%;
-            }
-            .search-active #search-panel {
-                left: 0; /* Slide to cover the screen */
-            }
-            .search-active #main-content {
-                margin-left: 0; /* Hide main content on small screens when search is active */
-                display: none; /* Prevent overlap */
-            }
-            .nav-item span {
-                display: none; /* Hide nav text on small screens for better fit */
-            }
-            nav {
-                width: 60px; /* Slimmer nav on small screens */
-            }
-            #main-content {
-                margin-left: 60px; /* Adjust for slimmer nav */
-            }
+        .hidden { display: none;}
+        .result-card {animation: fadeInUp 0.4s ease-out;}
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -102,22 +68,33 @@
             </div>
         </nav>
 
-        <!-- Search Panel -->
-        <div id="search-panel" class="bg-white shadow-lg h-full border-r border-gray-200 p-6 fixed top-0 transition-all duration-300 z-20">
-            <h2 class="text-2xl font-bold mb-6">Search</h2>
-            <input type="text" placeholder="Search" class="w-full bg-gray-100 rounded-md px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Search">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold">Recent</h3>
-                <button id="clear-recent-btn" class="text-blue-500 text-sm font-semibold hover:text-blue-700">Clear all</button>
-            </div>
-            <div id="recent-searches-list" class="space-y-4">
-                <!-- Recent search items will be dynamically added here -->
-            </div>
-        </div>
 
         <!-- Main Content -->
         <div id="main-content" class="ml-60 mt-4 w-full pr-4 transition-all duration-300">
             <div class="w-full">
+
+                <!--Add classroom-->
+                <div id="add-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+                            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
+                                <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+                                <h2 class="text-2xl font-bold mb-4 border-b pb-3">Create Classroom</h2>
+                                <form id="add-classroom-form" class="space-y-4">
+                                    <div>
+                                        <label for="new-classroom-name" class="block text-sm font-medium text-gray-700">Classroom Name</label>
+                                        <input type="text" id="new-classroom-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                    </div>
+                                    <div>
+                                        <label for="new-classroom-subject" class="block text-sm font-medium text-gray-700">Subject Code</label>
+                                        <input type="text" id="new-classroom-subject" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                                    </div>
+                                    <div class="flex justify-end pt-4">
+                                        <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
+                                        <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Create</button>
+                                    </div>
+                                </form>
+                            </div>
+                </div>
+
                 <!-- Home Content -->
                 <div id="home-content" class="content-section">
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
@@ -219,6 +196,7 @@
 
                 <!-- Classroom Content -->
                 <div id="classroom-content" class="content-section hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-4">
                     <header class="flex justify-between items-center mb-6">
                         <h1 class="text-3xl font-bold text-gray-800">Classrooms</h1>
                         <div class="flex space-x-4">
@@ -232,30 +210,7 @@
                             </button>
                         </div>
                     </header>
-                    <div id="add-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
-                            <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
-                            <h2 class="text-2xl font-bold mb-4 border-b pb-3">Create Classroom</h2>
-                            <form id="add-classroom-form" class="space-y-4">
-                                <div>
-                                    <label for="new-classroom-name" class="block text-sm font-medium text-gray-700">Classroom Name</label>
-                                    <input type="text" id="new-classroom-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                                </div>
-                                <div>
-                                    <label for="new-classroom-subject" class="block text-sm font-medium text-gray-700">Subject Code</label>
-                                    <input type="text" id="new-classroom-subject" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                                </div>
-                                <div>
-                                    <label for="new-classroom-desc" class="block text-sm font-medium text-gray-700">Description</label>
-                                    <textarea id="new-classroom-desc" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
-                                </div>
-                                <div class="flex justify-end pt-4">
-                                    <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
-                                    <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Create</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    <!--Join Model-->
                     <div id="join-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
                             <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
@@ -272,122 +227,180 @@
                             </form>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                            <div class="p-6 border-t-4 border-blue-500">
-                                <h2 class="text-xl font-bold text-gray-800 mb-1">Advanced Algorithms</h2>
-                                <p class="text-sm text-gray-600 mb-4">Dr. Evelyn Reed</p>
-                                <div class="flex justify-between items-center text-sm text-gray-500">
-                                    <span><i class="fas fa-user-friends mr-1"></i> 28 Students</span>
-                                    <span>CS-404</span>
-                                </div>
-                            </div>
-                            <a href="{{ url_for('classroom', classroom_id=1) }}" class="block bg-gray-50 text-center font-semibold text-blue-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-                        </div>
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                            <div class="p-6 border-t-4 border-green-500">
-                                <h2 class="text-xl font-bold text-gray-800 mb-1">Database Systems</h2>
-                                <p class="text-sm text-gray-600 mb-4">Prof. Samuel Chen</p>
-                                <div class="flex justify-between items-center text-sm text-gray-500">
-                                    <span><i class="fas fa-user-friends mr-1"></i> 35 Students</span>
-                                    <span>DB-301</span>
-                                </div>
-                            </div>
-                            <a href="#" class="block bg-gray-50 text-center font-semibold text-green-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-                        </div>
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                            <div class="p-6 border-t-4 border-purple-500">
-                                <h2 class="text-xl font-bold text-gray-800 mb-1">Operating Systems</h2>
-                                <p class="text-sm text-gray-600 mb-4">Ms. Senthil Anandhi</p>
-                                <div class="flex justify-between items-center text-sm text-gray-500">
-                                    <span><i class="fas fa-user-friends mr-1"></i> 41 Students</span>
-                                    <span>OS-312</span>
-                                </div>
-                            </div>
-                            <a href="#" class="block bg-gray-50 text-center font-semibold text-purple-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-                        </div>
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                            <div class="p-6 border-t-4 border-red-500">
-                                <h2 class="text-xl font-bold text-gray-800 mb-1">Intro to AI & ML</h2>
-                                <p class="text-sm text-gray-600 mb-4">Dr. Alan Grant</p>
-                                <div class="flex justify-between items-center text-sm text-gray-500">
-                                    <span><i class="fas fa-user-friends mr-1"></i> 52 Students</span>
-                                    <span>AI-101</span>
-                                </div>
-                            </div>
-                            <a href="#" class="block bg-gray-50 text-center font-semibold text-red-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-                        </div>
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                            <div class="p-6 border-t-4 border-yellow-500">
-                                <h2 class="text-xl font-bold text-gray-800 mb-1">Web Development</h2>
-                                <p class="text-sm text-gray-600 mb-4">Mr. Eric Varghese</p>
-                                <div class="flex justify-between items-center text-sm text-gray-500">
-                                    <span><i class="fas fa-user-friends mr-1"></i> 38 Students</span>
-                                    <span>WD-202</span>
-                                </div>
-                            </div>
-                            <a href="#" class="block bg-gray-50 text-center font-semibold text-yellow-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-                        </div>
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                            <div class="p-6 border-t-4 border-indigo-500">
-                                <h2 class="text-xl font-bold text-gray-800 mb-1">Data Structures</h2>
-                                <p class="text-sm text-gray-600 mb-4">Prof. Nandan</p>
-                                <div class="flex justify-between items-center text-sm text-gray-500">
-                                    <span><i class="fas fa-user-friends mr-1"></i> 45 Students</span>
-                                    <span>DS-210</span>
-                                </div>
-                            </div>
-                            <a href="#" class="block bg-gray-50 text-center font-semibold text-indigo-600 p-3 hover:bg-gray-100">Enter Classroom</a>
-                        </div>
+                <!-- Dynamic Classroom Container -->
+                    <div id="classrooms-in-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- JS will insert classroom cards here -->
+                    </div>
                     </div>
                 </div>
 
-<!-- Courses Content -->
-    <div id="courses-content" class="content-section hidden">
-        <div class="bg-white rounded-lg shadow-sm p-4">
-            <h1 class="text-2xl font-semibold text-center mb-4">Courses</h1>
-            <div class="course-container flex flex-wrap justify-center gap-4">
-                <a href="{{ url_for('course', course_name='dsa') }}" class="block w-48 h-36">
-                    <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
-                        <h2 class="mt-2.5 text-lg font-semibold">DSA</h2>
-                        <p class="text-sm">Date: September 25, 2025</p>
-                        <div class="stars text-xl text-yellow-400">★★★</div>
+                <!-- Courses Content -->
+                <div id="courses-content" class="content-section hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-4">
+                        <h1 class="text-2xl font-semibold text-center mb-4">Courses</h1>
+                        <div class="course-container flex flex-wrap justify-center gap-4">
+                            <a href="{{ url_for('course', course_name='dsa') }}" class="block w-48 h-36">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">DSA</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                </div>
+                            </a>
+                            <a href="{{ url_for('course', course_name='oops') }}" class="block w-48 h-36">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">OOPS</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                </div>
+                            </a>
+                            <a href="{{ url_for('course', course_name='dbms') }}" class="block w-48 h-36">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">DBMS</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                </div>
+                            </a>
+                            <a href="{{ url_for('course', course_name='os') }}" class="block w-48 h-36">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">OS</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                </div>
+                            </a>
+                            <a href="{{ url_for('course', course_name='dmml') }}" class="block w-48 h-36">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                    <h2 class="mt-2.5 text-lg font-semibold">DMML</h2>
+                                    <p class="text-sm">Date: September 25, 2025</p>
+                                    <div class="stars text-xl text-yellow-400">★★★</div>
+                                </div>
+                            </a>
+                        </div>
+                        <footer class="text-center mt-5 text-xs text-gray-500">
+                            <p>InsightEval adopts a hierarchical learning approach, allowing you to progress to the next course only after completing the previous one.</p>
+                        </footer>
                     </div>
-                </a>
-                <a href="{{ url_for('course', course_name='oops') }}" class="block w-48 h-36">
-                    <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
-                        <h2 class="mt-2.5 text-lg font-semibold">OOPS</h2>
-                        <p class="text-sm">Date: September 25, 2025</p>
-                        <div class="stars text-xl text-yellow-400">★★★</div>
+                </div>
+                
+
+                 <!-- Search Content  -->
+                <div id="search-content" class="content-section hidden">
+                <div class="bg-gray-50 min-h-screen py-8">
+                    <div class="max-w-4xl mx-auto px-6">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-lg p-6 text-center mb-8">
+                        <h2 class="text-2xl font-bold text-white">User Search</h2>
+                        <p class="text-indigo-100 text-sm mt-1">Find users by name or email</p>
                     </div>
-                </a>
-                <a href="{{ url_for('course', course_name='dbms') }}" class="block w-48 h-36">
-                    <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
-                        <h2 class="mt-2.5 text-lg font-semibold">DBMS</h2>
-                        <p class="text-sm">Date: September 25, 2025</p>
-                        <div class="stars text-xl text-yellow-400">★★★</div>
+
+                    <!-- Search Input -->
+                    <div class="relative mb-8">
+                        <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Type a name or id..."
+                        class="w-full p-4 pl-12 bg-white border border-gray-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800 placeholder-gray-400 transition-all duration-300"
+                        >
+                        <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
+                        </path>
+                        </svg>
                     </div>
-                </a>
-                <a href="{{ url_for('course', course_name='os') }}" class="block w-48 h-36">
-                    <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
-                        <h2 class="mt-2.5 text-lg font-semibold">OS</h2>
-                        <p class="text-sm">Date: September 25, 2025</p>
-                        <div class="stars text-xl text-yellow-400">★★★</div>
+
+                    <!-- Results -->
+                    <div id="results" class="grid gap-4 sm:grid-cols-1 md:grid-cols-2"></div>
                     </div>
-                </a>
-                <a href="{{ url_for('course', course_name='dmml') }}" class="block w-48 h-36">
-                    <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
-                        <h2 class="mt-2.5 text-lg font-semibold">DMML</h2>
-                        <p class="text-sm">Date: September 25, 2025</p>
-                        <div class="stars text-xl text-yellow-400">★★★</div>
+                </div>
+                </div>
+
+                <!--Search Profile Content -->
+                <div id="searchprofile-content" class="content-section hidden">
+                    <div class="container px-4 py-8">
+                        <div class="flex flex-col md:flex-row gap-8">
+                        
+                        <!-- LEFT SIDE -->
+                        <div class="w-full md:w-2/5 bg-white p-8 rounded-2xl shadow-lg relative font-[Inter] text-gray-800">
+
+                            <!-- Role Badge -->
+                            <div id="view-role-badge" class="absolute top-5 right-5">
+                                <!-- Filled dynamically -->
+                            </div>
+
+                            <!-- Profile Picture -->
+                            <div class="mb-10 text-center">
+                                <img
+                                    src="https://via.placeholder.com/128x128"
+                                    alt="Profile Picture"
+                                    class="w-32 h-32 mx-auto rounded-full border-4 border-indigo-200 object-cover shadow-sm"
+                                    id="sprofileViewPic"
+                                />
+                            </div>
+
+                            <!-- Profile Details -->
+                            <div class="space-y-7 text-left px-2">
+                                <div>
+                                    <p class="text-gray-500 text-sm uppercase font-semibold tracking-widest">Name</p>
+                                    <p id="view-name" class="text-xl font-semibold text-gray-900 mt-1 break-words leading-snug">—</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm uppercase font-semibold tracking-widest">User ID</p>
+                                    <p id="view-id" class="text-base font-semibold mt-1 break-words leading-snug">—</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm uppercase font-semibold tracking-widest">Department</p>
+                                    <p id="view-department" class="text-base font-semibold mt-1 break-words leading-snug">—</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm uppercase font-semibold tracking-widest">Bio</p>
+                                    <p
+                                        id="view-bio"
+                                        class="text-gray-700 mt-1 font-semibold break-words whitespace-pre-line min-h-[7rem] text-[0.95rem]"
+                                    >
+                                        —
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Back Button -->
+                            <div class="mt-10 text-center">
+                                <button
+                                    id="backToSearch"
+                                    class="bg-indigo-500 text-white py-2.5 px-6 rounded-lg font-medium hover:bg-indigo-600 transition duration-200 shadow-sm"
+                                >
+                                    ← Back to Search
+                                </button>
+                            </div>
+                        </div>
+
+
+
+                        <!-- RIGHT SIDE  -->
+                        <div class="w-full md:w-3/5 bg-white p-6 rounded-lg shadow-md flex flex-col right-container">
+                            
+                            <nav class="mb-6 bg-gray-100 p-3 rounded-md">
+                            <ul class="flex justify-start space-x-6">
+                                <li><a href="#" class="nav-link active" data-tab="sposts">Posts</a></li>
+                                <li><a href="#" class="nav-link" data-tab="sclassrooms">Classrooms</a></li>
+                            </ul>
+                            </nav>
+
+                            <div id="content" class="scrollable-container">
+                            <div id="sposts" class="tab-content grid grid-cols-2 gap-4">
+                                <!-- Posts will be shown here -->
+                            </div>
+                            <div id="sclassrooms" class="tab-content hidden grid grid-cols-3 gap-4">
+                                <!-- Classrooms will be shown here -->
+                            </div>
+                            </div>
+
+                        </div>
+                        </div>
                     </div>
-                </a>
-            </div>
-            <footer class="text-center mt-5 text-xs text-gray-500">
-                <p>InsightEval adopts a hierarchical learning approach, allowing you to progress to the next course only after completing the previous one.</p>
-            </footer>
-        </div>
-    </div>
+
+                    
+                </div>
+
+
 
                 <!-- Post Content -->
                 <div id="post-content" class="content-section hidden">
@@ -409,27 +422,34 @@
                                         <input type="file" id="profile_pic" accept="image/*" class="input-field" onchange="previewImage(event)">
                                     </div>
                                 </div>
-                                <div class="mb-4">
-                                    <label for="name" class="block text-gray-700 font-semibold mb-2">Name</label>
-                                    <input type="text" id="name" class="w-full p-2 border rounded-md" value="User Name">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="id" class="block text-gray-700 font-semibold mb-2">ID</label>
-                                    <input type="text" id="id" class="w-full p-2 border rounded-md" value="1NHCS057">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="department" class="block text-gray-700 font-semibold mb-2">Department</label>
-                                    <input type="text" id="department" class="w-full p-2 border rounded-md" value="Computer Science and Engineering">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="bio" class="block text-gray-700 font-semibold mb-2">Bio</label>
-                                    <textarea id="bio" class="w-full p-2 border rounded-md" rows="4" maxlength="200" placeholder="Enter Bio here">hai\nhello\nenghene</textarea>
-                                </div>
-                                <div class="flex justify-between space-x-4 mb-4">
-                                    <button id="resetPassword" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">Reset Password</button>
-                                    <button id="save" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 hidden">Save</button>
-                                    <button id="headerLogout" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">Logout</button>
-                                </div>
+                                                      <!-- Profile Form -->
+                                    <form id="profileForm">
+                                        <div class="mb-4">
+                                            <label for="name" class="block text-gray-700 font-semibold mb-2">Name</label>
+                                            <input type="text" id="name" class="w-full p-2 border rounded-md" placeholder="Enter Name">
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="id" class="block text-gray-700 font-semibold mb-2">ID</label>
+                                            <input type="text" id="id" class="w-full p-2 border rounded-md" placeholder="User ID">
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="department" class="block text-gray-700 font-semibold mb-2">Department</label>
+                                            <input type="text" id="department" class="w-full p-2 border rounded-md" placeholder="Department">
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="bio" class="block text-gray-700 font-semibold mb-2">Bio</label>
+                                            <textarea id="bio" class="w-full p-2 border rounded-md" rows="4" maxlength="200" placeholder="Enter Bio here"></textarea>
+                                        </div>
+
+                                        <div class="flex justify-between space-x-4 mb-4">
+                                            <button id="resetPassword" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">Reset Password</button>
+                                            <button type="button" id="save" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 hidden">Save</button>
+                                            <button type="button" id="headerLogout" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">Logout</button>
+                                        </div>
+                                    </form> 
                             </div>
                             <div class="w-full md:w-3/5 bg-white p-6 rounded-lg shadow-md flex flex-col right-container">
                                 <nav class="mb-6 bg-gray-100 p-3 rounded-md">
@@ -459,16 +479,6 @@
                                             <button id="cancelPost" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400">Cancel</button>
                                         </div>
                                     </div>
-                                    <div id="addClassroomForm" class="tab-content hidden">
-                                        <div class="mb-4">
-                                            <label for="classroomName" class="block text-gray-700 font-semibold mb-2">Classroom Name</label>
-                                            <input type="text" id="classroomName" class="w-full p-2 border rounded-md" placeholder="Enter classroom name">
-                                        </div>
-                                        <div class="flex justify-end space-x-2">
-                                            <button id="submitClassroom" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Submit</button>
-                                            <button id="cancelClassroom" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400">Cancel</button>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="fixed-add-button">
                                     <button id="addButton" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Add</button>
@@ -479,9 +489,602 @@
                 </div>
             </div>
         </div>
+        <div id="toast"  class="hidden fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 backdrop-blur-sm"></div>
     </div>
 
     <script>
+
+            //Global Variables
+            window.currentUser={};
+
+
+            const joinForm = document.getElementById('join-classroom-form');
+            if (joinForm) {
+            joinForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const codeInput = document.getElementById('join-classroom-code');
+                const enteredCode = codeInput.value.trim();
+
+                if (!enteredCode || enteredCode.length < 8) {
+                showToast("Please enter a valid 8-character classroom code.", "error");
+                return;
+                }
+
+                try {
+                        const resp = await fetch(`/join_classroom_by_code/${enteredCode}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include"
+                    });
+
+                    const data = await resp.json();
+
+                    if (resp.ok) {
+                        showToast("Join request sent successfully!", "success");
+                        document.getElementById('join-classroom-modal').classList.add('hidden');
+                    } else {
+                        showToast(data.error || "Could not send join request", "error");
+                    }
+                    } catch (err) {
+                    console.error("Error sending join request:", err);
+                    showToast("Error sending join request", "error");
+                    }
+
+
+            });
+           }
+
+            document.getElementById("add-classroom-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById("new-classroom-name").value.trim();
+            const subject = document.getElementById("new-classroom-subject").value.trim();
+
+            try {
+                const response = await fetch("/create_classroom", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, subject }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                showToast("Classroom created successfully!");
+                e.target.reset();
+                document.getElementById("add-classroom-modal").classList.add("hidden");
+
+                const classroomId = result.id;
+                try {
+                    const resp = await fetch(`/get_classroom/${classroomId}`);
+                    const classroom = await resp.json();
+
+                    if (resp.ok && classroom) {
+                        const container = document.getElementById("classrooms");
+                        const containerInContent = document.getElementById("classrooms-in-content");
+                        const cls = {
+                            id: classroomId,
+                            ownerEmail: classroom.owner,
+                            name: classroom.classroomName,
+                            subjectCode: classroom.subjectCode,
+                            createdDate: classroom.createdDate,
+                            noOfStudents: 0
+                        }
+                        const card = createClassroomCard(cls,0);
+                        container.appendChild(card);
+                        card.classList.add("ring-2", "ring-green-400");
+                        card.scrollIntoView({ behavior: "smooth", block: "center" });
+                        setTimeout(() => card.classList.remove("ring-2", "ring-green-400"), 2000);
+                        const card2 = createClassroomCardContent(cls);
+                        containerInContent.appendChild(card2);
+                        card2.classList.add("ring-2", "ring-green-400");
+                        card2.scrollIntoView({ behavior: "smooth", block: "center" });
+                        setTimeout(() => card2.classList.remove("ring-2", "ring-green-400"), 2000);
+
+
+                    } else {
+                        showToast("Failed to fetch new classroom details", "error");
+                    }
+                } catch (err) {
+                    console.error("Error fetching classroom:", err);
+                    showToast("Could not fetch new classroom details.", "error");
+                }
+
+                } else {
+                showToast( result.message,'error');
+                }
+            } catch (error) {
+                console.error("Error creating classroom:", error);
+                showToast("Failed to create classroom.",'error');
+            }
+            });
+
+
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const searchContent = document.getElementById("search-content");
+                const profileContent = document.getElementById("searchprofile-content");
+
+                const backToSearchBtn = document.getElementById("backToSearch");
+                const profileName = document.getElementById("view-name");
+                const profileId = document.getElementById("view-id");
+                const profileDept = document.getElementById("view-department");
+                const profileBio = document.getElementById("view-bio");
+                const profilePic = document.getElementById("sprofileViewPic");
+                const sclassroomsContainer = document.getElementById('sclassrooms');
+
+                
+
+
+                // Handle clicking a result card
+                document.addEventListener("click", (e) => {
+                    const card = e.target.closest(".result-card");
+                    if (!card) return;
+
+                    // Get user data from the card
+                    const name = card.dataset.name;
+                    const id = card.dataset.id;
+                    const dept = card.dataset.department;
+                    const bio = card.dataset.bio || "No bio available";
+                    const pic = card.dataset.pic || "https://via.placeholder.com/128x128";
+                    const roleBadgeDiv = document.getElementById("view-role-badge");
+
+                    if (card.dataset.role === "faculty") {
+                        roleBadgeDiv.innerHTML = `
+                            <span class="text-sm font-medium text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">
+                                Faculty
+                            </span>`;
+                    } else {
+                        roleBadgeDiv.innerHTML = `
+                            <span class="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
+                                Student
+                            </span>`;
+                    }
+
+                    // Fill profile section
+                    profileName.textContent = name;
+                    profileId.textContent = id;
+                    profileDept.textContent = dept;
+                    profileBio.textContent = bio;
+                    profilePic.src = pic;
+                    
+
+
+                    // Show profile and hide search
+                    searchContent.classList.add("hidden");
+                    profileContent.classList.remove("hidden");
+                    const classrooms = card.dataset.classroom ? JSON.parse(card.dataset.classroom) : [];
+                    renderClassrooms(classrooms, sclassroomsContainer ,1);
+
+                });
+
+                // Handle "Back to Search" button
+                backToSearchBtn.addEventListener("click", () => {
+                    profileContent.classList.add("hidden");
+                    searchContent.classList.remove("hidden");
+                });
+            });
+
+            
+            function debounce(fn, wait = 300) {
+            let t;
+            return function (...args) {
+                clearTimeout(t);
+                t = setTimeout(() => fn.apply(this, args), wait);
+            };
+            }
+
+            /* render a single user card (consistent with your modern UI) */
+            function renderUserCard(user) {
+            const div = document.createElement('div');
+            div.className = 'result-card bg-white p-5 rounded-2xl shadow hover:shadow-lg hover:scale-[1.02] transition transform duration-300 flex items-center space-x-4';
+            const avatarUrl = user.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=ddd&color=333&rounded=true`;
+            const roleBadge = user.role === 'faculty' ? '<span class="text-sm font-medium text-indigo-700 bg-indigo-100 px-2 py-1 rounded-full">Faculty</span>' : '<span class="text-sm font-medium text-green-700 bg-green-100 px-2 py-1 rounded-full">Student</span>';
+            
+            div.dataset.name = user.name || '';
+            div.dataset.id = user.userid || '';
+            div.dataset.department = user.department || '';
+            div.dataset.bio = user.bio || '';
+            div.dataset.pic = avatarUrl;
+            div.dataset.role = user.role || '';
+            div.dataset.classroom = JSON.stringify(user.classrooms || []);
+
+
+            div.innerHTML = `
+                <img src="${avatarUrl}" alt="${user.name}" class="w-14 h-14 rounded-full border-2 border-indigo-100 object-cover">
+                <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="min-w-0">
+                    <p class="font-semibold text-lg text-gray-800 truncate">${user.name || '—'}</p>
+                    <p class="text-sm text-gray-500 truncate">${user.email || ''}</p>
+                    </div>
+                    <div class="flex-shrink-0">${roleBadge}</div>
+                </div>
+                <div class="mt-2 text-sm text-gray-600">
+                    <span class="font-medium text-gray-700">ID:</span> ${user.userid || '—'}
+                    <span class="mx-2">•</span>
+                    <span class="font-medium text-gray-700">Dept:</span> ${user.department || '—'}
+                </div>
+                </div>
+            `;
+            return div;
+            }
+
+            /* main search handler */
+            const searchInput = document.getElementById('searchInput');
+            const resultsDiv = document.getElementById('results');
+
+            async function doSearch(query) {
+            resultsDiv.innerHTML = '<div class="col-span-full text-center py-6 text-gray-500">Searching...</div>';
+            try {
+                const resp = await fetch('/search_users?query=' + encodeURIComponent(query), { method: 'GET' });
+                if (!resp.ok) {
+                const err = await resp.json().catch(() => ({}));
+                resultsDiv.innerHTML = `<div class="col-span-full text-center py-6 text-red-500">Error: ${err.error || resp.statusText}</div>`;
+                return;
+                }
+                const data = await resp.json();
+                resultsDiv.innerHTML = '';
+                if (!data || data.length === 0) {
+                resultsDiv.innerHTML = '<div class="col-span-full text-center py-10 text-gray-500">No users found</div>';
+                return;
+                }
+                data.forEach(user => {
+                resultsDiv.appendChild(renderUserCard(user));
+                });
+            } catch (e) {
+                console.error(e);
+                resultsDiv.innerHTML = '<div class="col-span-full text-center py-6 text-red-500">Network error</div>';
+            }
+            }
+
+            /* Debounced input listener for live search */
+            const debouncedSearch = debounce((e) => {
+            const q = e.target.value.trim();
+            if (q.length === 0) {
+                // maybe show recent users or clear
+                resultsDiv.innerHTML = '<div class="col-span-full text-center py-10 text-gray-500">Type to search users</div>';
+                return;
+            }
+            doSearch(q);
+            }, 300);
+
+            searchInput.addEventListener('input', debouncedSearch);
+
+            /* optional: search on Enter key immediately */
+            searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                doSearch(searchInput.value.trim());
+            }
+            });
+
+
+        
+            document.getElementById('save').addEventListener('click', async () => {
+                    const name = document.getElementById('name').value.trim();
+                    const id = document.getElementById('id').value.trim();
+                    const department = document.getElementById('department').value.trim();
+                    const bio = document.getElementById('bio').value.trim();
+
+                    try {
+                        const response = await fetch('/update_profile', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, id, department, bio })
+                        });
+
+                        const data = await response.json();
+                        if (response.ok) {
+                            showToast('Profile updated successfully ', 'success');
+                            document.getElementById('save').classList.add('hidden');
+                        } else {
+                            showToast(data.error || 'Failed to update profile ', 'error');
+                        }
+                    } catch (err) {
+                        showToast('Error connecting to server ', 'error');
+                        console.error(err);
+                    }
+                });
+
+            function showToast(message, type = "success") {
+                const toast = document.getElementById("toast");
+                toast.textContent = message;
+                toast.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 backdrop-blur-sm transition-all duration-500 transform translate-y-0 opacity-100 ${
+                    type === "success" ? "bg-green-500" : "bg-red-500"
+                }`;
+                toast.classList.remove("hidden");
+
+                // Slide in animation
+                toast.style.transform = "translateY(-10px)";
+                toast.style.opacity = "1";
+
+                // Remove after 3 seconds with smooth fade-out
+                setTimeout(() => {
+                    toast.style.opacity = "0";
+                    toast.style.transform = "translateY(-20px)";
+                    setTimeout(() => {
+                        toast.classList.add("hidden");
+                    }, 500);
+                }, 3000);
+            }
+
+            // Handle reset password button click
+            document.getElementById("resetPassword").addEventListener("click", (e) => {
+                e.preventDefault(); // prevent form reload
+                fetch("/reset_password", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                })
+                .then(res => res.json())
+                .then(data => showToast(data.message, data.status))
+                .catch(() => showToast("Something went wrong!", "error"));
+            });
+
+
+
+            const saveButton = document.getElementById('save');
+            document.addEventListener('DOMContentLoaded', function() {
+                // Fetch user profile data from Flask
+                saveButton.classList.add('hidden');
+                const classroomsContainer = document.getElementById('classrooms');
+                const clsroomcntner = document.getElementById('classrooms-in-content');
+                clsroomcntner.innerHTML = "<p class='text-black-500'>Loading classrooms...</p>";
+
+                async function loadClassrooms() {
+                    clsroomcntner.innerHTML = "<p class='text-gray-500'>Loading classrooms...</p>";
+
+                    try {
+                        const response = await fetch('/get_profile_data');
+                        const data = await response.json();
+
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                            return;
+                        }
+
+                        // fill user data
+                        document.getElementById('name').value = data.name || '';
+                        document.getElementById('id').value = data.userid || '';
+                        document.getElementById('department').value = data.department || '';
+                        document.getElementById('bio').value = data.bio || '';
+                        window.currentUser = {user_email: data.email || ''};
+                        if (saveButton) saveButton.classList.add('hidden');
+
+                        renderClassrooms(data.classrooms || [], classroomsContainer, 0);
+
+                        // render right-side classrooms
+                        if (clsroomcntner) {
+                            clsroomcntner.innerHTML = ""; // clear loading text
+                            const classrooms = data.classrooms || [];
+
+                            if (classrooms.length === 0) {
+                                clsroomcntner.innerHTML = "<p class='text-gray-500'>No classrooms found.</p>";
+                                return;
+                            }
+
+                            classrooms.forEach(cls => {
+                                const card = createClassroomCardContent(cls);
+                                clsroomcntner.appendChild(card);
+                            });
+                        }
+
+                    } catch (error) {
+                        console.error('Error fetching profile:', error);
+                    }
+                }
+
+                // 🟢 call loadClassrooms() initially
+                loadClassrooms();
+
+                // expose globally so delete code can use it
+                window.loadClassrooms = loadClassrooms;
+
+
+            });
+
+            function renderClassrooms(classrooms,kclassroomsContainer,cardtype) {
+                    if (!kclassroomsContainer) return;
+
+                    kclassroomsContainer.innerHTML = ''; // clear
+                    if (!classrooms || classrooms.length === 0) {
+                        kclassroomsContainer.innerHTML = '<div class="col-span-full text-gray-500 p-4">No classrooms created yet.</div>';
+                        return;
+                    }
+                    classrooms.forEach(cls => {
+                        kclassroomsContainer.appendChild(createClassroomCard(cls,cardtype));
+                    });
+
+                }
+            function createClassroomCard(cls,cardtype) {
+                    const div = document.createElement('div');
+                    div.className = 'p-4 bg-white rounded-xl shadow-sm border flex flex-col justify-between';
+
+                    // Format created date
+                    let created = cls.createdDate || '';
+                    try {
+                        // try parse ISO if possible
+                        const d = new Date(created);
+                        if (!isNaN(d.getTime())) {
+                            created = d.toLocaleString(); // adjust formatting as needed
+                        }
+                    } catch (e) { /* ignore */ }
+
+                   if(cardtype==0){
+                   div.innerHTML = `
+                            <div class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
+                                <!-- Gradient accent bar -->
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                                <div class="p-5 pr-7">
+                                <!-- Title -->
+                                <h3 class="text-xl font-bold text-gray-900 mb-1.5 truncate tracking-tight">
+                                    ${escapeHtml(cls.name || 'Untitled Classroom')}
+                                </h3>
+
+                                <!-- Subject -->
+                                <div class="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13c-1.168-.776-2.754-1.253-4.5-1.253s-3.332-.477-4.5-1.253"></path>
+                                    </svg>
+                                    <span class="font-semibold text-gray-800">${escapeHtml(cls.subjectCode || '—')}</span>
+                                </div>
+
+                                <!-- Created date -->
+                                <p class="text-xs text-gray-400 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    ${escapeHtml(created)}
+                                </p>
+                                </div>
+
+                                <!-- Delete button (bottom right, floating on hover) -->
+                                <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                <button 
+                                    data-id="${cls.id}" 
+                                    class="delete-classroom-btn flex items-center gap-1.5 bg-red-500 text-white font-medium px-4 py-2 rounded-lg hover:bg-red-600 shadow-lg hover:shadow-red-500/30 transition-all text-sm whitespace-nowrap">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                                </div>
+                            </div>
+                            `;
+                        } else {
+                            div.innerHTML = `
+                            <div class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
+                                <!-- Gradient accent bar -->
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                                <div class="p-5 pr-7">
+                                <!-- Title -->
+                                <h3 class="text-xl font-bold text-gray-900 mb-1.5 truncate tracking-tight">
+                                    ${escapeHtml(cls.name || 'Untitled Classroom')}
+                                </h3>
+
+                                <!-- Subject -->
+                                <div class="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13c-1.168-.776-2.754-1.253-4.5-1.253s-3.332-.477-4.5-1.253"></path>
+                                    </svg>
+                                    <span class="font-semibold text-gray-800">${escapeHtml(cls.subjectCode || '—')}</span>
+                                </div>
+
+                                <!-- Created date -->
+                                <p class="text-xs text-gray-400 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    ${escapeHtml(created)}
+                                </p>
+                                </div>
+
+                                <!-- Request join button (bottom right, floating on hover) -->
+                                <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                <button 
+                                    data-id="${cls.id}" 
+                                    class="join-classroom-btn flex items-center gap-1.5 bg-cyan-500 text-white font-medium px-4 py-2 rounded-lg hover:bg-green-600 shadow-lg hover:shadow-green-500/30 transition-all text-sm whitespace-nowrap">
+                                    Request Join
+                                </button>
+                                </div>
+                            </div>
+                            `;
+                        }
+                    // attach event
+                    const delBtn = div.querySelector('.delete-classroom-btn');
+                    if (delBtn) {
+                        delBtn.addEventListener('click', async (e) => {
+                            const id = e.currentTarget.dataset.id;
+                            if (!confirm('Delete classroom? This action cannot be undone.')) return;
+
+                            try {
+                                const resp = await fetch('/delete_classroom', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ id })
+                                });
+                                const result = await resp.json();
+                                if (resp.ok && result.success) {
+                                    showToast('Classroom deleted', 'success');
+                                    // remove card from UI
+                                    div.remove();
+                                    if (typeof loadClassrooms === 'function') {
+                                            loadClassrooms();
+                                        }
+                                } else {
+                                    showToast(result.message || 'Failed to delete', 'error');
+                                }
+                            } catch (err) {
+                                console.error(err);
+                                showToast('Error deleting classroom', 'error');
+                            }
+                        });
+                    }
+
+                    const joinBtn = div.querySelector('.join-classroom-btn');
+                    if (joinBtn) {
+                    joinBtn.addEventListener('click', async (e) => {
+                        const classroomId = e.currentTarget.dataset.id;
+
+                        try {
+                        const resp = await fetch(`/join_classroom/${classroomId}`, {
+                            method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/json',
+                            },
+                            credentials: 'include' // 👈 critical for Flask session cookies
+                        });
+
+                        const text = await resp.text(); // 👈 read as text first
+                        console.log('Raw response:', text);
+
+                        let data = {};
+                        try {
+                            data = JSON.parse(text);
+                        } catch {
+                            console.warn('Response is not valid JSON:', text);
+                        }
+
+                        if (resp.ok) {
+                            showToast('Join request sent successfully!', 'success');
+                        } else {
+                            showToast(data.error || 'Failed to send join request.', 'error');
+                        }
+                        } catch (err) {
+                        console.error('Error sending join request:', err);
+                        showToast('Could not send join request.', 'error');
+                        }
+                    });
+                    }
+
+                    return div;
+                }
+
+
+
+                function escapeHtml(text) {
+                    if (!text) return '';
+                    return text
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                }
+
+
+        const inputs = document.querySelectorAll('#profile_pic, #name, #id, #department, #bio');
+            if (saveButton) {
+                inputs.forEach(input => {
+                    input.addEventListener('change', () => {
+                        saveButton.classList.remove('hidden');
+                    });
+                });
+            }    
+
+
         document.addEventListener('DOMContentLoaded', function() {
             const body = document.body;
             const navItems = document.querySelectorAll('.nav-item');
@@ -500,63 +1103,30 @@
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
                     const section = item.getAttribute('data-section');
-                    if (section === 'search') {
-                        body.classList.add('search-active');
-                    } else {
-                        body.classList.remove('search-active');
-                        showSection(section + '-content');
+                    
+                    // Hide all content sections
+                    document.querySelectorAll('.content-section').forEach(sec => {
+                        sec.classList.add('hidden');
+                    });
+
+                    // Show the clicked section
+                    const activeSection = document.getElementById(section + '-content');
+                    if (activeSection) {
+                        activeSection.classList.remove('hidden');
                     }
+
+                    // Update active class on navbar
                     navItems.forEach(nav => nav.classList.remove('active'));
                     item.classList.add('active');
                 });
             });
+
 
             // Default to home section on page load
             if (homeNavItem) {
                 homeNavItem.classList.add('active');
                 showSection('home-content');
             }
-
-            // --- Dynamic Recent Searches ---
-            const recentSearchesList = document.getElementById('recent-searches-list');
-            let recentSearches = [
-                { name: 'Ms. Senthil Anandhi', role: 'Teacher', initial: 'M', color: 'bg-purple-500' },
-                { name: 'Advanced Algorithms', role: 'Course', initial: 'A', color: 'bg-blue-500' },
-                { name: 'Balu Chandrashekar', role: 'Student', initial: 'B', color: 'bg-green-500' }
-            ];
-
-            function renderRecentSearches() {
-                recentSearchesList.innerHTML = '';
-                recentSearches.forEach((search, index) => {
-                    const searchItemHTML = `
-                        <div class="flex items-center justify-between recent-search-item">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full ${search.color} flex items-center justify-center text-white font-bold">${search.initial}</div>
-                                <div>
-                                    <p class="font-semibold text-sm">${search.name}</p>
-                                    <p class="text-xs text-gray-500">${search.role}</p>
-                                </div>
-                            </div>
-                            <button class="text-gray-400 hover:text-gray-700 remove-recent-btn" data-index="${index}">&times;</button>
-                        </div>`;
-                    recentSearchesList.insertAdjacentHTML('beforeend', searchItemHTML);
-                });
-            }
-
-            document.getElementById('clear-recent-btn').addEventListener('click', () => {
-                recentSearches = [];
-                renderRecentSearches();
-            });
-
-            recentSearchesList.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remove-recent-btn')) {
-                    const indexToRemove = parseInt(e.target.dataset.index);
-                    recentSearches.splice(indexToRemove, 1);
-                    renderRecentSearches();
-                }
-            });
-
-            renderRecentSearches();
 
             // --- Add/Join Classroom Modal Functionality ---
             const addClassroomBtn = document.getElementById('add-classroom-btn');
@@ -599,75 +1169,53 @@
                 });
             });
 
-          /*  const courses = document.querySelectorAll('.course');
-            courses.forEach(course => {
-                course.addEventListener('click', () => {
-                    const courseName = course.querySelector('h2').textContent;
-                    if (course.classList.contains('unlocked')) {
-                        alert(`Accessing course: ${courseName}`);
-                    } else {
-                        alert(`Course ${courseName} is locked. Complete the previous course to unlock.`);
-                    }
-                });
-            }); */
+            
+            // --- Profile Tabs Handling ---
+            function setupProfileTabs(profileSectionId) {
+                const section = document.getElementById(profileSectionId);
+                if (!section) return;
 
-            const inputs = document.querySelectorAll('#profile_pic, #name, #id, #department, #bio');
-            const saveButton = document.getElementById('save');
-            if (saveButton) {
-                inputs.forEach(input => {
-                    input.addEventListener('change', () => {
-                        saveButton.classList.remove('hidden');
-                    });
-                });
-            }
+                const navLinks = section.querySelectorAll('.nav-link');
+                const tabContents = section.querySelectorAll('.tab-content');
+                const addButton = section.querySelector('#addButton');
 
-            const navLinks = document.querySelectorAll('.nav-link');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const addButton = document.getElementById('addButton');
-
-            if (addButton) {
                 navLinks.forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
+
+                        // deactivate all tabs
                         navLinks.forEach(l => l.classList.remove('active'));
                         link.classList.add('active');
 
+                        // get the clicked tab id
                         const tab = link.getAttribute('data-tab');
-                        tabContents.forEach(content => {
-                            if (content.id === 'posts' || content.id === 'classrooms' || content.id === 'addPostForm' || content.id === 'addClassroomForm') {
-                                content.classList.add('hidden');
-                            }
-                        });
 
-                        const targetTab = document.getElementById(tab);
-                        if (targetTab) {
-                            targetTab.classList.remove('hidden');
-                        }
-                        const addPostForm = document.getElementById('addPostForm');
-                        const addClassroomForm = document.getElementById('addClassroomForm');
-                        if (addPostForm) addPostForm.classList.add('hidden');
-                        if (addClassroomForm) addClassroomForm.classList.add('hidden');
+                        // hide all tab contents in this section
+                        tabContents.forEach(content => content.classList.add('hidden'));
+
+                        // show the target tab in this section
+                        const targetTab = section.querySelector(`#${tab}`);
+                        if (targetTab) targetTab.classList.remove('hidden');
                     });
                 });
 
-                addButton.addEventListener('click', () => {
-                    const activeTab = document.querySelector('.nav-link.active')?.getAttribute('data-tab');
-                    if (activeTab) {
-                        tabContents.forEach(content => {
-                            if (content.id === 'posts' || content.id === 'classrooms' || content.id === 'addPostForm' || content.id === 'addClassroomForm') {
-                                content.classList.add('hidden');
-                            }
-                        });
+                if (addButton) {
+                    addButton.addEventListener('click', () => {
+                        const activeTab = section.querySelector('.nav-link.active')?.getAttribute('data-tab');
                         if (activeTab === 'posts') {
-                            const addPostForm = document.getElementById('addPostForm');
+                            const addPostForm = section.querySelector('#addPostForm');
                             if (addPostForm) addPostForm.classList.remove('hidden');
                         } else if (activeTab === 'classrooms') {
-                            const addClassroomForm = document.getElementById('addClassroomForm');
-                            if (addClassroomForm) addClassroomForm.classList.remove('hidden');
+                            openModal(addModal);
                         }
-                    }
-                });
+                    });
+                }
             }
+
+            // ✅ Initialize for both profile sections
+            setupProfileTabs('profile-content');
+            setupProfileTabs('searchprofile-content');
+
 
             const submitPostButton = document.getElementById('submitPost');
             if (submitPostButton) {
@@ -684,6 +1232,8 @@
             }
         });
 
+
+
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -697,6 +1247,8 @@
                 reader.readAsDataURL(file);
             }
         }
+
+
 
         function addStudentReminder() {
             const input = document.getElementById('studentInput');
@@ -712,6 +1264,119 @@
                 input.value = '';
             }
         }
+
+
+        function createClassroomCardContent(classroom) {
+            const card = document.createElement("div");
+            card.className = "bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300";
+
+            const neonGradient = randomNeon();           // ← unique per card
+            const neonClass = neonGradient.replace(/from-| to-|-500/g, '').replace(' ', '-'); 
+            // → e.g. "cyan-blue"
+
+            card.classList.add('neon-' + neonClass);     // ← usable in JS: document.querySelector('.neon-cyan-blue')
+
+            card.classList.add('neon-' + neonClass);
+            card.innerHTML = `
+            <div class="group relative bg-white rounded-2xl shadow-md 
+                            hover:shadow-xl transition-all duration-300 
+                            border border-gray-100 overflow-hidden">
+                
+                <!-- LEFT GRADIENT BAR (slides in on hover) -->
+                <div class="absolute top-0 left-0 w-1.5 h-full 
+                                bg-gradient-to-b ${neonGradient}
+                                opacity-0 group-hover:opacity-100 
+                                transition-opacity duration-500"></div>
+
+                <div class="p-6 pr-8">
+                <h2 class="text-2xl  tracking-tight mb-2 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent text-2xl rounded-full"">
+                    ${escapeHtml(classroom.name)}
+                </h2>
+                
+                <p class="text-sm opacity-70 mb-5">
+                    ${escapeHtml(classroom.owner || "You")}
+                </p>
+
+                <div class="flex justify-between items-center text-xs">
+                    <span class="flex items-center gap-1.5 opacity-60">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    ${classroom.noOfStudents || 0}
+                    </span>
+
+                    <span class="px-2.5 py-1 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent 
+                                font-bold text-xs rounded-full">
+                    ${escapeHtml(classroom.subjectCode || "—")}
+                    </span>
+                </div>
+                </div>
+
+                <!-- ENTER BUTTON (40px + neon hover) -->
+                <a href="/classroom/${classroom.id}"
+                class="block text-center py-2.5 text-sm font-medium text-gray-600
+                        border-t border-gray-200 relative overflow-hidden
+                        transition-all duration-400">
+                
+                <span class="px-2.5 py-1 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent font-bold text-xs rounded-full 
+                        transition-all duration-500 ease-in-out transform group-hover:opacity-0 group-hover:scale-95">
+            Enter Classroom →
+            </span>
+
+            <span class="absolute inset-0 flex items-center justify-center 
+                        bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent font-bold
+                        opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 
+                        transition-all duration-500 ease-in-out">
+            Enter Classroom →
+            </span>
+
+
+                </a>
+            </div>
+            `;
+
+            const enterBtn = card.querySelector('a');
+            if (enterBtn) {
+                enterBtn.addEventListener('click', (e) => {
+                    // Optional: prevent default redirect until we save details
+                    // e.preventDefault();
+
+                    const classroomData = {
+                        ownerEmail: classroom.ownerEmail,
+                        userEmail: window.currentUser.user_email || '',
+                        id: classroom.id,
+                        name: classroom.name,
+                        subjectCode: classroom.subjectCode,
+                        owner: classroom.owner || "You"
+                    };
+
+                    // Save selected classroom details to localStorage
+                    localStorage.setItem('selectedClassroom', JSON.stringify(classroomData));
+
+                    // You can optionally log it for verification
+                    console.log("Saved classroom:", classroomData);
+                });
+            }
+
+            return card;
+        }
+
+
+        function randomNeon() {
+            const neons = [
+                'from-pink-400 to-rose-500',
+                'from-cyan-400 to-blue-500',
+                'from-emerald-400 to-teal-500',
+                'from-purple-400 to-indigo-500',
+                'from-orange-400 to-red-500',
+                'from-lime-400 to-green-500',
+                'from-fuchsia-400 to-purple-500'
+            ];
+            return neons[Math.floor(Math.random() * neons.length)];
+        }
+
+
     </script>
 </body>
 </html>
