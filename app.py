@@ -77,8 +77,7 @@ def home():
     """Redirects the root URL to the login page."""
     return redirect(url_for('login'))
 
-
-#LOGIN
+# LOGIN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -88,45 +87,37 @@ def login():
         password = form.password.data
 
         try:
-            # 1️⃣ Sign in the user with Firebase Auth
+            # 1️⃣ Sign in user with Firebase Auth
             user = auth.sign_in_with_email_and_password(email, password)
 
-            # 2️⃣ Determine user type and Firestore path
-            # Assuming 'students' are type 1, 'faculty' type 2
+            # 2️⃣ Firestore: check in 'users' collection
             safe_email = email.replace(".", "_")
-
-            # First check students collection
-            doc_ref = firestore_db.collection("User").document("students").collection("students").document(safe_email)
+            doc_ref = firestore_db.collection("users").document(safe_email)
             doc = doc_ref.get()
 
             if not doc.exists:
-                # If not found in students, check faculty
-                doc_ref = firestore_db.collection("User").document("faculty").collection("faculty").document(safe_email)
-                doc = doc_ref.get()
-                user_type = "faculty"
-            else:
-                user_type = "students"
-
-            if not doc.exists:
-                flash("User profile not found in database. Contact admin.", "error")
+                flash("User not found in Firestore. Contact admin.", "error")
                 return redirect(url_for('login'))
 
             user_data = doc.to_dict()
+            user_role = user_data.get("role", "Unknown")
 
             # 3️⃣ Check if profile is complete
-            profile_fields = ["name", "id"]
-            profile_complete = all(field in user_data and user_data[field] for field in profile_fields)
+            profile_fields = ["name", "id"]  # fields to check in Firestore
+            profile_complete = all(
+                field in user_data and user_data[field] for field in profile_fields
+            )
 
-            # 4️⃣ Set session
+            # 4️⃣ Set session info
             session['user_email'] = email
-            session['user_role'] = user_type
+            session['user_role'] = user_role
 
-            # 5️⃣ Redirect based on profile completeness
+            # 5️⃣ Redirect based on completeness
             if profile_complete:
                 flash(f"Welcome back, {email}!", "success")
                 return redirect(url_for('dashboard'))
             else:
-                flash("Please complete your profile.", "info")
+                flash("Please complete your profile setup.", "info")
                 return redirect(url_for('setup_profile'))
 
         except Exception as e:
@@ -143,7 +134,9 @@ def login():
     return render_template('login.html', form=form)
 
 
-#SETUP PROFILE
+
+
+# SETUP PROFILE
 @app.route('/setup_profile', methods=['GET', 'POST'])
 def setup_profile():
     if 'user_email' not in session:
@@ -159,21 +152,26 @@ def setup_profile():
         department = form.department.data
         bio = form.bio.data
 
-        # Use email as document ID
-        safe_email = session['user_email'].replace('.', '_')
-        user_type = session.get('user_role')
-        user_doc = firestore_db.collection("User").document(user_type).collection(user_type).document(safe_email)
+        # Get session info
+        email = session['user_email']
+        role = session.get('user_role', 'Student')  # Default to Student if missing
+        safe_email = email.replace('.', '_')
 
+        # Reference to users collection
+        user_doc = firestore_db.collection("users").document(safe_email)
+
+        # Data to save
         user_data = {
             'name': name,
             'id': student_id,
             'department': department,
             'bio': bio,
-            'profile_complete': True
+            'role': role
         }
 
+        # Save profile data to Firestore
+        user_doc.set(user_data, merge=True)
 
-        user_doc.set(user_data)
         flash('Profile saved successfully!', 'success')
         return redirect(url_for('dashboard'))
 
@@ -222,19 +220,17 @@ def update_profile():
 
     try:
         safe_email = session['user_email'].replace('.', '_')
-        user_type = session.get('user_role')
-        user_doc = firestore_db.collection("User").document(user_type).collection(user_type).document(safe_email)
+        user_doc = firestore_db.collection("users").document(safe_email)
 
         user_data = {
             'name': name,
             'id': user_id,
             'department': department,
-            'bio': bio,
-            'profile_complete': True
+            'bio': bio
         }
 
 
-        user_doc.set(user_data)
+        user_doc.set(user_data, merge=True)
         return jsonify({'message': 'Profile updated successfully'}), 200
 
     except Exception as e:
@@ -250,11 +246,10 @@ def get_profile_data():
         return {'error': 'User not logged in'}, 401
 
     user_email = session['user_email']
-    user_type = session.get('user_role')
     safe_email = user_email.replace('.', '_')  # Firestore doc names can’t contain '.'
 
     try:
-        user_doc = firestore_db.collection("User").document(user_type).collection(user_type).document(safe_email).get()
+        user_doc = firestore_db.collection("users").document(safe_email).get()
         if user_doc.exists:
             user_data = user_doc.to_dict()
             classroom_ids = user_data.get('classroom', [])  # list of ids (may be empty)
@@ -267,12 +262,9 @@ def get_profile_data():
                     if class_data:
                         owner_email = class_data.get('owner', '')
                         owner_email = owner_email.replace('.', '_')
-                        owner_doc = firestore_db.collection("User").document("faculty").collection("faculty").document(owner_email).get()
+                        owner_doc = firestore_db.collection("users").document(owner_email).get()
                         if owner_doc.exists:
-                            owner_name = owner_doc.to_dict().get('name', 'Unknown')
-                        else:
-                            owner_doc1 = firestore_db.collection("User").document("students").collection("students").document(owner_email).get()
-                            owner_name = owner_doc1.to_dict().get('name', 'Unknown')    
+                            owner_name = owner_doc.to_dict().get('name', 'Unknown')    
                         classrooms.append({
                             'id': cid,
                             'name': class_data.get('classroomName', ''),
@@ -291,6 +283,7 @@ def get_profile_data():
 
             return {
                 'email': user_email,
+                'role': user_data.get('role', ''),
                 'name': user_data.get('name', ''),
                 'userid': user_data.get('id', ''),
                 'department': user_data.get('department', ''),
@@ -321,7 +314,7 @@ def search_users():
 
     try:
         # STUDENTS
-        students_col = firestore_db.collection('User').document('students').collection('students')
+        students_col = firestore_db.collection('users')
         for doc in students_col.stream():
             data = doc.to_dict() or {}
             # normalize fields to avoid KeyErrors
@@ -355,45 +348,7 @@ def search_users():
                     'userid': data.get('userid') or data.get('id') or '',
                     'department': data.get('department', ''),
                     'bio': data.get('bio', ''),
-                    'role': 'student',
-                    'classrooms': classrooms
-                })
-
-        # FACULTY
-        faculty_col = firestore_db.collection('User').document('faculty').collection('faculty')
-        for doc in faculty_col.stream():
-            data = doc.to_dict() or {}
-            name = (data.get('name') or '').lower()
-            userid = (data.get('userid') or data.get('id') or '').lower()
-
-            if (q in name or q in userid) and doc.id != session.get('user_email','').replace('.', '_').lower():
-                classroom_ids = data.get('classroom', [])  # list of ids (may be empty)
-                classrooms = []
-                for cid in classroom_ids:
-                    try:
-                        class_ref = realtime_db.reference(f'classrooms/{cid}')
-                        class_data = class_ref.get()
-                        if class_data:
-                            classrooms.append({
-                                'id': cid,
-                                'name': class_data.get('classroomName', ''),
-                                'subjectCode': class_data.get('subjectCode', ''),
-                                'createdDate': class_data.get('createdDate', ''),
-                            })
-                        else:
-                            # If realtime entry was removed, skip or you can mark as missing
-                            pass
-                    except Exception as e:
-                        # log and continue
-                        print(f"Error fetching classroom {cid} from RTDB:", e)
-                        
-                results.append({
-                    'name': data.get('name', ''),
-                    'email': data.get('email', ''),
-                    'userid': data.get('userid') or data.get('id') or '',
-                    'department': data.get('department', ''),
-                    'bio': data.get('bio', ''),
-                    'role': 'faculty',
+                    'role': data.get('role',''),
                     'classrooms': classrooms
                 })
 
@@ -496,7 +451,7 @@ def create_classroom():
         name = data.get('name')
         subject = data.get('subject')
         user_email = session.get('user_email')
-        user_type = session.get('user_role')  # assuming user logged in
+
         if not user_email:
             return jsonify({'success': False, 'message': 'Not logged in'})
 
@@ -513,7 +468,7 @@ def create_classroom():
 
         classroom_id = new_ref.key
         safe_email = user_email.replace('.', '_')
-        user_classroom_ref = firestore_db.collection("User").document(user_type).collection(user_type).document(safe_email)
+        user_classroom_ref = firestore_db.collection("users").document(safe_email)
         user_classroom_ref.set({
             'classroom': firestore.ArrayUnion([classroom_id])
         }, merge=True)
@@ -549,7 +504,6 @@ def delete_classroom():
         return jsonify({'success': False, 'message': 'Missing classroom id'}), 400
 
     user_email = session['user_email']
-    user_type = session.get('user_role')  # fallback
     safe_email = user_email.replace('.', '_')
 
     try:
@@ -558,7 +512,7 @@ def delete_classroom():
         class_ref.delete()
 
         # 2) Remove classroom id from Firestore user doc (use ArrayRemove)
-        user_doc_ref = firestore_db.collection("User").document(user_type).collection(user_type).document(safe_email)
+        user_doc_ref = firestore_db.collection("users").document(safe_email)
         user_doc_ref.update({
             'classroom': firestore.ArrayRemove([classroom_id])
         })
@@ -654,13 +608,10 @@ def get_join_requests(classroom_id):
             email = email_key
 
             # 3️⃣ Search for this email in Firestore under User collection
-            req_doc = firestore_db.collection("User").document("faculty").collection("faculty").document(email).get()
+            req_doc = firestore_db.collection("users").document(email).get()
             if req_doc.exists:
                 req_name = req_doc.to_dict().get('name', 'Unknown')
-            else:
-                req_doc1 = firestore_db.collection("User").document("students").collection("students").document(email).get()
-                req_name = req_doc1.to_dict().get('name', 'Unknown') 
-
+            
 
             result.append({
                     'name':req_name ,
@@ -672,6 +623,8 @@ def get_join_requests(classroom_id):
     except Exception as e:
         print("Error fetching join requests:", str(e))
         return jsonify({'error': str(e)}), 500
+    
+    
     
 
 @app.route('/reject_join_request', methods=['POST'])
@@ -727,26 +680,56 @@ def accept_join_request():
         current_count = classroom_ref.child('noOfStudents').get() or 0
         classroom_ref.child('noOfStudents').set(current_count + 1)
 
-        req_ref = firestore_db.collection("User").document("faculty").collection("faculty").document(email_key)
+        req_ref = firestore_db.collection("users").document(email_key)
         req_doc = req_ref.get()
         if req_doc.exists:
             req_ref.set({
             'classroom': firestore.ArrayUnion([classroom_id])
         }, merge=True)
-        else:
-            req_doc1 = firestore_db.collection("User").document("students").collection("students").document(email_key)
-            req_doc1.set({
-            'classroom': firestore.ArrayUnion([classroom_id])
-        }, merge=True) 
-
         
-
-
         return jsonify({'success': True, 'message': 'Join request accepted'}), 200
 
     except Exception as e:
         print("Error accepting join request:", e)
         return jsonify({'error': str(e)}), 500
+    
+
+
+
+@app.route('/get_members/<classroom_id>', methods=['GET'])
+def get_members(classroom_id):
+    try:
+        # 1️⃣ Fetch members from Realtime Database
+        members_ref = realtime_db.reference(f'classrooms/{classroom_id}/members')
+        members = members_ref.get() or {}
+
+        if not members:
+            return jsonify([]), 200
+
+        firestore_db = firestore.client()
+        result = []
+
+        # 2️⃣ For each member email_key (stored as student1@insighteval_com)
+        for email_key in members.keys():
+            email = email_key.replace('_', '.')  # convert back to normal email format
+
+            # 3️⃣ Check Firestore (faculty first, then students)
+            doc_faculty = firestore_db.collection("users").document(email_key).get()
+            if doc_faculty.exists:
+                user_data = doc_faculty.to_dict()
+                name = user_data.get('name', 'Unknown')
+            
+            result.append({
+                'name': name,
+                'email': email
+            })
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        print("Error fetching members:", str(e))
+        return jsonify({'error': str(e)}), 500
+
 
 
 

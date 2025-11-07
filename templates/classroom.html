@@ -128,8 +128,8 @@
                             <div>
                                 <h3 class="font-semibold text-purple-700 mb-3 text-sm tracking-wider">TEACHER</h3>
                                 <div class="flex items-center space-x-3 member-entry">
-                                    <div class="member-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                                    <span class="member-name font-semibold text-gray-700">Ms. Senthil Anandhi</span>
+                                    <div class="w-9 h-9 rounded-full ml-3 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold member-initial"></div>
+                                    <span class="member-name font-semibold text-gray-700">teacher_insightEval</span>
                                 </div>
                             </div>
                             <div>
@@ -291,6 +291,8 @@
                 requestsBadge.classList.toggle('hidden', count === 0);
             }
 
+            fetchMembers();
+
             if (user_email === owner_email) {
                 tabRequests.classList.remove('hidden');
                 loadJoinRequests();
@@ -333,76 +335,77 @@
             }
 
             requestsContainer.addEventListener('click', async function(e) {
-    const btn = e.target.closest('button');
-    if (!btn) return;
+                    const btn = e.target.closest('button');
+                    if (!btn) return;
 
-    const isDecline = btn.classList.contains('decline-btn');
-    const isAccept = btn.classList.contains('accept-btn');
-    const item = btn.closest('.request-item');
-    const email = item.querySelector('.email-textfeild').textContent.trim();
+                    const isDecline = btn.classList.contains('decline-btn');
+                    const isAccept = btn.classList.contains('accept-btn');
+                    const item = btn.closest('.request-item');
+                    const email = item.querySelector('.email-textfeild').textContent.trim();
 
-    if (isDecline) {
-        if (!confirm(`Reject ${email}?`)) return;
+                    if (isDecline) {
+                        if (!confirm(`Reject ${email}?`)) return;
 
-        try {
-            const resp = await fetch('/reject_join_request', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    classroom_id: classroom_details.id,
-                    email: email
-                })
+                        try {
+                            const resp = await fetch('/reject_join_request', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    classroom_id: classroom_details.id,
+                                    email: email
+                                })
+                            });
+                            const result = await resp.json();
+
+                            if (resp.ok && result.success) {
+                                item.style.transition = 'opacity 0.3s ease';
+                                item.style.opacity = '0';
+                                setTimeout(() => item.remove(), 300);
+                                joinRequests = joinRequests.filter(r => r.email !== email);
+                                updateRequestsBadge();
+                            } else {
+                                alert(result.error || 'Failed to reject request');
+                            }
+
+                        } catch (err) {
+                            console.error('Error:', err);
+                            alert('Error rejecting request');
+                        }
+                    }
+
+                    // We'll add Accept logic later
+                    if (isAccept) {
+                    if (!confirm(`Accept ${email} into this classroom?`)) return;
+
+                    try {
+                        const resp = await fetch('/accept_join_request', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                classroom_id: classroom_details.id,
+                                email: email
+                            })
+                        });
+                    const result = await resp.json();
+
+                    if (resp.ok && result.success) {
+                        item.style.transition = 'opacity 0.3s ease';
+                        item.style.opacity = '0';
+                        setTimeout(() => item.remove(), 300);
+                        joinRequests = joinRequests.filter(r => r.email !== email);
+                        updateRequestsBadge();
+                        await fetchMembers();
+                    } else {
+                        alert(result.error || 'Failed to accept request');
+                    }
+
+                } catch (err) {
+                    console.error('Error:', err);
+                    alert('Error accepting request');
+                }
+                }
+
             });
-            const result = await resp.json();
-
-            if (resp.ok && result.success) {
-                item.style.transition = 'opacity 0.3s ease';
-                item.style.opacity = '0';
-                setTimeout(() => item.remove(), 300);
-                joinRequests = joinRequests.filter(r => r.email !== email);
-                updateRequestsBadge();
-            } else {
-                alert(result.error || 'Failed to reject request');
-            }
-
-        } catch (err) {
-            console.error('Error:', err);
-            alert('Error rejecting request');
-        }
-    }
-
-    // We'll add Accept logic later
-    if (isAccept) {
-    if (!confirm(`Accept ${email} into this classroom?`)) return;
-
-    try {
-        const resp = await fetch('/accept_join_request', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                classroom_id: classroom_details.id,
-                email: email
-            })
-        });
-        const result = await resp.json();
-
-        if (resp.ok && result.success) {
-            item.style.transition = 'opacity 0.3s ease';
-            item.style.opacity = '0';
-            setTimeout(() => item.remove(), 300);
-            joinRequests = joinRequests.filter(r => r.email !== email);
-            updateRequestsBadge();
-        } else {
-            alert(result.error || 'Failed to accept request');
-        }
-
-    } catch (err) {
-        console.error('Error:', err);
-        alert('Error accepting request');
-    }
-    }
-
-});
 
 
             tabMembers.addEventListener('click', () => {
@@ -519,32 +522,50 @@
                 </div>`;
             }
 
-            // === STUDENTS (NO VIEW MORE) ===
-            const studentNames = [];
-            const studentList = document.getElementById('student-list');
-            
-            function generateHslColor(name) {
-                let hash = 0;
-                for (let i = 0; i < name.length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
-                return `hsl(${hash % 360}, 60%, 50%)`;
+            async function fetchMembers() {
+                try {
+                    const resp = await fetch(`/get_members/${classroom_details.id}`);
+                    const members = await resp.json();
+
+                    const studentList = document.getElementById('student-list');
+                    studentList.innerHTML = '';
+
+                    if (members.length === 0) {
+                        studentList.innerHTML = `<p class="text-gray-400 text-sm">No students yet.</p>`;
+                        return;
+                    }
+
+                    members.forEach(member => {
+                        const firstLetter = member.name ? member.name.charAt(0).toUpperCase() : '?';
+
+                        const item = document.createElement('div');
+                        item.className = "flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200";
+                        item.innerHTML = `
+                            <div class="flex items-center space-x-3">
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                                    ${firstLetter}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">${member.name}</p>
+                                    <p class="text-xs text-gray-500">${member.email}</p>
+                                </div>
+                            </div>
+                        `;
+                        studentList.appendChild(item);
+                    });
+                } catch (err) {
+                    console.error("Error fetching members:", err);
+                }
             }
 
-            studentNames.forEach(name => {
-                const entry = document.createElement('div');
-                entry.className = 'flex items-center space-x-3 member-entry';
-                entry.innerHTML = `
-                    <div class="member-initial h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-lg"></div>
-                    <span class="member-name text-gray-700">${name}</span>
-                `;
-                studentList.appendChild(entry);
-            });
+
 
             document.querySelectorAll('.member-entry').forEach(entry => {
                 const nameSpan = entry.querySelector('.member-name');
+                nameSpan.textContent = classroom_details.owner || "Unknown Teacher";
                 const initialDiv = entry.querySelector('.member-initial');
                 const name = nameSpan.textContent.trim();
                 initialDiv.textContent = name.charAt(0).toUpperCase();
-                initialDiv.style.backgroundColor = generateHslColor(name);
             });
         });
     </script>
