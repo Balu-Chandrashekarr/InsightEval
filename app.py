@@ -313,7 +313,6 @@ def search_users():
     results = []
 
     try:
-        # STUDENTS
         students_col = firestore_db.collection('users')
         for doc in students_col.stream():
             data = doc.to_dict() or {}
@@ -321,7 +320,7 @@ def search_users():
             name = (data.get('name') or '').lower()
             userid = (data.get('userid') or data.get('id') or '').lower()
 
-            if (q in name or q in userid) and userid != session.get('user_email','').lower():
+            if (q in name or q in userid) and doc.id.replace('_','.') != session.get('user_email',''):
                 classroom_ids = data.get('classroom', [])  # list of ids (may be empty)
                 classrooms = []
                 for cid in classroom_ids:
@@ -329,12 +328,13 @@ def search_users():
                         class_ref = realtime_db.reference(f'classrooms/{cid}')
                         class_data = class_ref.get()
                         if class_data:
-                            classrooms.append({
-                                'id': cid,
-                                'name': class_data.get('classroomName', ''),
-                                'subjectCode': class_data.get('subjectCode', ''),
-                                'createdDate': class_data.get('createdDate', ''),
-                            })
+                            if(class_data.get('owner')==doc.id.replace('_','.')):
+                                classrooms.append({
+                                    'id': cid,
+                                    'name': class_data.get('classroomName', ''),
+                                    'subjectCode': class_data.get('subjectCode', ''),
+                                    'createdDate': class_data.get('createdDate', ''),
+                                })
                         else:
                             # If realtime entry was removed, skip or you can mark as missing
                             pass
@@ -465,15 +465,24 @@ def create_classroom():
             'members': {},
             'joinRequests': {}
         })
-
-        classroom_id = new_ref.key
+        classroom={
+            'id': new_ref.key,
+            'name': name,
+            'owner': "You",
+            'ownerEmail': user_email,
+            'noOfStudents': 0,
+            'subjectCode': subject,
+            'createdDate': datetime.now().strftime("%m/%d/%Y, %I:%M:%S %p")
+        }
+        classroom_id = new_ref.key    
         safe_email = user_email.replace('.', '_')
         user_classroom_ref = firestore_db.collection("users").document(safe_email)
         user_classroom_ref.set({
             'classroom': firestore.ArrayUnion([classroom_id])
         }, merge=True)
+        
 
-        return jsonify({'success': True, 'id': new_ref.key})
+        return jsonify({'success': True, 'classroom': classroom})
     except Exception as e:
         return jsonify({'error': False, 'message': str(e)})
     

@@ -151,7 +151,9 @@
     </main>
 
     <script>
-
+       
+        //Global variables
+        window.c_user={};
         
         document.addEventListener('DOMContentLoaded', function() {
             // === USER & DATA ===
@@ -166,8 +168,12 @@
 
             const user_email = classroom_details.userEmail || "";
             const owner_email = classroom_details.ownerEmail || "";
+            c_user.user_name = classroom_details.owner || "Unknown User";
+            if (user_email === owner_email) {
+                c_user.user_name = "You"
+            }
             document.getElementById("classroom-name").textContent = classroom_details.name || "Untitled Class";
-            document.getElementById("subcode").textContent = classroom_details.subjectCode+" | "+classroom_details.owner || "yxt-000 | Unknown";
+            document.getElementById("subcode").textContent = classroom_details.subjectCode+" | "+c_user.user_name || "yxt-000 | Unknown";
 
             
 
@@ -562,7 +568,7 @@
 
             document.querySelectorAll('.member-entry').forEach(entry => {
                 const nameSpan = entry.querySelector('.member-name');
-                nameSpan.textContent = classroom_details.owner || "Unknown Teacher";
+                nameSpan.textContent = c_user.user_name || "Unknown Teacher";
                 const initialDiv = entry.querySelector('.member-initial');
                 const name = nameSpan.textContent.trim();
                 initialDiv.textContent = name.charAt(0).toUpperCase();

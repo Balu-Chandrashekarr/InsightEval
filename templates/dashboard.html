@@ -492,34 +492,29 @@
         <div id="toast"  class="hidden fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 backdrop-blur-sm"></div>
     </div>
 
-    <script>
-
-            //Global Variables
-            window.currentUser={};
-
-
+<script>
+//Global Variables
+            window.currentUser = {};
+            window.classroomsContainer = document.getElementById('classrooms');
+            window.MainclassroomsContainer = document.getElementById('classrooms-in-content');
+//Join Forms
             const joinForm = document.getElementById('join-classroom-form');
             if (joinForm) {
             joinForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-
                 const codeInput = document.getElementById('join-classroom-code');
                 const enteredCode = codeInput.value.trim();
-
                 if (!enteredCode || enteredCode.length < 8) {
                 showToast("Please enter a valid 8-character classroom code.", "error");
                 return;
                 }
-
                 try {
                         const resp = await fetch(`/join_classroom_by_code/${enteredCode}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include"
                     });
-
                     const data = await resp.json();
-
                     if (resp.ok) {
                         showToast("Join request sent successfully!", "success");
                         document.getElementById('join-classroom-modal').classList.add('hidden');
@@ -530,17 +525,13 @@
                     console.error("Error sending join request:", err);
                     showToast("Error sending join request", "error");
                     }
-
-
             });
            }
-
+//Add Classroom
             document.getElementById("add-classroom-form").addEventListener("submit", async (e) => {
             e.preventDefault();
-
             const name = document.getElementById("new-classroom-name").value.trim();
             const subject = document.getElementById("new-classroom-subject").value.trim();
-
             try {
                 const response = await fetch("/create_classroom", {
                 method: "POST",
@@ -551,23 +542,28 @@
                 const result = await response.json();
 
                 if (result.success) {
-                showToast("Classroom created successfully!");
                 e.target.reset();
-                document.getElementById("add-classroom-modal").classList.add("hidden");
-
-                const classroomId = result.id;
+                classroom = result.classroom;
                 try {
-                    const resp = await fetch(`/get_classroom/${classroomId}`);
-                    const classroom = await resp.json();
-
-                    if (resp.ok && classroom) {
-                     loadClassrooms();
-                    } else {
-                        showToast("Failed to fetch new classroom details", "error");
-                    }
+                    document.getElementById("add-classroom-modal").classList.add("hidden");
+                    if (window.classroomsContainer.children.length === 1) {
+                            const onlyChild = window.classroomsContainer.firstElementChild;
+                            if (onlyChild && onlyChild.matches("p.text-gray-500")) {
+                                onlyChild.remove();
+                            }
+                        }  
+                    window.classroomsContainer.appendChild(createClassroomCard(classroom,0));
+                    if (window.MainclassroomsContainer.children.length === 1) {
+                            const onlyChild = window.MainclassroomsContainer.firstElementChild;
+                            if (onlyChild && onlyChild.matches("p.text-gray-500")) {
+                                onlyChild.remove();
+                            }
+                        }
+                    window.MainclassroomsContainer.appendChild(createClassroomCardContent(classroom));
+                    showToast("Classroom created successfully!"); 
                 } catch (err) {
                     console.error("Error fetching classroom:", err);
-                    showToast("Could not fetch new classroom details.", "error");
+                    showToast(""+err, "error");
                 }
 
                 } else {
@@ -578,13 +574,10 @@
                 showToast("Failed to create classroom.",'error');
             }
             });
-
-
-
+//Search
             document.addEventListener("DOMContentLoaded", () => {
                 const searchContent = document.getElementById("search-content");
                 const profileContent = document.getElementById("searchprofile-content");
-
                 const backToSearchBtn = document.getElementById("backToSearch");
                 const profileName = document.getElementById("view-name");
                 const profileId = document.getElementById("view-id");
@@ -592,15 +585,10 @@
                 const profileBio = document.getElementById("view-bio");
                 const profilePic = document.getElementById("sprofileViewPic");
                 const sclassroomsContainer = document.getElementById('sclassrooms');
-
-                
-
-
                 // Handle clicking a result card
                 document.addEventListener("click", (e) => {
                     const card = e.target.closest(".result-card");
                     if (!card) return;
-
                     // Get user data from the card
                     const name = card.dataset.name;
                     const id = card.dataset.id;
@@ -608,7 +596,6 @@
                     const bio = card.dataset.bio || "No bio available";
                     const pic = card.dataset.pic || "https://via.placeholder.com/128x128";
                     const roleBadgeDiv = document.getElementById("view-role-badge");
-
                     if (card.dataset.role === "faculty") {
                         roleBadgeDiv.innerHTML = `
                             <span class="text-sm font-medium text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">
@@ -620,32 +607,32 @@
                                 Student
                             </span>`;
                     }
-
                     // Fill profile section
                     profileName.textContent = name;
                     profileId.textContent = id;
                     profileDept.textContent = dept;
                     profileBio.textContent = bio;
                     profilePic.src = pic;
-                    
-
-
                     // Show profile and hide search
                     searchContent.classList.add("hidden");
                     profileContent.classList.remove("hidden");
                     const classrooms = card.dataset.classroom ? JSON.parse(card.dataset.classroom) : [];
-                    renderClassrooms(classrooms, sclassroomsContainer ,1);
-
+                    sclassroomsContainer.innerHTML = ""; // clear loading text
+                    sclassroomsContainer.innerHTML = ""; // clear loading text
+                    if (classrooms.length === 0) {
+                        sclassroomsContainer.innerHTML = "<p class='text-gray-500'>No classrooms found.</p>";
+                        return;
+                    }
+                    classrooms.forEach(cls => {
+                        sclassroomsContainer.appendChild(createClassroomCard(cls,1));
+                    });
                 });
-
                 // Handle "Back to Search" button
                 backToSearchBtn.addEventListener("click", () => {
                     profileContent.classList.add("hidden");
                     searchContent.classList.remove("hidden");
                 });
             });
-
-            
             function debounce(fn, wait = 300) {
             let t;
             return function (...args) {
@@ -653,13 +640,12 @@
                 t = setTimeout(() => fn.apply(this, args), wait);
             };
             }
-
-            /* render a single user card (consistent with your modern UI) */
+//Search User card 
             function renderUserCard(user) {
             const div = document.createElement('div');
             div.className = 'result-card bg-white p-5 rounded-2xl shadow hover:shadow-lg hover:scale-[1.02] transition transform duration-300 flex items-center space-x-4';
             const avatarUrl = user.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=ddd&color=333&rounded=true`;
-            const roleBadge = user.role === 'faculty' ? '<span class="text-sm font-medium text-indigo-700 bg-indigo-100 px-2 py-1 rounded-full">Faculty</span>' : '<span class="text-sm font-medium text-green-700 bg-green-100 px-2 py-1 rounded-full">Student</span>';
+            const roleBadge = user.role === 'Faculty' ? '<span class="text-sm font-medium text-indigo-700 bg-indigo-100 px-2 py-1 rounded-full">Faculty</span>' : '<span class="text-sm font-medium text-green-700 bg-green-100 px-2 py-1 rounded-full">Student</span>';
             
             div.dataset.name = user.name || '';
             div.dataset.id = user.userid || '';
@@ -668,8 +654,6 @@
             div.dataset.pic = avatarUrl;
             div.dataset.role = user.role || '';
             div.dataset.classroom = JSON.stringify(user.classrooms || []);
-
-
             div.innerHTML = `
                 <img src="${avatarUrl}" alt="${user.name}" class="w-14 h-14 rounded-full border-2 border-indigo-100 object-cover">
                 <div class="flex-1 min-w-0">
@@ -689,7 +673,6 @@
             `;
             return div;
             }
-
             /* main search handler */
             const searchInput = document.getElementById('searchInput');
             const resultsDiv = document.getElementById('results');
@@ -717,7 +700,6 @@
                 resultsDiv.innerHTML = '<div class="col-span-full text-center py-6 text-red-500">Network error</div>';
             }
             }
-
             /* Debounced input listener for live search */
             const debouncedSearch = debounce((e) => {
             const q = e.target.value.trim();
@@ -728,9 +710,7 @@
             }
             doSearch(q);
             }, 300);
-
             searchInput.addEventListener('input', debouncedSearch);
-
             /* optional: search on Enter key immediately */
             searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -738,15 +718,11 @@
                 doSearch(searchInput.value.trim());
             }
             });
-
-
-        
             document.getElementById('save').addEventListener('click', async () => {
                     const name = document.getElementById('name').value.trim();
                     const id = document.getElementById('id').value.trim();
                     const department = document.getElementById('department').value.trim();
                     const bio = document.getElementById('bio').value.trim();
-
                     try {
                         const response = await fetch('/update_profile', {
                             method: 'POST',
@@ -766,7 +742,7 @@
                         console.error(err);
                     }
                 });
-
+//ShowToast
             function showToast(message, type = "success") {
                 const toast = document.getElementById("toast");
                 toast.textContent = message;
@@ -788,7 +764,6 @@
                     }, 500);
                 }, 3000);
             }
-
             // Handle reset password button click
             document.getElementById("resetPassword").addEventListener("click", (e) => {
                 e.preventDefault(); // prevent form reload
@@ -800,86 +775,151 @@
                 .then(data => showToast(data.message, data.status))
                 .catch(() => showToast("Something went wrong!", "error"));
             });
-
-
-
             const saveButton = document.getElementById('save');
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', async function() {
                 // Fetch user profile data from Flask
                 saveButton.classList.add('hidden');
                 const classroomsContainer = document.getElementById('classrooms');
                 const clsroomcntner = document.getElementById('classrooms-in-content');
-                clsroomcntner.innerHTML = "<p class='text-black-500'>Loading classrooms...</p>";
-
-                async function loadClassrooms() {
-                    clsroomcntner.innerHTML = "<p class='text-gray-500'>Loading classrooms...</p>";
-
-                    try {
+            async function fetchProfile(){
+                try {
                         const response = await fetch('/get_profile_data');
                         const data = await response.json();
-
                         if (data.error) {
                             console.error('Error:', data.error);
                             return;
                         }
-
                         // fill user data
                         document.getElementById('name').value = data.name || '';
                         document.getElementById('id').value = data.userid || '';
                         document.getElementById('department').value = data.department || '';
                         document.getElementById('bio').value = data.bio || '';
-                        window.currentUser = {user_email: data.email || ''};
+                        window.currentUser = {user_email: data.email || '',
+                                                classrooms: data.classrooms || []
+                                                };
                         if (saveButton) saveButton.classList.add('hidden');
-
-                        renderClassrooms(data.classrooms || [], classroomsContainer, 0);
-
-                        // render right-side classrooms
-                        if (clsroomcntner) {
-                            clsroomcntner.innerHTML = ""; // clear loading text
-                            const classrooms = data.classrooms || [];
-
-                            if (classrooms.length === 0) {
-                                clsroomcntner.innerHTML = "<p class='text-gray-500'>No classrooms found.</p>";
-                                return;
-                            }
-
-                            classrooms.forEach(cls => {
-                                const card = createClassroomCardContent(cls);
-                                clsroomcntner.appendChild(card);
-                            });
-                        }
-
-                    } catch (error) {
+                    }
+                    catch (error){
                         console.error('Error fetching profile:', error);
                     }
                 }
-
+                await fetchProfile();
+                async function loadClassrooms() {
+                        const classrooms = window.currentUser.classrooms || [];
+                        // Main classrooms container and Profile classrooms container
+                        window.MainclassroomsContainer.innerHTML = ""; // clear loading text
+                        window.classroomsContainer.innerHTML = ""; // clear loading text
+                        if (classrooms.length === 0) {
+                            window.MainclassroomsContainer.innerHTML = "<p class='text-gray-500'>No classrooms found.</p>";
+                            window.classroomsContainer.innerHTML = "<p class='text-gray-500'>No classrooms found.</p>";
+                            return;
+                        }
+                        classrooms.forEach(cls => {
+                            if(cls.ownerEmail === window.currentUser.user_email){
+                                window.classroomsContainer.appendChild(createClassroomCard(cls,0));}
+                            window.MainclassroomsContainer.appendChild(createClassroomCardContent(cls));
+                            
+                        });
+                }
                 // 🟢 call loadClassrooms() initially
                 loadClassrooms();
-
                 // expose globally so delete code can use it
                 window.loadClassrooms = loadClassrooms;
-
-
             });
+//Main ClassroomCard    
+            function createClassroomCardContent(classroom) {
+                const card = document.createElement("div");
+                card.className = "bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300";
+                const neonGradient = randomNeon();           // ← unique per card
+                const neonClass = neonGradient.replace(/from-| to-|-500/g, '').replace(' ', '-'); 
+                // → e.g. "cyan-blue"
+                card.classList.add('neon-' + neonClass);     // ← usable in JS: document.querySelector('.neon-cyan-blue')
+                card.classList.add('neon-' + neonClass);
+                card.classList.add("classroom-card");
+                card.setAttribute("data-id", classroom.id);
+                card.innerHTML = `
+                <div class="group relative bg-white rounded-2xl shadow-md 
+                                hover:shadow-xl transition-all duration-300 
+                                border border-gray-100 overflow-hidden">
+                    
+                    <!-- LEFT GRADIENT BAR (slides in on hover) -->
+                    <div class="absolute top-0 left-0 w-1.5 h-full 
+                                    bg-gradient-to-b ${neonGradient}
+                                    opacity-0 group-hover:opacity-100 
+                                    transition-opacity duration-500"></div>
 
-            function renderClassrooms(classrooms,kclassroomsContainer,cardtype) {
-                    if (!kclassroomsContainer) return;
+                    <div class="p-6 pr-8">
+                    <h2 class="text-2xl  tracking-tight mb-2 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent text-2xl rounded-full"">
+                        ${escapeHtml(classroom.name)}
+                    </h2>
+                    
+                    <p class="text-sm opacity-70 mb-5">
+                        ${escapeHtml(classroom.owner || "You")}
+                    </p>
 
-                    kclassroomsContainer.innerHTML = ''; // clear
-                    if (!classrooms || classrooms.length === 0) {
-                        kclassroomsContainer.innerHTML = '<div class="col-span-full text-gray-500 p-4">No classrooms created yet.</div>';
-                        return;
-                    }
-                    classrooms.forEach(cls => {
-                        kclassroomsContainer.appendChild(createClassroomCard(cls,cardtype));
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="flex items-center gap-1.5 opacity-60">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        ${classroom.noOfStudents || 0}
+                        </span>
+
+                        <span class="px-2.5 py-1 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent 
+                                    font-bold text-xs rounded-full">
+                        ${escapeHtml(classroom.subjectCode || "—")}
+                        </span>
+                    </div>
+                    </div>
+
+                    <!-- ENTER BUTTON (40px + neon hover) -->
+                    <a href="/classroom/${classroom.id}"
+                    class="block text-center py-2.5 text-sm font-medium text-gray-600
+                            border-t border-gray-200 relative overflow-hidden
+                            transition-all duration-400">
+                    
+                    <span class="px-2.5 py-1 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent font-bold text-xs rounded-full 
+                            transition-all duration-500 ease-in-out transform group-hover:opacity-0 group-hover:scale-95">
+                Enter Classroom →
+                </span>
+
+                <span class="absolute inset-0 flex items-center justify-center 
+                            bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent font-bold
+                            opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 
+                            transition-all duration-500 ease-in-out">
+                Enter Classroom →
+                </span>
+
+
+                    </a>
+                </div>
+                `;
+                const enterBtn = card.querySelector('a');
+                if (enterBtn) {
+                    enterBtn.addEventListener('click', (e) => {
+                        // Optional: prevent default redirect until we save details
+                        // e.preventDefault();
+                        const classroomData = {
+                            ownerEmail: classroom.ownerEmail,
+                            userEmail: window.currentUser.user_email || '',
+                            id: classroom.id,
+                            name: classroom.name,
+                            subjectCode: classroom.subjectCode,
+                            owner: classroom.owner || "You"
+                        };
+                        // Save selected classroom details to localStorage
+                        localStorage.setItem('selectedClassroom', JSON.stringify(classroomData));
+                        // You can optionally log it for verification
+                        console.log("Saved classroom:", classroomData);
                     });
-
                 }
+                return card;
+            }
+//Profile ClassroomCard    
             function createClassroomCard(cls,cardtype) {
                     const div = document.createElement('div');
                     div.className = 'p-4 bg-white rounded-xl shadow-sm border flex flex-col justify-between';
-
                     // Format created date
                     let created = cls.createdDate || '';
                     try {
@@ -889,8 +929,9 @@
                             created = d.toLocaleString(); // adjust formatting as needed
                         }
                     } catch (e) { /* ignore */ }
-
                    if(cardtype==0){
+                   div.classList.add("profile-classroom-card");
+                   div.setAttribute("data-id", cls.id);
                    div.innerHTML = `
                             <div class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
                                 <!-- Gradient accent bar -->
@@ -971,7 +1012,6 @@
                             </div>
                             `;
                         }
-                    // attach event
                     const delBtn = div.querySelector('.delete-classroom-btn');
                     if (delBtn) {
                         delBtn.addEventListener('click', async (e) => {
@@ -987,11 +1027,14 @@
                                 const result = await resp.json();
                                 if (resp.ok && result.success) {
                                     showToast('Classroom deleted', 'success');
-                                    // remove card from UI
-                                    div.remove();
-                                    if (typeof loadClassrooms === 'function') {
-                                            loadClassrooms();
-                                        }
+                                    document.querySelectorAll(`[data-id="${id}"]`).forEach(card => card.remove());
+
+                                // show message if empty
+                                if (window.classroomsContainer.children.length === 0)
+                                    window.classroomsContainer.innerHTML = "<p class='text-gray-500'>No classrooms found.</p>";
+
+                                if (window.MainclassroomsContainer.children.length === 0)
+                                    window.MainclassroomsContainer.innerHTML = "<p class='text-gray-500'>No classrooms found.</p>";
                                 } else {
                                     showToast(result.message || 'Failed to delete', 'error');
                                 }
@@ -1001,7 +1044,7 @@
                             }
                         });
                     }
-
+                    
                     const joinBtn = div.querySelector('.join-classroom-btn');
                     if (joinBtn) {
                     joinBtn.addEventListener('click', async (e) => {
@@ -1037,12 +1080,8 @@
                         }
                     });
                     }
-
                     return div;
                 }
-
-
-
                 function escapeHtml(text) {
                     if (!text) return '';
                     return text
@@ -1052,8 +1091,6 @@
                         .replace(/"/g, "&quot;")
                         .replace(/'/g, "&#039;");
                 }
-
-
         const inputs = document.querySelectorAll('#profile_pic, #name, #id, #department, #bio');
             if (saveButton) {
                 inputs.forEach(input => {
@@ -1062,8 +1099,6 @@
                     });
                 });
             }    
-
-
         document.addEventListener('DOMContentLoaded', function() {
             const body = document.body;
             const navItems = document.querySelectorAll('.nav-item');
@@ -1078,77 +1113,62 @@
                     targetSection.classList.remove('hidden');
                 }
             }
-
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
                     const section = item.getAttribute('data-section');
-                    
                     // Hide all content sections
                     document.querySelectorAll('.content-section').forEach(sec => {
                         sec.classList.add('hidden');
                     });
-
                     // Show the clicked section
                     const activeSection = document.getElementById(section + '-content');
                     if (activeSection) {
                         activeSection.classList.remove('hidden');
                     }
-
                     // Update active class on navbar
                     navItems.forEach(nav => nav.classList.remove('active'));
                     item.classList.add('active');
                 });
             });
-
-
             // Default to home section on page load
             if (homeNavItem) {
                 homeNavItem.classList.add('active');
                 showSection('home-content');
             }
-
             // --- Add/Join Classroom Modal Functionality ---
             const addClassroomBtn = document.getElementById('add-classroom-btn');
             const joinClassroomBtn = document.getElementById('join-classroom-btn');
             const addModal = document.getElementById('add-classroom-modal');
             const joinModal = document.getElementById('join-classroom-modal');
             const closeButtons = document.querySelectorAll('.close-modal-btn');
-
             const openModal = (modal) => {
                 if (modal) modal.classList.remove('hidden');
             };
-
             const closeModal = (modal) => {
                 if (modal) modal.classList.add('hidden');
             };
-
             if (addClassroomBtn) {
                 addClassroomBtn.addEventListener('click', () => openModal(addModal));
             }
             if (joinClassroomBtn) {
                 joinClassroomBtn.addEventListener('click', () => openModal(joinModal));
             }
-
             closeButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     closeModal(addModal);
                     closeModal(joinModal);
                 });
             });
-
             window.addEventListener('click', (event) => {
                 if (event.target === addModal) closeModal(addModal);
                 if (event.target === joinModal) closeModal(joinModal);
             });
-
             // --- Other Page Interactions ---
             document.querySelectorAll('.fa-heart').forEach(heart => {
                 heart.addEventListener('click', () => {
                     heart.classList.toggle('text-red-500');
                 });
             });
-
-            
             // --- Profile Tabs Handling ---
             function setupProfileTabs(profileSectionId) {
                 const section = document.getElementById(profileSectionId);
@@ -1157,7 +1177,6 @@
                 const navLinks = section.querySelectorAll('.nav-link');
                 const tabContents = section.querySelectorAll('.tab-content');
                 const addButton = section.querySelector('#addButton');
-
                 navLinks.forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -1177,7 +1196,6 @@
                         if (targetTab) targetTab.classList.remove('hidden');
                     });
                 });
-
                 if (addButton) {
                     addButton.addEventListener('click', () => {
                         const activeTab = section.querySelector('.nav-link.active')?.getAttribute('data-tab');
@@ -1190,19 +1208,15 @@
                     });
                 }
             }
-
             // ✅ Initialize for both profile sections
             setupProfileTabs('profile-content');
             setupProfileTabs('searchprofile-content');
-
-
             const submitPostButton = document.getElementById('submitPost');
             if (submitPostButton) {
                 submitPostButton.addEventListener('click', () => {
                     // Placeholder for post submission logic
                 });
             }
-
             const logoutButton = document.getElementById('headerLogout');
             if (logoutButton) {
                 logoutButton.addEventListener('click', () => {
@@ -1210,9 +1224,6 @@
                 });
             }
         });
-
-
-
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -1226,9 +1237,6 @@
                 reader.readAsDataURL(file);
             }
         }
-
-
-
         function addStudentReminder() {
             const input = document.getElementById('studentInput');
             const reminderText = input.value.trim();
@@ -1243,105 +1251,6 @@
                 input.value = '';
             }
         }
-
-
-        function createClassroomCardContent(classroom) {
-            const card = document.createElement("div");
-            card.className = "bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300";
-
-            const neonGradient = randomNeon();           // ← unique per card
-            const neonClass = neonGradient.replace(/from-| to-|-500/g, '').replace(' ', '-'); 
-            // → e.g. "cyan-blue"
-
-            card.classList.add('neon-' + neonClass);     // ← usable in JS: document.querySelector('.neon-cyan-blue')
-
-            card.classList.add('neon-' + neonClass);
-            card.innerHTML = `
-            <div class="group relative bg-white rounded-2xl shadow-md 
-                            hover:shadow-xl transition-all duration-300 
-                            border border-gray-100 overflow-hidden">
-                
-                <!-- LEFT GRADIENT BAR (slides in on hover) -->
-                <div class="absolute top-0 left-0 w-1.5 h-full 
-                                bg-gradient-to-b ${neonGradient}
-                                opacity-0 group-hover:opacity-100 
-                                transition-opacity duration-500"></div>
-
-                <div class="p-6 pr-8">
-                <h2 class="text-2xl  tracking-tight mb-2 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent text-2xl rounded-full"">
-                    ${escapeHtml(classroom.name)}
-                </h2>
-                
-                <p class="text-sm opacity-70 mb-5">
-                    ${escapeHtml(classroom.owner || "You")}
-                </p>
-
-                <div class="flex justify-between items-center text-xs">
-                    <span class="flex items-center gap-1.5 opacity-60">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                    ${classroom.noOfStudents || 0}
-                    </span>
-
-                    <span class="px-2.5 py-1 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent 
-                                font-bold text-xs rounded-full">
-                    ${escapeHtml(classroom.subjectCode || "—")}
-                    </span>
-                </div>
-                </div>
-
-                <!-- ENTER BUTTON (40px + neon hover) -->
-                <a href="/classroom/${classroom.id}"
-                class="block text-center py-2.5 text-sm font-medium text-gray-600
-                        border-t border-gray-200 relative overflow-hidden
-                        transition-all duration-400">
-                
-                <span class="px-2.5 py-1 bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent font-bold text-xs rounded-full 
-                        transition-all duration-500 ease-in-out transform group-hover:opacity-0 group-hover:scale-95">
-            Enter Classroom →
-            </span>
-
-            <span class="absolute inset-0 flex items-center justify-center 
-                        bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent font-bold
-                        opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 
-                        transition-all duration-500 ease-in-out">
-            Enter Classroom →
-            </span>
-
-
-                </a>
-            </div>
-            `;
-
-            const enterBtn = card.querySelector('a');
-            if (enterBtn) {
-                enterBtn.addEventListener('click', (e) => {
-                    // Optional: prevent default redirect until we save details
-                    // e.preventDefault();
-
-                    const classroomData = {
-                        ownerEmail: classroom.ownerEmail,
-                        userEmail: window.currentUser.user_email || '',
-                        id: classroom.id,
-                        name: classroom.name,
-                        subjectCode: classroom.subjectCode,
-                        owner: classroom.owner || "You"
-                    };
-
-                    // Save selected classroom details to localStorage
-                    localStorage.setItem('selectedClassroom', JSON.stringify(classroomData));
-
-                    // You can optionally log it for verification
-                    console.log("Saved classroom:", classroomData);
-                });
-            }
-
-            return card;
-        }
-
-
         function randomNeon() {
             const neons = [
                 'from-pink-400 to-rose-500',
@@ -1354,8 +1263,6 @@
             ];
             return neons[Math.floor(Math.random() * neons.length)];
         }
-
-
-    </script>
+</script>
 </body>
 </html>
