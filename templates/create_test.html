@@ -22,9 +22,9 @@
                 <p class="text-md text-gray-600">Design an assessment for your class.</p>
             </div>
             <a href="{{ url_for('classroom_page', classroom_id=1) }}" class="flex items-center space-x-2 text-sm font-semibold text-blue-600 hover:underline">
-    <i class="fas fa-arrow-left"></i>
-    <span>Back to Classroom</span>
-</a>
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Classroom</span>
+            </a>
         </header>
 
         <div class="bg-white rounded-lg shadow-lg p-8 space-y-6">
@@ -48,7 +48,7 @@
                 <div id="questions-container" class="space-y-6">
                     <!-- Questions will be added here dynamically -->
                 </div>
-                
+
                 <!-- Add Question Buttons -->
                 <div class="flex items-center gap-4 pt-4 border-t">
                     <span class="font-semibold">Add New Question:</span>
@@ -64,18 +64,18 @@
                 </div>
             </div>
 
-             <hr>
+            <hr>
 
             <!-- Final Actions -->
             <div class="flex justify-end gap-4 pt-4">
-                 <button class="bg-gray-200 text-gray-800 font-semibold px-6 py-2 rounded-lg hover:bg-gray-300">Save Draft</button>
-                 <button class="bg-blue-500 text-white font-bold px-6 py-2 rounded-lg hover:bg-blue-600">Publish Test</button>
+                <button id="save-draft-btn" class="bg-gray-200 text-gray-800 font-semibold px-6 py-2 rounded-lg hover:bg-gray-300">Save Draft</button>
+                <button id="publish-test-btn" class="bg-blue-500 text-white font-bold px-6 py-2 rounded-lg hover:bg-blue-600">Publish Test</button>
             </div>
         </div>
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const questionsContainer = document.getElementById('questions-container');
             let questionCounter = 0;
 
@@ -83,6 +83,9 @@
             document.getElementById('add-short-answer-btn').addEventListener('click', () => addQuestion('short_answer'));
             document.getElementById('add-code-btn').addEventListener('click', () => addQuestion('code'));
 
+            // -----------------------------------------------------------------
+            //  Add a new question (MCQ now has a "correct" radio button)
+            // -----------------------------------------------------------------
             function addQuestion(type) {
                 questionCounter++;
                 const questionId = `question-${questionCounter}`;
@@ -91,55 +94,141 @@
                 switch (type) {
                     case 'mcq':
                         questionHTML = `
-                            <div class="p-4 border rounded-lg bg-gray-50 relative">
-                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
-                                <label class="block text-md font-semibold text-gray-700 mb-2">Question ${questionCounter} (Multiple Choice)</label>
-                                <input type="text" placeholder="Enter the question..." class="w-full p-2 border rounded-md mb-3">
-                                <div class="space-y-2 pl-4">
-                                    ${[...Array(4)].map((_, i) => `
-                                        <div class="option-input-group">
-                                            <input type="radio" name="${questionId}-correct" class="form-radio text-blue-500">
-                                            <input type="text" placeholder="Option ${i + 1}" class="w-full p-2 border rounded-md">
-                                            <button class="text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
-                                        </div>
-                                    `).join('')}
+                            <div class="p-4 border rounded-lg bg-gray-50 relative" data-qid="${questionId}">
+                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times-circle"></i>
+                                </button>
+                                <label class="block text-md font-semibold text-gray-700 mb-2">
+                                    Question ${questionCounter} (Multiple Choice)
+                                </label>
+                                <input type="text" placeholder="Enter the question..." class="w-full p-2 border rounded-md mb-3" data-field="text">
+
+                                <div class="space-y-2 pl-4" data-options-container>
+                                    ${[...Array(4)].map((_, i) => mcqOptionHTML(questionId, i)).join('')}
                                 </div>
-                                <button class="text-sm text-blue-500 hover:underline mt-2" onclick="addOption(this, '${questionId}')">+ Add Option</button>
+
+                                <button type="button" class="text-sm text-blue-500 hover:underline mt-2"
+                                        onclick="addOption(this, '${questionId}')">+ Add Option</button>
                             </div>`;
                         break;
+
                     case 'short_answer':
-                         questionHTML = `
+                        questionHTML = `
                             <div class="p-4 border rounded-lg bg-gray-50 relative">
-                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
-                                <label class="block text-md font-semibold text-gray-700 mb-2">Question ${questionCounter} (Short Answer)</label>
-                                <textarea placeholder="Enter the question..." rows="2" class="w-full p-2 border rounded-md"></textarea>
+                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times-circle"></i>
+                                </button>
+                                <label class="block text-md font-semibold text-gray-700 mb-2">
+                                    Question ${questionCounter} (Short Answer)
+                                </label>
+                                <textarea placeholder="Enter the question..." rows="2"
+                                          class="w-full p-2 border rounded-md"></textarea>
                             </div>`;
                         break;
+
                     case 'code':
-                         questionHTML = `
+                        questionHTML = `
                             <div class="p-4 border rounded-lg bg-gray-50 relative">
-                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
-                                <label class="block text-md font-semibold text-gray-700 mb-2">Question ${questionCounter} (Coding Challenge)</label>
-                                <textarea placeholder="Describe the coding problem..." rows="4" class="w-full p-2 border rounded-md font-mono text-sm"></textarea>
+                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times-circle"></i>
+                                </button>
+                                <label class="block text-md font-semibold text-gray-700 mb-2">
+                                    Question ${questionCounter} (Coding Challenge)
+                                </label>
+                                <textarea placeholder="Describe the coding problem..." rows="4"
+                                          class="w-full p-2 border rounded-md font-mono text-sm"></textarea>
                             </div>`;
                         break;
                 }
                 questionsContainer.insertAdjacentHTML('beforeend', questionHTML);
             }
 
-            window.addOption = function(button, questionId) {
-                const optionsContainer = button.previousElementSibling;
-                const optionCount = optionsContainer.children.length;
-                const newOptionHTML = `
+            // -----------------------------------------------------------------
+            //  Helper: HTML for a single MCQ option (radio + text + delete)
+            // -----------------------------------------------------------------
+            function mcqOptionHTML(questionId, index) {
+                return `
                     <div class="option-input-group">
-                        <input type="radio" name="${questionId}-correct" class="form-radio text-blue-500">
-                        <input type="text" placeholder="Option ${optionCount + 1}" class="w-full p-2 border rounded-md">
-                        <button class="text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                        <input type="radio" name="${questionId}-correct" class="form-radio text-blue-500" required>
+                        <input type="text" placeholder="Option ${index + 1}" class="flex-1 p-2 border rounded-md" data-option-text>
+                        <button type="button" class="text-gray-400 hover:text-red-500"
+                                onclick="this.parentElement.remove()">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>`;
-                optionsContainer.insertAdjacentHTML('beforeend', newOptionHTML);
             }
+
+            // -----------------------------------------------------------------
+            //  Add a new option to an existing MCQ
+            // -----------------------------------------------------------------
+            window.addOption = function (button, questionId) {
+                const container = button.previousElementSibling; // data-options-container
+                const optionCount = container.children.length;
+                const newHTML = mcqOptionHTML(questionId, optionCount);
+                container.insertAdjacentHTML('beforeend', newHTML);
+            };
+
+            // -----------------------------------------------------------------
+            //  Collect the whole test into a JSON-friendly structure
+            // -----------------------------------------------------------------
+            function getTestData() {
+                const title = document.getElementById('test-title').value.trim();
+                const description = document.getElementById('test-description').value.trim();
+
+                const questions = Array.from(questionsContainer.children).map(qDiv => {
+                    const type = qDiv.querySelector('label').textContent.includes('Multiple Choice') ? 'mcq' :
+                                 qDiv.querySelector('label').textContent.includes('Short Answer') ? 'short_answer' : 'code';
+
+                    if (type === 'mcq') {
+                        const text = qDiv.querySelector('[data-field="text"]').value.trim();
+                        const optionsContainer = qDiv.querySelector('[data-options-container]');
+                        const optionElements = optionsContainer.querySelectorAll('.option-input-group');
+
+                        const options = Array.from(optionElements).map(el => ({
+                            text: el.querySelector('[data-option-text]').value.trim(),
+                            correct: el.querySelector('input[type="radio"]').checked
+                        }));
+
+                        // Find the correct index (for direct mapping)
+                        const correctIndex = options.findIndex(o => o.correct);
+                        if (correctIndex === -1) throw new Error('Please select a correct answer for MCQ question.');
+
+                        return { type, text, options, correctIndex };
+                    }
+
+                    // Short answer & coding – no correct answer needed here
+                    const text = qDiv.querySelector('textarea').value.trim();
+                    return { type, text };
+                });
+
+                return { title, description, questions };
+            }
+
+            // -----------------------------------------------------------------
+            //  Save / Publish handlers (demo – replace with real fetch)
+            // -----------------------------------------------------------------
+            document.getElementById('save-draft-btn').addEventListener('click', () => {
+                try {
+                    const data = getTestData();
+                    console.log('Draft data →', data);
+                    alert('Draft saved (check console)');
+                } catch (e) {
+                    alert(e.message);
+                }
+            });
+
+            document.getElementById('publish-test-btn').addEventListener('click', () => {
+                try {
+                    const data = getTestData();
+                    console.log('Publish data →', data);
+                    alert('Test published (check console)');
+                    // Example POST:
+                    // fetch('/api/tests', {method:'POST', body:JSON.stringify(data), headers:{'Content-Type':'application/json'}})
+                } catch (e) {
+                    alert(e.message);
+                }
+            });
         });
     </script>
 </body>
 </html>
-
