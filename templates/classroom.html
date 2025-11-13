@@ -325,12 +325,12 @@
 
             <!-- Right: Tick / X Buttons -->
             <div class="flex items-center gap-2">
-                <button class="accept-btn p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-all duration-200 group-hover:scale-110" data-id="${req.id}">
+                <button class="accept-btn p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-all duration-200 group-hover:scale-110" title="accept" data-id="${req.id}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                     </svg>
                 </button>
-                <button class="decline-btn p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition-all duration-200 group-hover:scale-110" data-id="${req.id}">
+                <button class="decline-btn p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition-all duration-200 group-hover:scale-110" title="reject" data-id="${req.id}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -541,24 +541,49 @@
                         return;
                     }
 
+                    // ✅ Render all members
                     members.forEach(member => {
                         const firstLetter = member.name ? member.name.charAt(0).toUpperCase() : '?';
 
                         const item = document.createElement('div');
-                        item.className = "flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200";
                         item.innerHTML = `
-                            <div class="flex items-center space-x-3">
-                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
-                                    ${firstLetter}
+                            <div class="request-item group flex items-center justify-between p-5 bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300">
+                                
+                                <!-- Left: Avatar + Info -->
+                                <div class="flex items-center space-x-4 flex-1 min-w-0">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                                        ${firstLetter}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-medium text-gray-700 truncate">${member.name}</p>
+                                        <p class="text-xs text-gray-400 truncate">${member.email}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-800">${member.name}</p>
-                                    <p class="text-xs text-gray-500">${member.email}</p>
+
+                                <!-- Right: Action Buttons -->
+                                <div class="flex items-center gap-2">
+                                    <button class="view-btn p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-all duration-200 group-hover:scale-110" 
+                                            title="View Profile" data-id="${member.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
+                                            stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                                d="M12 14c-3.314 0-6 2.014-6 4.5V21h12v-2.5c0-2.486-2.686-4.5-6-4.5zM12 12a4 4 0 100-8 4 4 0 000 8z" />
+                                        </svg>
+                                    </button>
+                                    <button class="remove-btn p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition-all duration-200 group-hover:scale-110" 
+                                            title="Remove" data-id="${member.id}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" 
+                                                d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         `;
+
                         studentList.appendChild(item);
                     });
+
                 } catch (err) {
                     console.error("Error fetching members:", err);
                 }

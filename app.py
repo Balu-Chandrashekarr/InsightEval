@@ -516,20 +516,42 @@ def delete_classroom():
     safe_email = user_email.replace('.', '_')
 
     try:
-        # 1) Delete from Realtime DB
+        # 1️⃣ Get classroom data from Realtime DB
         class_ref = realtime_db.reference(f'classrooms/{classroom_id}')
+        classroom_data = class_ref.get()
+
+        if not classroom_data:
+            return jsonify({'success': False, 'message': 'Classroom not found'}), 404
+
+        members = classroom_data.get('members', {})
+
+        # 2️⃣ Remove classroom from each member's Firestore document
+        fs = firestore.client()
+        for member_email_key in members.keys():
+            # Convert back to normal email if needed
+            email = member_email_key
+            user_doc_ref = fs.collection('users').document(email)
+            doc_snapshot = user_doc_ref.get()
+            if doc_snapshot.exists:
+                user_doc_ref.update({
+                    'classroom': firestore.ArrayRemove([classroom_id])
+                })
+
+        # 3️⃣ Delete classroom from Realtime Database
         class_ref.delete()
 
-        # 2) Remove classroom id from Firestore user doc (use ArrayRemove)
+        # 4️⃣ Remove classroom id from Firestore (owner)
         user_doc_ref = firestore_db.collection("users").document(safe_email)
         user_doc_ref.update({
             'classroom': firestore.ArrayRemove([classroom_id])
         })
 
         return jsonify({'success': True, 'message': 'Classroom deleted'}), 200
+
     except Exception as e:
         print("Error deleting classroom:", e)
         return jsonify({'success': False, 'message': str(e)}), 500
+
     
 
 
@@ -738,6 +760,47 @@ def get_members(classroom_id):
     except Exception as e:
         print("Error fetching members:", str(e))
         return jsonify({'error': str(e)}), 500
+    
+
+@app.route('/remove_member', methods=['POST'])
+def remove_member():
+    if 'user_email' not in session:
+        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+
+    data = request.get_json() or {}
+    classroom_id = data.get('classroom_id')
+    member_email = data.get('member_email')
+
+    if not classroom_id or not member_email:
+        return jsonify({'success': False, 'message': 'Missing data'}), 400
+
+    safe_email = member_email.replace('.', '_')
+
+    try:
+        # 1️⃣ Remove member from Realtime Database
+        class_ref = realtime_db.reference(f'classrooms/{classroom_id}/members/{safe_email}')
+        class_ref.delete()
+
+        # 2️⃣ Decrease number of students count
+        class_meta_ref = realtime_db.reference(f'classrooms/{classroom_id}/noOfStudents')
+        count = class_meta_ref.get() or 0
+        if count > 0:
+            class_meta_ref.set(count - 1)
+
+        # 3️⃣ Remove classroom id from member's Firestore user doc
+        fs = firestore.client()
+        user_doc_ref = fs.collection('users').document(safe_email)
+        if user_doc_ref.get().exists:
+            user_doc_ref.update({
+                'classroom': firestore.ArrayRemove([classroom_id])
+            })
+
+        return jsonify({'success': True, 'message': 'Member removed successfully'}), 200
+
+    except Exception as e:
+        print("Error removing member:", e)
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 
 
 
