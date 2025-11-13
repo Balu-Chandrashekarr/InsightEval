@@ -8,9 +8,27 @@ from wtforms.validators import DataRequired, Email, Length,Optional
 import logging
 from datetime import datetime
 from jinja2.exceptions import TemplateNotFound
+import os
+from dotenv import load_dotenv
+import json
+from openai import OpenAI  # ← ADD THIS LINE
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+# Load .env
+load_dotenv()
 
+# OpenRouter key
+OPENROUTER_KEY = os.getenv("OPENROUTER_KEY")
 
+# AI client
+chat_client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=OPENROUTER_KEY
+) if OPENROUTER_KEY else None
 
+if not chat_client:
+    logger.error("OPENROUTER_KEY missing – AI features disabled")
 app = Flask(__name__)
 
 # =============================================================================
@@ -71,6 +89,107 @@ class ProfileForm(FlaskForm):
 # =============================================================================
 #  Routes
 # =============================================================================
+QUESTION_CACHE = {}
+
+def load_questions(course: str):
+    """Load questions from templates/json/<course>_questions.json"""
+    if course in QUESTION_CACHE:
+        return QUESTION_CACHE[course]
+
+    path = os.path.join("templates", "json", f"{course}_questions.json")
+    if not os.path.exists(path):
+        logger.warning(f"JSON not found: {path}")
+        return []
+
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    QUESTION_CACHE[course] = data.get("questions", [])
+    return QUESTION_CACHE[course]
+def detect_weak_topics(wrong_questions: list) -> list:
+    if not wrong_questions or not chat_client:
+        return ["General Review"]
+
+    prompt = "Analyze these wrong questions and return up to 3 main weak topics (comma-separated, short names):\n\n"
+    for i, q in enumerate(wrong_questions[:8], 1):
+        prompt += f"{i}. {q}\n"
+    prompt += "\nWeak topics:"
+
+    try:
+        response = chat_client.chat.completions.create(
+            model="mistralai/mistral-7b-instruct:free",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=50
+        )
+        resp = response.choices[0].message.content
+        topics = [t.strip() for t in resp.strip().split(",") if t.strip()]
+        return topics[:3] or ["General Review"]
+    except Exception as e:
+        logger.error(f"Topic detection error: {e}")
+        return ["General Review"]
+    
+@app.route("/api/ai_feedback_quiz", methods=["POST"])
+def ai_feedback_quiz():
+    if not chat_client:
+        return jsonify({"error": "AI not configured"}), 500
+
+    data = request.get_json(silent=True) or {}
+    course = data.get("course", "").lower()
+    score  = int(data.get("score", 0))
+
+    # Accept two payload styles
+    answered = data.get("answered", [])
+    wrong_questions = data.get("wrong_questions", [])
+
+    # If only answered → extract texts
+    if answered and not wrong_questions:
+        questions = load_questions(course)
+        qmap = {q["id"]: q for q in questions}
+        wrong_questions = [
+            qmap[a["id"]]["question"]
+            for a in answered
+            if not a.get("correct") and a["id"] in qmap
+        ]
+
+    weak_topics = detect_weak_topics(wrong_questions)
+
+    prompt = f"""Course: {course.upper()}
+Score: {score}/20
+Weak topics: {", ".join(weak_topics)}
+
+1. Write a 150‑word personalized feedback (strengths, weaknesses, 3 tips).
+2. Generate exactly 3 MCQs on the weak topics.
+
+Output ONLY valid JSON:
+{{
+  "feedback": "…",
+  "micro_quiz": {{
+    "questions": [
+      {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"b) …"}},
+      {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"a) …"}},
+      {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"c) …"}}
+    ]
+  }}
+}}"""
+
+    try:
+        response = chat_client.chat.completions.create(
+            model="mistralai/mistral-7b-instruct:free",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=700
+        )
+        raw = response.choices[0].message.content
+        cleaned = raw.strip().strip("```json").strip("```").strip()
+        result = json.loads(cleaned)
+        return jsonify(result)
+    except Exception as e:
+        logger.exception("AI generation failed")
+        return jsonify({"error": "AI generation failed", "details": str(e)}), 500
+@app.route("/micro_quiz")
+def micro_quiz():
+    return render_template("micro_quiz.html")
 
 @app.route('/')
 def home():

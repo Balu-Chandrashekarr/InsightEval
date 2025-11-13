@@ -1,0 +1,23 @@
+# Environment variables (secrets)
+.env
+.env.local
+.env.* 
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Flask / instance folder
+instance/
+*.db
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log

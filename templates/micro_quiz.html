@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Micro-Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>.timer { font-size: 1.5rem; font-weight: bold; color: #dc2626; }</style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center p-4">
+<div class="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6">
+  <div class="flex justify-between mb-4">
+    <h2 class="text-2xl font-bold">AI Micro-Quiz</h2>
+    <div class="timer" id="timer">01:00</div>
+  </div>
+
+  <form id="quizForm" class="space-y-6">
+    <div id="questions"></div>
+    <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700">
+      Submit
+    </button>
+  </form>
+
+  <div id="result" class="mt-6 hidden">
+    <h3 class="text-xl font-bold mb-2">Result</h3>
+    <p id="score" class="text-lg"></p>
+    <button onclick="location.href='/dashboard'" class="mt-4 bg-gray-300 px-4 py-2 rounded">
+      Back to Dashboard
+    </button>
+  </div>
+</div>
+
+<script>
+const quiz = JSON.parse(localStorage.getItem("microQuiz") || "[]");
+let timeLeft = 60;
+let timer;
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    const m = String(Math.floor(timeLeft/60)).padStart(2,'0');
+    const s = String(timeLeft%60).padStart(2,'0');
+    document.getElementById("timer").textContent = `${m}:${s}`;
+    if (timeLeft <= 0) submit();
+  }, 1000);
+}
+
+function render() {
+  const container = document.getElementById("questions");
+  quiz.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "border-b pb-4";
+    div.innerHTML = `
+      <p class="font-medium mb-2">${i+1}. ${q.question}</p>
+      ${q.options.map(o => `
+        <label class="block cursor-pointer">
+          <input type="radio" name="q${i}" value="${o}" class="mr-2"> ${o}
+        </label>`).join("")}
+    `;
+    container.appendChild(div);
+  });
+  startTimer();
+}
+
+function submit() {
+  clearInterval(timer);
+  const form = document.getElementById("quizForm");
+  const data = new FormData(form);
+  let correct = 0;
+  quiz.forEach((q, i) => {
+    if (data.get(`q${i}`) === q.answer) correct++;
+  });
+  document.getElementById("score").textContent = `Score: ${correct}/${quiz.length}`;
+  document.getElementById("result").classList.remove("hidden");
+  document.getElementById("quizForm").classList.add("hidden");
+  localStorage.removeItem("microQuiz");
+}
+
+render();
+document.getElementById("quizForm").onsubmit = e => { e.preventDefault(); submit(); };
+</script>
+</body>
+</html>

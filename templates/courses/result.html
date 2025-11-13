@@ -53,19 +53,46 @@
             margin: 8px 0;
             font-size: 0.95rem;
         }
-        .back-btn {
-            background-color: #3b82f6;
-            color: white;
+        .back-btn, .micro-btn {
+            display: inline-block;
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: 600;
-            transition: background-color 0.3s ease;
             text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+            margin-right: 10px;
+        }
+        .back-btn {
+            background-color: #3b82f6;
+            color: white;
         }
         .back-btn:hover {
             background-color: #2563eb;
+        }
+        .micro-btn {
+            background-color: #7c3aed;
+            color: white;
+        }
+        .micro-btn:hover {
+            background-color: #6d28d9;
+        }
+        .ai-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
+            border-radius: 12px;
+            border: 1px solid #c7d2fe;
+        }
+        .ai-section h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #4c1d95;
+            margin-bottom: 12px;
+        }
+        .loading {
+            color: #6b7280;
+            font-style: italic;
         }
     </style>
 </head>
@@ -74,20 +101,36 @@
         <div class="result-wrapper">
             <h1 id="course-title"></h1>
             <div class="result-section" id="result-content"></div>
+
+            <!-- AI SECTION -->
+            <div id="ai-section" class="ai-section">
+                <h3>AI-Powered Learning Boost</h3>
+                <div id="feedback-loading" class="loading">Loading questions and analyzing...</div>
+                <div id="feedback-text" class="mt-4 text-gray-800 leading-relaxed"></div>
+                <button id="start-micro" class="micro-btn hidden">
+                    Start AI Micro-Quiz (3 Questions)
+                </button>
+            </div>
+
             <a href="/dashboard" class="back-btn">Back to Dashboard</a>
         </div>
     </div>
 
     <script>
-        // Get course and result data from URL query parameters
+        // === 1. Parse URL ===
         const urlParams = new URLSearchParams(window.location.search);
-        const course = urlParams.get('course');
-        const score = urlParams.get('score');
-        const percentage = urlParams.get('percentage');
-        const answersJson = urlParams.get('answers');
-        const answers = JSON.parse(decodeURIComponent(answersJson));
+        const course = (urlParams.get('course') || '').toLowerCase();
+        const score = parseInt(urlParams.get('score') || 0);
+        const percentage = urlParams.get('percentage') || '0';
+        const answersJson = urlParams.get('answers') || '{}';
+        let answers = {};
+        try {
+            answers = JSON.parse(decodeURIComponent(answersJson));
+        } catch (e) {
+            console.error("Failed to parse answers:", e);
+        }
 
-        // Map course to title
+        // === 2. Course Title ===
         const courseTitles = {
             'dsa': 'Final Assessment: Data Structures and Algorithms',
             'oops': 'Final Assessment: Object-Oriented Programming',
@@ -95,24 +138,119 @@
             'os': 'Final Assessment: Operating Systems',
             'dmml': 'Final Assessment: Data Mining and Machine Learning'
         };
-
-        // Set the course title
         document.getElementById('course-title').textContent = courseTitles[course] || 'Final Assessment';
 
-        // Display result
+        // === 3. Show Result ===
         const resultContent = document.getElementById('result-content');
         resultContent.innerHTML = `
             <p class="mb-2">Marks Obtained: <span class="font-semibold">${score}/20</span> (${percentage}%)</p>
-            ${parseFloat(percentage) >= 80 ? '<p class="text-green-700 mb-4">Congratulations! You have passed the assessment.</p>' : '<p class="text-red-700 mb-4">You did not pass. Please review the material and retry.</p>'}
+            ${score >= 16 
+                ? '<p class="text-green-700 mb-4">Congratulations! You have passed the assessment.</p>' 
+                : '<p class="text-red-700 mb-4">You did not pass. Please review and retry.</p>'
+            }
             <div class="evaluation-summary">
                 <p class="font-bold mb-2">Review of All Questions:</p>
                 <ul>
                     ${Object.entries(answers).map(([key, value]) => `
-                        <li>${key.replace('q', 'Question ')}: ${value.selected !== 'Not answered' ? `Selected: ${value.selected}, ` : ''}Correct Answer: ${value.answer}${value.correct ? ' (Correct)' : value.selected !== 'Not answered' ? ' (Incorrect)' : ''}</li>
+                        <li>${key.replace('q', 'Question ')}: 
+                            ${value.selected !== 'Not answered' ? `Selected: ${value.selected}, ` : ''} 
+                            Correct Answer: ${value.answer}
+                            ${value.correct ? ' <span class="text-green-600">(Correct)</span>' : value.selected !== 'Not answered' ? ' <span class="text-red-600">(Incorrect)</span>' : ''}
+                        </li>
                     `).join('')}
                 </ul>
             </div>
         `;
+
+        // === 4. Load Questions JSON ===
+        let allQuestions = [];
+        console.log("Fetching questions from:", `/json/${course}_questions.json`);
+        fetch(`/json/${course}_questions.json`)
+            .then(r => {
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                return r.json();
+            })
+            .then(data => {
+                allQuestions = data.questions || [];
+                console.log("Loaded Questions:", allQuestions.map(q => ({id: q.id, question: q.question})));
+                generateAIFeedback();
+            })
+            .catch(err => {
+                console.error("Failed to load questions:", err);
+                document.getElementById('feedback-loading').innerHTML = 
+                    `<span class="text-red-600">Failed to load questions: ${err.message}</span>`;
+            });
+
+        // === 5. Generate AI Feedback ===
+        async function generateAIFeedback() {
+            const loadingEl = document.getElementById('feedback-loading');
+            loadingEl.textContent = "Analyzing your answers...";
+
+            // Extract wrong question IDs (numeric)
+            const wrongIds = Object.entries(answers)
+                .filter(([_, v]) => !v.correct && v.selected && v.selected !== 'Not answered')
+                .map(([k]) => {
+                    const num = parseInt(k.replace('q', ''));
+                    return isNaN(num) ? null : num;
+                })
+                .filter(id => id !== null);
+
+            console.log("Wrong Question IDs:", wrongIds);
+
+            // Match with full questions
+            const wrongQuestions = allQuestions
+                .filter(q => wrongIds.includes(q.id))
+                .map(q => q.question);
+
+            console.log("Wrong Question Texts:", wrongQuestions);
+
+            // Always send at least one (for testing)
+            const payload = {
+                course: course || 'unknown',
+                score: score,
+                wrong_questions: wrongQuestions.length > 0 ? wrongQuestions : ["Sample weak area"]
+            };
+
+            console.log("Sending to AI:", payload);
+
+            try {
+                const resp = await fetch("/api/ai_feedback_quiz", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!resp.ok) {
+                    const text = await resp.text();
+                    throw new Error(`HTTP ${resp.status}: ${text}`);
+                }
+
+                const data = await resp.json();
+                console.log("AI Response:", data);
+
+                if (data.error) {
+                    loadingEl.innerHTML = `<span class="text-red-600">AI Error: ${data.error}</span>`;
+                    return;
+                }
+
+                document.getElementById('feedback-text').innerHTML = 
+                    (data.feedback || "No feedback generated.").replace(/\n/g, '<br>');
+                loadingEl.classList.add('hidden');
+
+                // Show micro-quiz button
+                window.microQuiz = data.micro_quiz?.questions || [];
+                const btn = document.getElementById('start-micro');
+                btn.classList.remove('hidden');
+                btn.onclick = () => {
+                    localStorage.setItem('microQuiz', JSON.stringify(window.microQuiz));
+                    location.href = '/micro_quiz';
+                };
+
+            } catch (err) {
+                console.error("AI Request Failed:", err);
+                loadingEl.innerHTML = `<span class="text-red-600">AI Request Failed: ${err.message}</span>`;
+            }
+        }
     </script>
 </body>
 </html>
