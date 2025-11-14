@@ -154,12 +154,30 @@ def ai_feedback_quiz():
 
     weak_topics = detect_weak_topics(wrong_questions)
 
-    prompt = f"""Course: {course.upper()}
-Score: {score}/20
-Weak topics: {", ".join(weak_topics)}
+    prompt = f"""You are an expert tutor giving honest, constructive feedback.
 
-1. Write a 150‑word personalized feedback (strengths, weaknesses, 3 tips).
-2. Generate exactly 3 MCQs on the weak topics.
+Course: {course.upper()}
+Score: {score}/20 ({score * 5:.0f}%)
+Weak topics: {", ".join(weak_topics) if weak_topics else "None identified"}
+
+INSTRUCTIONS:
+1. Write a 120–150 word feedback.
+2. Tone MUST match the score:
+   - 0–4/20: "You struggled significantly. Here's what went wrong..."
+   - 5–9/20: "You faced challenges. Let's fix the basics..."
+   - 10–14/20: "Good effort! You know some parts, but..."
+   - 15–17/20: "Strong performance! Just a few gaps..."
+   - 18–20/20: "Excellent! You're mastering this..."
+   
+
+3. Structure:
+   - Start with tone-matched opener
+   - 1 strength (even if score is 0: "You attempted all questions")
+   - 2–3 weaknesses (based on weak topics)
+   - 3 numbered tips (actionable, 1-line each)
+   - End with encouragement
+
+4. Generate exactly 5 MCQs on weak topics only.
 
 Output ONLY valid JSON:
 {{
@@ -168,10 +186,13 @@ Output ONLY valid JSON:
     "questions": [
       {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"b) …"}},
       {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"a) …"}},
-      {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"c) …"}}
+      {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"c) …"}},
+      {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"b) …"}},
+      {{"question":"…","options":["a) …","b) …","c) …","d) …"],"answer":"b) …"}}
     ]
   }}
-}}"""
+}}
+"""
 
     try:
         response = chat_client.chat.completions.create(
