@@ -122,141 +122,189 @@
     </div>
 
     <script>
-        // Get course from URL query parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const course = urlParams.get('course')?.toLowerCase() || 'dsa'; // Default to 'dsa' if not provided
-        console.log("Current course:", course); // Debug the course value
+  // Extract parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const course = urlParams.get('course')?.toLowerCase();
+  const classroomId = urlParams.get('classroom');
+  const testRef = urlParams.get('test');
 
-        // Map course to title and JSON file
-        const courseTitles = {
-            'dsa': 'Final Assessment: Data Structures and Algorithms',
-            'oops': 'Final Assessment: Object-Oriented Programming',
-            'dbms': 'Final Assessment: Database Management Systems',
-            'os': 'Final Assessment: Operating Systems',
-            'dmml': 'Final Assessment: Data Mining and Machine Learning'
-        };
-        const courseJson = {
-            'dsa': '/json/dsa_questions.json',
-            'oops': '/json/oops_questions.json',
-            'dbms': '/json/dbms_questions.json',
-            'os': '/json/os_questions.json',
-            'dmml': '/json/dmml_questions.json'
-        };
+  console.log("🧠 Classroom:", classroomId);
+  console.log("🧩 Test Ref:", testRef);
+  console.log("📚 Course:", course);
 
-        // Set the course title
-        document.getElementById('course-title').textContent = courseTitles[course] || 'Final Assessment';
+  // Map course to title and JSON file
+  const courseTitles = {
+      'dsa': 'Final Assessment: Data Structures and Algorithms',
+      'oops': 'Final Assessment: Object-Oriented Programming',
+      'dbms': 'Final Assessment: Database Management Systems',
+      'os': 'Final Assessment: Operating Systems',
+      'dmml': 'Final Assessment: Data Mining and Machine Learning'
+  };
+  const courseJson = {
+      'dsa': '/json/dsa_questions.json',
+      'oops': '/json/oops_questions.json',
+      'dbms': '/json/dbms_questions.json',
+      'os': '/json/os_questions.json',
+      'dmml': '/json/dmml_questions.json'
+  };
 
-        // Fetch and display questions based on course
-        fetch(courseJson[course])
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to load questions');
-                return response.json();
-            })
-            .then(data => {
-                const questions = data.questions;
-                // Randomly select 20 questions (Fisher-Yates shuffle)
-                for (let i = questions.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [questions[i], questions[j]] = [questions[j], questions[i]];
-                }
-                const selectedQuestions = questions.slice(0, 20);
+  // Set title placeholder
+  document.getElementById('course-title').textContent = courseTitles[course];
 
-                // Generate question navigation and content
-                const questionList = document.getElementById('question-list');
-                const assessmentForm = document.getElementById('assessment-form');
-                selectedQuestions.forEach((q, index) => {
-                    const questionNum = index + 1;
-                    // Add to navigation
-                    const li = document.createElement('li');
-                    li.textContent = `Question ${questionNum}`;
-                    li.dataset.index = index;
-                    li.addEventListener('click', () => {
-                        document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
-                        document.getElementById(`question-${index}`).classList.add('active');
-                        document.querySelectorAll('.question-nav li').forEach(li => li.classList.remove('active'));
-                        li.classList.add('active');
-                    });
-                    questionList.appendChild(li);
+  // =========================
+  // MAIN LOADER FUNCTION
+  // =========================
+  async function loadQuestions() {
+    if (classroomId && testRef) {
+      // ✅ Case 1: Classroom Test (Backend Fetch)
+      console.log("Fetching classroom test from backend...");
+      try {
+        const response = await fetch(`/get_test_data/${classroomId}/${testRef}`);
+        const data = await response.json();
 
-                    // Add question content
-                    const questionDiv = document.createElement('div');
-                    questionDiv.id = `question-${index}`;
-                    questionDiv.className = 'question';
-                    questionDiv.innerHTML = `
-                        <h3>${q.question}</h3>
-                        ${q.options.map((option, i) => `
-                            <div class="option">
-                                <input type="radio" name="q${questionNum}" value="${option}" id="q${questionNum}_opt${i}">
-                                <label for="q${questionNum}_opt${i}">${option}</label>
-                            </div>
-                        `).join('')}
-                    `;
-                    assessmentForm.appendChild(questionDiv);
+        if (!data.success) throw new Error(data.error || "Failed to fetch test data");
+        const wrapper = data.test;
+        const test = wrapper.test ? wrapper.test : wrapper;
 
-                    // Add event listener for answering
-                    const radios = questionDiv.querySelectorAll('input[type="radio"]');
-                    radios.forEach(radio => {
-                        radio.addEventListener('change', () => {
-                            const navItem = questionList.children[index];
-                            if (!navItem.classList.contains('answered')) {
-                                navItem.classList.add('answered');
-                            }
-                        });
-                    });
-                });
+        document.getElementById("course-title").textContent = test.title;
+        renderQuestions(test.questions || []);
+      } catch (err) {
+        console.error("Error fetching test:", err);
+        document.getElementById('assessment-form').innerHTML =
+          '<p class="text-red-600">Error loading classroom test. Please try again later.</p>';
+      }
 
-                // Show the first question by default
-                if (selectedQuestions.length > 0) {
-                    document.getElementById('question-0').classList.add('active');
-                    questionList.firstChild.classList.add('active');
-                }
+    } else {
+      // ✅ Case 2: Predefined course JSON
+      console.log("Loading static course assessment...");
+      try {
+        const response = await fetch(courseJson[course]);
+        if (!response.ok) throw new Error('Failed to load questions');
+        const data = await response.json();
 
-                // Add submit button only to the 20th question
-                const lastQuestionIndex = selectedQuestions.length - 1;
-                const lastQuestionDiv = document.getElementById(`question-${lastQuestionIndex}`);
-                if (lastQuestionDiv) {
-                    const submitButton = document.createElement('button');
-                    submitButton.type = 'submit';
-                    submitButton.className = 'submit-btn visible'; // Visible only for the 20th question
-                    submitButton.textContent = 'Submit Assessment';
-                    lastQuestionDiv.appendChild(submitButton);
-                }
+        const questions = data.questions;
+        // Shuffle and select 20
+        for (let i = questions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [questions[i], questions[j]] = [questions[j], questions[i]];
+        }
+        const selected = questions.slice(0, 20);
+        renderQuestions(selected);
+      } catch (err) {
+        console.error('Error loading static questions:', err);
+        document.getElementById('assessment-form').innerHTML =
+          '<p class="text-red-600">Error loading static questions.</p>';
+      }
+    }
+  }
 
-                // Handle form submission to redirect to result page
-                const assessmentFormElement = document.getElementById('assessment-form');
-                assessmentFormElement.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    let score = 0;
-                    const answers = {};
-                    selectedQuestions.forEach((q, index) => {
-                        const questionNum = index + 1;
-                        const selected = document.querySelector(`input[name="q${questionNum}"]:checked`);
-                        if (selected) {
-                            if (selected.value === q.answer) {
-                                score++;
-                                answers[`q${questionNum}`] = { selected: selected.value, correct: true };
-                            } else {
-                                answers[`q${questionNum}`] = { selected: selected.value, correct: false, answer: q.answer };
-                            }
-                        } else {
-                            answers[`q${questionNum}`] = { selected: 'Not answered', correct: false, answer: q.answer };
-                        }
-                    });
-                    const percentage = (score / 20) * 100;
+  loadQuestions();
 
-                    // Construct query parameters for redirect
-                    const params = new URLSearchParams();
-                    params.append('score', score);
-                    params.append('percentage', percentage.toFixed(2));
-                    params.append('answers', JSON.stringify(answers));
-                    params.append('course', course);
-                    window.location.href = `/courses/result?${params.toString()}`;
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('assessment-form').innerHTML = '<p class="text-red-600">Error loading questions. Please try again later.</p>';
-            });
-    </script>
+  // =========================
+  // RENDER FUNCTION
+  // =========================
+  function renderQuestions(questions) {
+    if (!questions || questions.length === 0) {
+      document.getElementById('assessment-form').innerHTML =
+        '<p class="text-gray-600">No questions found.</p>';
+      return;
+    }
+
+    const questionList = document.getElementById('question-list');
+    const assessmentForm = document.getElementById('assessment-form');
+    questionList.innerHTML = '';
+    assessmentForm.innerHTML = '';
+
+    questions.forEach((q, index) => {
+      const num = index + 1;
+
+      // Sidebar nav item
+      const li = document.createElement('li');
+      li.textContent = `Question ${num}`;
+      li.dataset.index = index;
+      li.addEventListener('click', () => {
+        document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+        document.getElementById(`question-${index}`).classList.add('active');
+        document.querySelectorAll('.question-nav li').forEach(li => li.classList.remove('active'));
+        li.classList.add('active');
+      });
+      questionList.appendChild(li);
+
+      // Question block
+      const questionDiv = document.createElement('div');
+      questionDiv.id = `question-${index}`;
+      questionDiv.className = 'question';
+      questionDiv.innerHTML = `
+        <h3>${q.question}</h3>
+        ${q.options.map((opt, i) => `
+          <div class="option">
+            <input type="radio" name="q${num}" value="${opt}" id="q${num}_opt${i}">
+            <label for="q${num}_opt${i}">${opt}</label>
+          </div>
+        `).join('')}
+      `;
+      assessmentForm.appendChild(questionDiv);
+
+      // Mark answered in sidebar
+      questionDiv.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          const navItem = questionList.children[index];
+          if (!navItem.classList.contains('answered')) navItem.classList.add('answered');
+        });
+      });
+    });
+
+    // Show first question
+    document.querySelector('.question')?.classList.add('active');
+    questionList.firstChild?.classList.add('active');
+
+    // Submit button on last question
+    const last = document.getElementById(`question-${questions.length - 1}`);
+    if (last) {
+      const btn = document.createElement('button');
+      btn.type = 'submit';
+      btn.className = 'submit-btn visible';
+      btn.textContent = 'Submit Assessment';
+      last.appendChild(btn);
+    }
+
+    // Handle submission
+    assessmentForm.addEventListener('submit', e => {
+      e.preventDefault();
+      handleSubmit(questions);
+    });
+  }
+
+  // =========================
+  // SUBMIT HANDLER
+  // =========================
+  function handleSubmit(questions) {
+    let score = 0;
+    const answers = {};
+    questions.forEach((q, i) => {
+      const num = i + 1;
+      const selected = document.querySelector(`input[name="q${num}"]:checked`);
+      if (selected && selected.value === q.answer) score++;
+      answers[`q${num}`] = {
+        selected: selected?.value || 'Not answered',
+        correct: selected?.value === q.answer,
+        answer: q.answer
+      };
+    });
+
+    const percentage = (score / questions.length) * 100;
+
+    const params = new URLSearchParams({
+      score,
+      percentage: percentage.toFixed(2),
+      course,
+      answers: JSON.stringify(answers)
+    });
+
+    // Redirect to results page
+    window.location.href = `/courses/result?${params.toString()}`;
+  }
+</script>
+
 </body>
 </html>

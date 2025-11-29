@@ -7,6 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        body{
+            /*background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');*/
+            background: linear-gradient(135deg, #fff7e1 0%, #ffe9b3 50%, #ffd280 100%);
+
+        }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
         .message-box-popup {
@@ -86,7 +91,7 @@
                                 <i class="fas fa-plus text-gray-600"></i>
                             </button>
                             <div id="plus-popup" class="message-box-popup absolute bottom-14 left-0 bg-white rounded-lg shadow-xl p-2 w-48 hidden">
-                                <a href="{{ url_for('create_test') }}" class="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100">
+                                <a id="create-test-link" class="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100">
                                     <i class="fas fa-file-alt text-blue-500"></i>
                                     <span class="font-semibold">Create Test</span>
                                 </a>
@@ -149,23 +154,22 @@
             </div>
         </div>
     </main>
-
-    <script>
-       
+        <script>
         //Global variables
         window.c_user={};
+        window.classroom_details = JSON.parse(localStorage.getItem('selectedClassroom')) || {};
+        window.classroomId = window.location.pathname.split('/').pop();
+
         
         document.addEventListener('DOMContentLoaded', function() {
             // === USER & DATA ===
-            const pathParts = window.location.pathname.split('/');
-            const classroomId = pathParts[pathParts.length - 1];
-            const classroom_details = JSON.parse(localStorage.getItem('selectedClassroom'));
+            //const pathParts = window.location.pathname.split('/');
+            //const classroomId = pathParts[pathParts.length - 1];
             
             if (!classroom_details) {
                 console.error("No classroom data found in localStorage");
                 return;
             }
-
             const user_email = classroom_details.userEmail || "";
             const owner_email = classroom_details.ownerEmail || "";
             c_user.user_name = classroom_details.owner || "Unknown User";
@@ -175,8 +179,7 @@
             document.getElementById("classroom-name").textContent = classroom_details.name || "Untitled Class";
             document.getElementById("subcode").textContent = classroom_details.subjectCode+" | "+c_user.user_name || "yxt-000 | Unknown";
 
-            
-
+          
             // Demo join requests
             let joinRequests = [];
             async function loadJoinRequests() {
@@ -458,27 +461,34 @@
                 this.style.height = (this.scrollHeight) + 'px';
             });
 
-            sendBtn.addEventListener('click', () => {
-                const content = messageInput.value.trim();
-                if (content) {
-                    const newPost = createPostCard('announcement', content);
-                    classroomFeed.insertAdjacentHTML('beforeend', newPost);
-                    classroomFeed.scrollTop = classroomFeed.scrollHeight;
-                    messageInput.value = '';
-                    messageInput.style.height = 'auto';
+            // 📨 Send message to backend
+            sendBtn.addEventListener('click', async () => {
+                const message = messageInput.value.trim();
+                if (!message) return;
 
-                    // Add to notifications
-                    notifications.unshift({
-                        id: Date.now(),
-                        type: 'post',
-                        message: 'New announcement posted',
-                        time: 'just now',
-                        read: false
+                try {
+                    const response = await fetch('/send_message', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            classroom_id: classroom_details.id,
+                            message: message
+                        })
                     });
-                    updateNotificationBadge();
-                    renderNotifications();
+
+                    const result = await response.json();
+                    if (result.success) {
+                        messageInput.value = '';
+                        messageInput.style.height = 'auto';
+                    } else {
+                        alert(result.message || "Failed to send message");
+                    }
+                } catch (err) {
+                    console.error("Error sending message:", err);
+                    alert("Error while sending message");
                 }
             });
+
 
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -487,46 +497,20 @@
                 }
             });
 
-            materialUpload.addEventListener('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const newPost = createPostCard('material', `Shared a new file: ${file.name}`, null, file);
-                    classroomFeed.insertAdjacentHTML('beforeend', newPost);
-                    classroomFeed.scrollTop = classroomFeed.scrollHeight;
-                }
+            document.getElementById('create-test-link').addEventListener('click', () => {
+                const pathParts = window.location.pathname.split('/');
+                const classroomId = pathParts[pathParts.length - 1];
+                window.location.href = `/create_test/${classroomId}`;
             });
 
-            function createPostCard(type, content, dueDate, file) {
-                const postDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                let iconClass, colorClass, title, actionButton = '';
-
-                switch (type) {
-                    case 'assignment':
-                        iconClass = 'fas fa-clipboard-list'; colorClass = 'red'; title = 'New Assignment';
-                        if (dueDate) actionButton = `<div class="text-right"><p class="font-semibold text-red-600">Due: ${dueDate}</p><button class="mt-4 bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 text-sm">Submit Work</button></div>`;
-                        break;
-                    case 'material':
-                        iconClass = 'fas fa-book'; colorClass = 'green'; title = 'New Study Material';
-                        if (file) actionButton = `<a href="#" class="mt-4 bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 text-sm flex items-center space-x-2"><i class="fas fa-download"></i><span>${file.name}</span></a>`;
-                        break;
-                    default:
-                        iconClass = 'fas fa-bullhorn'; colorClass = 'blue'; title = 'Announcement';
-                        break;
-                }
-
-                return `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden animate-fade-in">
-                    <div class="p-5 flex items-start space-x-4">
-                        <div class="bg-${colorClass}-100 p-3 rounded-full"><i class="${iconClass} text-xl text-${colorClass}-600"></i></div>
-                        <div class="flex-1">
-                            <h3 class="text-lg font-bold text-gray-800">${title}</h3>
-                            <p class="text-sm text-gray-500">Posted on: ${postDate}</p>
-                            <p class="mt-2 text-gray-700 whitespace-pre-wrap">${content}</p>
-                        </div>
-                        ${actionButton}
-                    </div>
-                </div>`;
-            }
+            materialUpload.addEventListener('change', function() {
+                const file = this.files[0];
+                /*if (file) {
+                    const newPost = createPostCard('material', `Shared a new file: ${file.name}`, null, null, file);
+                    classroomFeed.insertAdjacentHTML('beforeend', newPost);
+                    classroomFeed.scrollTop = classroomFeed.scrollHeight;
+                }*/
+            });
 
             async function fetchMembers() {
                 try {
@@ -600,5 +584,242 @@
             });
         });
     </script>
+    <script type="module">
+        //functions
+        function createPostCard(type, content, sender = "Unknown", pDate, file) {
+            // Format date/time
+            let created = formatMessageDate(pDate);
+            if(sender === classroom_details.ownerEmail)
+                sender = "Teacher";
+                else if(sender === classroom_details.userEmail)
+                sender = "You";
+
+            // Layout variations
+            let html = '';
+
+            // 🗣️ ANNOUNCEMENT
+            if (type === 'announcement') {
+                html = `
+                <div class="flex justify-start">
+                    <div class="bg-white rounded-2xl rounded-tl-md shadow-sm px-5 py-4 w-full">
+                    <p class="text-gray-800 leading-relaxed">${content}</p>
+                    <p class="text-xs text-gray-500 mt-3 text-right">${sender} · ${created}</p>
+                    </div>
+                </div>`;
+            }
+
+            // 📘 STUDY MATERIAL
+            else if (type === 'material' && file) {
+                const fileName = file.name || 'StudyMaterial.pdf';
+                const fileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                html = `
+                <div class="flex justify-start">
+                    <div class="bg-white rounded-2xl rounded-tl-md shadow-sm overflow-hidden w-full">
+                    <a href="${file.url || '#'}"
+                        download="${fileName}"
+                        class="flex items-center justify-between p-5 hover:bg-gray-50 transition">
+                        <div>
+                        <p class="font-medium text-gray-800">${fileName}</p>
+                        <p class="text-xs text-gray-500 mt-1">${fileSize} · ${file.type?.toUpperCase() || 'FILE'}</p>
+                        </div>
+                        <i class="fas fa-download text-xl text-gray-500"></i>
+                    </a>
+                    <div class="text-right pr-5 pb-3">
+                        <span class="text-xs text-gray-500">${created}</span>
+                    </div>
+                    </div>
+                </div>`;
+            }
+
+            // 🧩 TEST MESSAGE
+            else if (type === 'test') {
+                let testInfo = typeof content === 'string' ? JSON.parse(content) : content;
+                const start = new Date(testInfo.start_time);
+                const end = new Date(testInfo.end_time);
+                const now = new Date();
+
+                let status = '';
+                let statusColor = 'gray';
+                if (now < start) { 
+                status = 'Upcoming'; 
+                statusColor = 'blue';
+                } 
+                else if (now >= start && now <= end) { 
+                status = 'LIVE'; 
+                statusColor = 'green';
+                } 
+                else { 
+                status = 'Ended'; 
+                statusColor = 'red';
+                }
+
+                const startStr = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const endStr = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                html = `
+                <div class="flex justify-start">
+                <div class="bg-white rounded-2xl rounded-tl-md shadow-sm w-full">
+                    <div class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2.5">
+                        <i class="fas fa-file-alt text-${statusColor}-600"></i>
+                        <p class="font-medium text-gray-800 text-base">${testInfo.title || "Untitled Test"}</p>
+                        </div>
+                        <span class="bg-${statusColor}-500 text-white px-2.5 py-0.5 rounded-full text-xs font-bold">${status}</span>
+                    </div>
+
+                    <p class="text-gray-700 text-sm">Code: 
+                        <span class="font-bold text-${statusColor}-700">${testInfo.code || "N/A"}</span>
+                    </p>
+
+                    <div class="mt-3 flex items-center justify-between text-xs">
+                        <div class="text-gray-600">
+                        <p><i class="far fa-clock mr-1"></i> <strong>Start:</strong> ${startStr}</p>
+                        <p class="mt-0.5"><i class="far fa-stopwatch mr-1"></i> <strong>End:</strong> ${endStr}</p>
+                        </div>
+
+                        ${
+                        status === 'LIVE'
+                            ? `<button 
+                                class="start-test-btn bg-green-600 hover:bg-green-700 
+                                text-white text-sm font-medium px-6 py-2 rounded-lg transition"
+                                data-ref="${testInfo.refKey}">
+                                Start Test
+                            </button>`
+                            : status === 'Ended'
+                            ? `<button 
+                                class="view-results-btn bg-blue-600 hover:bg-blue-700 
+                                text-white text-sm font-medium px-6 py-2 rounded-lg transition"
+                                data-ref="${testInfo.refkey}">
+                                View Results
+                            </button>`
+                            : ''
+                        }
+                    </div>
+
+                    <p class="text-xs text-gray-500 mt-3 text-right">${sender} · ${created}</p>
+                    </div>
+                </div>
+                </div>`;
+
+            }
+
+            return html;
+        }
+        // 🔗 Handle start test routing
+        document.addEventListener('click', (e) => {
+            const startBtn = e.target.closest('.start-test-btn');
+            if (!startBtn) return;
+
+            const classroomId = window.classroomId;
+            const refKey = startBtn.getAttribute('data-ref');
+
+            if (!classroomId || !refKey) {
+                console.error("Missing classroomId or test ref key");
+                return;
+            }
+
+            const testUrl = `/courses/assessment?classroom=${encodeURIComponent(classroomId)}&test=${encodeURIComponent(refKey)}`;
+            console.log("Redirecting to:", testUrl);
+            window.location.href = testUrl;
+
+        });
+
+
+        function formatMessageDate(isoString) {    
+            try {
+                if (!isoString) return '';
+                const date = new Date(isoString);
+                if (isNaN(date.getTime())) return isoString;
+
+                const now = new Date();
+
+                // Extract dates (ignoring time)
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const yesterday = new Date(today);
+                yesterday.setDate(today.getDate() - 1);
+
+                const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+                // Format time as 12-hour (e.g., 03:25 PM)
+                const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                // Compare day difference
+                if (messageDate.getTime() === today.getTime()) {
+                return `Today ${timeString}`;
+                } else if (messageDate.getTime() === yesterday.getTime()) {
+                return `Yesterday ${timeString}`;
+                } else {
+                // Fallback: show full date
+                return date.toLocaleString([], {
+                    month: '2-digit',
+                    day: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                }
+            } catch (e) {
+                console.error("Date formatting error:", e);
+                return isoString;
+            }
+        }    
+
+
+        // Firebase imports    
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getDatabase, ref, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnx9tSj5_bJk4qwdoHutv_73iUoGHINWE",
+            authDomain: "insighteval-e56af.firebaseapp.com",
+            databaseURL: "https://insighteval-e56af-default-rtdb.firebaseio.com/",
+            projectId: "insighteval-e56af",
+            storageBucket: "insighteval-e56af.appspot.com",
+            messagingSenderId: "184739995469",
+            appId: "1:184739995469:web:9390b124eced0431ff6104"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const classroomId = window.location.pathname.split('/').pop();
+        const activitiesRef = ref(db, `classrooms/${classroomId}/activities`);
+        const classroomFeed = document.getElementById('classroom-feed');
+
+
+        // ✅ Listen for new activities in real-time
+        onChildAdded(activitiesRef, (snapshot) => {
+            const msg = snapshot.val();
+            if (!msg) return;
+            console.log("🔥 New Message:", msg);
+
+            const refKey = snapshot.key;
+
+            if (msg.type === 3 && msg.test) {
+                msg.test.refKey = refKey; 
+            }
+
+            let card = '';
+
+            // 🗣️ Type 1 — Announcement
+            if (msg.type === 1) {
+            card = createPostCard('announcement', msg.message, msg.sender, msg.timestamp, null);
+            }
+
+            // 🧩 Type 3 — Test
+            else if (msg.type === 3 && msg.test) {
+            card = createPostCard('test', msg.test, msg.sender, msg.timestamp, null);
+            }
+
+            // Add only new card
+            if (card) {
+            classroomFeed.insertAdjacentHTML('beforeend', card);
+            classroomFeed.scrollTop = classroomFeed.scrollHeight;
+            }
+        });
+</script>
+
+
 </body>
 </html>

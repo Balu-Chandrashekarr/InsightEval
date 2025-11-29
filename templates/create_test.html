@@ -3,50 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Test - InsightEval</title>
+    <title>InsightEval - CreateTest</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        .option-input-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-    </style>
+    body {
+        background: linear-gradient(to bottom, #1e3a8a 75%, #ffffff 25%) no-repeat; 
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    main {
+        background: #ffffff;
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 1000px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .option-input-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+    }
+
+    .remove-btn {
+        opacity: 0.6;
+        transition: all 0.2s ease, transform 0.2s ease;
+    }
+
+    .remove-btn:hover {
+        opacity: 1;
+        color: #ef4444 !important;
+        transform: scale(1.15);
+    }
+
+    input, textarea, select {
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #3b82f6; /* Tailwind blue-500 */
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        outline: none;
+    }
+
+    button {
+        transition: all 0.2s ease;
+    }
+
+    button:hover {
+        transform: scale(1.03);
+    }
+</style>
+
 </head>
 <body class="bg-gray-100 font-sans">
     <main class="p-8 max-w-4xl mx-auto">
-        <header class="flex justify-between items-center mb-6">
+        <header class="flex justify-between items-center mb-10">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800">Create a New Test</h1>
                 <p class="text-md text-gray-600">Design an assessment for your class.</p>
             </div>
-            <a href="{{ url_for('classroom_page', classroom_id=1) }}" class="flex items-center space-x-2 text-sm font-semibold text-blue-600 hover:underline">
-                <i class="fas fa-arrow-left"></i>
-                <span>Back to Classroom</span>
-            </a>
         </header>
 
-        <div class="bg-white rounded-lg shadow-lg p-8 space-y-6">
+        
+
             <!-- Test Details -->
-            <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                 <div>
-                    <label for="test-title" class="block text-lg font-semibold text-gray-700">Test Title</label>
-                    <input type="text" id="test-title" placeholder="e.g., Midterm Exam on Data Structures" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <label class="block text-lg font-semibold text-gray-700">Test Title</label>
+                    <input type="text" id="testName" placeholder="e.g. Midterm Exam - Data Structures" 
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
-                    <label for="test-description" class="block text-lg font-semibold text-gray-700">Description / Instructions</label>
-                    <textarea id="test-description" rows="3" placeholder="Instructions for students..." class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    <label class="block text-lg font-semibold text-gray-700">Test Code</label>
+                    <input type="text" id="testCode" placeholder="e.g. DSA-MID-2025" 
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-lg font-semibold text-gray-700">Start Date & Time</label>
+                    <input type="datetime-local" id="startTime" 
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-lg font-semibold text-gray-700">End Date & Time</label>
+                    <input type="datetime-local" id="endTime" 
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
             </div>
 
-            <hr>
+            <hr class="border-gray-200">
 
             <!-- Questions Section -->
             <div class="space-y-6">
-                <h2 class="text-2xl font-bold text-gray-800">Questions</h2>
-                <div id="questions-container" class="space-y-6">
-                    <!-- Questions will be added here dynamically -->
+                <h2 class="text-2xl font-bold text-gray-800 mt-5">Questions</h2>
+
+                <div id="questions-container" class="space-y-8">
+                    <!-- Questions will appear here -->
                 </div>
 
                 <!-- Add Question Buttons -->
@@ -64,171 +125,189 @@
                 </div>
             </div>
 
-            <hr>
+            <hr class="border-gray-200 mt-4">
 
-            <!-- Final Actions -->
-            <div class="flex justify-end gap-4 pt-4">
-                <button id="save-draft-btn" class="bg-gray-200 text-gray-800 font-semibold px-6 py-2 rounded-lg hover:bg-gray-300">Save Draft</button>
-                <button id="publish-test-btn" class="bg-blue-500 text-white font-bold px-6 py-2 rounded-lg hover:bg-blue-600">Publish Test</button>
+            <!-- Publish Button -->
+            <div class="flex justify-center pt-6">
+                <button id="publish-test-btn" 
+                        class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xl px-12 py-4 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                    Publish Test
+                </button>
             </div>
-        </div>
+        
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const questionsContainer = document.getElementById('questions-container');
-            let questionCounter = 0;
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const questionsContainer = document.getElementById("questions-container");
+    let questionCounter = 0;
 
-            document.getElementById('add-mcq-btn').addEventListener('click', () => addQuestion('mcq'));
-            document.getElementById('add-short-answer-btn').addEventListener('click', () => addQuestion('short_answer'));
-            document.getElementById('add-code-btn').addEventListener('click', () => addQuestion('code'));
+    document.getElementById("add-mcq-btn").addEventListener("click", () => addQuestion("mcq"));
+    document.getElementById("add-short-answer-btn").addEventListener("click", () => addQuestion("short_answer"));
+    document.getElementById("add-code-btn").addEventListener("click", () => addQuestion("code"));
 
-            // -----------------------------------------------------------------
-            //  Add a new question (MCQ now has a "correct" radio button)
-            // -----------------------------------------------------------------
-            function addQuestion(type) {
-                questionCounter++;
-                const questionId = `question-${questionCounter}`;
-                let questionHTML = '';
+    // Add Question Function
+    function addQuestion(type) {
+        questionCounter++;
+        const qid = `q${questionCounter}`;
+        let html = "";
 
-                switch (type) {
-                    case 'mcq':
-                        questionHTML = `
-                            <div class="p-4 border rounded-lg bg-gray-50 relative" data-qid="${questionId}">
-                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
-                                    <i class="fas fa-times-circle"></i>
-                                </button>
-                                <label class="block text-md font-semibold text-gray-700 mb-2">
-                                    Question ${questionCounter} (Multiple Choice)
-                                </label>
-                                <input type="text" placeholder="Enter the question..." class="w-full p-2 border rounded-md mb-3" data-field="text">
+        if (type === "mcq") {
+            html = `
+            <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="mcq">
+                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
+                    <span>Question ${questionCounter}</span>
+                    <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-blue-100 text-blue-800">
+                        <i class="fas fa-check-circle"></i> Multiple Choice
+                    </span>
+                </h3>
+                <input type="text" placeholder="Enter your question..." class="w-full p-2 border rounded-md mb-3" data-qtext>
+                <div class="space-y-2 pl-4" data-options>
+                    ${[...Array(4)].map((_, i) => mcqOptionHTML(qid, i)).join("")}
+                </div>
+                <button type="button" class="text-sm text-blue-500 hover:underline mt-2" onclick="addOption(this, '${qid}')">
+                    + Add Option
+                </button>
+            </div>`;
+        }
 
-                                <div class="space-y-2 pl-4" data-options-container>
-                                    ${[...Array(4)].map((_, i) => mcqOptionHTML(questionId, i)).join('')}
-                                </div>
+        else if (type === "short_answer") {
+            html = `
+            <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="short_answer">
+                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
+                    <span>Question ${questionCounter}</span>
+                    <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-green-100 text-green-700">
+                        <i class="fas fa-paragraph"></i> Short Answer
+                    </span>
+                </h3>
+                <textarea placeholder="Enter your question..." rows="3" class="w-full p-2 border rounded-md mb-3" data-qtext></textarea>
+                <input type="text" placeholder="Enter the correct answer..." class="w-full p-2 border rounded-md" data-answer>
+            </div>`;
+        }
 
-                                <button type="button" class="text-sm text-blue-500 hover:underline mt-2"
-                                        onclick="addOption(this, '${questionId}')">+ Add Option</button>
-                            </div>`;
-                        break;
+        else if (type === "code") {
+            html = `
+            <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="coding">
+                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
+                    <span>Question ${questionCounter}</span>
+                    <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-gray-800 text-white">
+                        <i class="fas fa-code"></i> Coding
+                    </span>
+                </h3>
+                <textarea placeholder="Describe the coding problem..." rows="4" class="w-full p-3 border rounded-md font-mono text-sm mb-3" data-qtext></textarea>
+                <input type="text" placeholder="Enter expected output (answer)..." class="w-full p-2 border rounded-md" data-answer>
+            </div>`;
+        }
 
-                    case 'short_answer':
-                        questionHTML = `
-                            <div class="p-4 border rounded-lg bg-gray-50 relative">
-                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
-                                    <i class="fas fa-times-circle"></i>
-                                </button>
-                                <label class="block text-md font-semibold text-gray-700 mb-2">
-                                    Question ${questionCounter} (Short Answer)
-                                </label>
-                                <textarea placeholder="Enter the question..." rows="2"
-                                          class="w-full p-2 border rounded-md"></textarea>
-                            </div>`;
-                        break;
+        questionsContainer.insertAdjacentHTML("beforeend", html);
+    }
 
-                    case 'code':
-                        questionHTML = `
-                            <div class="p-4 border rounded-lg bg-gray-50 relative">
-                                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
-                                    <i class="fas fa-times-circle"></i>
-                                </button>
-                                <label class="block text-md font-semibold text-gray-700 mb-2">
-                                    Question ${questionCounter} (Coding Challenge)
-                                </label>
-                                <textarea placeholder="Describe the coding problem..." rows="4"
-                                          class="w-full p-2 border rounded-md font-mono text-sm"></textarea>
-                            </div>`;
-                        break;
-                }
-                questionsContainer.insertAdjacentHTML('beforeend', questionHTML);
-            }
+    // MCQ option generator
+    function mcqOptionHTML(qid, index) {
+        return `
+        <div class="option-input-group">
+            <input type="radio" name="${qid}-correct" class="form-radio text-blue-500">
+            <input type="text" placeholder="Option ${index + 1}" class="flex-1 p-2 border rounded-md" data-option-text>
+            <button type="button" class="text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+    }
 
-            // -----------------------------------------------------------------
-            //  Helper: HTML for a single MCQ option (radio + text + delete)
-            // -----------------------------------------------------------------
-            function mcqOptionHTML(questionId, index) {
-                return `
-                    <div class="option-input-group">
-                        <input type="radio" name="${questionId}-correct" class="form-radio text-blue-500" required>
-                        <input type="text" placeholder="Option ${index + 1}" class="flex-1 p-2 border rounded-md" data-option-text>
-                        <button type="button" class="text-gray-400 hover:text-red-500"
-                                onclick="this.parentElement.remove()">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>`;
-            }
+    // Add new MCQ option dynamically
+    window.addOption = function (btn, qid) {
+        const container = btn.previousElementSibling;
+        const optionCount = container.children.length;
+        container.insertAdjacentHTML("beforeend", mcqOptionHTML(qid, optionCount));
+    };
 
-            // -----------------------------------------------------------------
-            //  Add a new option to an existing MCQ
-            // -----------------------------------------------------------------
-            window.addOption = function (button, questionId) {
-                const container = button.previousElementSibling; // data-options-container
-                const optionCount = container.children.length;
-                const newHTML = mcqOptionHTML(questionId, optionCount);
-                container.insertAdjacentHTML('beforeend', newHTML);
-            };
+    // ✅ Publish Test 
+    document.getElementById("publish-test-btn").addEventListener("click", async function () {
+        const classroomId = window.location.pathname.split("/").pop(); // extract classroom id
 
-            // -----------------------------------------------------------------
-            //  Collect the whole test into a JSON-friendly structure
-            // -----------------------------------------------------------------
-            function getTestData() {
-                const title = document.getElementById('test-title').value.trim();
-                const description = document.getElementById('test-description').value.trim();
+        const questions = [];
+        Array.from(questionsContainer.children).forEach((div, i) => {
+            const type = div.dataset.type;
+            const questionText = div.querySelector("[data-qtext]")?.value.trim() || "";
+            if (!questionText) return;
 
-                const questions = Array.from(questionsContainer.children).map(qDiv => {
-                    const type = qDiv.querySelector('label').textContent.includes('Multiple Choice') ? 'mcq' :
-                                 qDiv.querySelector('label').textContent.includes('Short Answer') ? 'short_answer' : 'code';
+            if (type === "mcq") {
+                const optionsDiv = div.querySelector("[data-options]");
+                const optionRows = optionsDiv.querySelectorAll(".option-input-group");
+                const options = Array.from(optionRows).map((row) => row.querySelector("[data-option-text]").value.trim());
+                const correct = Array.from(optionRows).find((row) => row.querySelector('input[type="radio"]').checked);
+                const correctText = correct ? correct.querySelector("[data-option-text]").value.trim() : "";
 
-                    if (type === 'mcq') {
-                        const text = qDiv.querySelector('[data-field="text"]').value.trim();
-                        const optionsContainer = qDiv.querySelector('[data-options-container]');
-                        const optionElements = optionsContainer.querySelectorAll('.option-input-group');
-
-                        const options = Array.from(optionElements).map(el => ({
-                            text: el.querySelector('[data-option-text]').value.trim(),
-                            correct: el.querySelector('input[type="radio"]').checked
-                        }));
-
-                        // Find the correct index (for direct mapping)
-                        const correctIndex = options.findIndex(o => o.correct);
-                        if (correctIndex === -1) throw new Error('Please select a correct answer for MCQ question.');
-
-                        return { type, text, options, correctIndex };
-                    }
-
-                    // Short answer & coding – no correct answer needed here
-                    const text = qDiv.querySelector('textarea').value.trim();
-                    return { type, text };
+                questions.push({
+                    id: i + 1,
+                    question: questionText,
+                    options: options.filter(o => o !== ""),
+                    answer: correctText || "N/A",
                 });
-
-                return { title, description, questions };
+            } else {
+                const answer = div.querySelector("[data-answer]")?.value.trim() || "";
+                questions.push({
+                    id: i + 1,
+                    question: questionText,
+                    options: [],
+                    answer: answer || "N/A",
+                });
             }
-
-            // -----------------------------------------------------------------
-            //  Save / Publish handlers (demo – replace with real fetch)
-            // -----------------------------------------------------------------
-            document.getElementById('save-draft-btn').addEventListener('click', () => {
-                try {
-                    const data = getTestData();
-                    console.log('Draft data →', data);
-                    alert('Draft saved (check console)');
-                } catch (e) {
-                    alert(e.message);
-                }
-            });
-
-            document.getElementById('publish-test-btn').addEventListener('click', () => {
-                try {
-                    const data = getTestData();
-                    console.log('Publish data →', data);
-                    alert('Test published (check console)');
-                    // Example POST:
-                    // fetch('/api/tests', {method:'POST', body:JSON.stringify(data), headers:{'Content-Type':'application/json'}})
-                } catch (e) {
-                    alert(e.message);
-                }
-            });
         });
-    </script>
+
+        if (questions.length === 0) {
+            alert("Please add at least one question!");
+            return;
+        }
+
+        const testData = {
+            title: document.getElementById("testName").value.trim() || "Untitled Test",
+            code: document.getElementById("testCode").value.trim() || "TEST-001",
+            start_time: document.getElementById("startTime").value,
+            end_time: document.getElementById("endTime").value,
+            questions: questions
+        };
+
+        try {
+            const res = await fetch(`/publish_test/${classroomId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    test: testData
+                })
+            });
+
+            const result = await res.json();
+            if (result.success) {
+                alert("✅ Test published successfully!");
+                window.location.href = `/classroom/${classroomId}`;
+            } else {
+                alert("❌ Failed to publish: " + result.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("⚠️ Error publishing test!");
+        }
+    });
+
+    const tomorrow = new Date(); 
+    tomorrow.setDate(tomorrow.getDate() + 1); 
+    tomorrow.setHours(10, 0); 
+    const dateStr = tomorrow.toISOString().slice(0, 16); 
+    document.getElementById('startTime').value = dateStr; 
+    document.getElementById('endTime').value = dateStr;
+    
+});
+</script>
+
 </body>
 </html>

@@ -1,18 +1,21 @@
-from flask import Flask, jsonify, render_template, redirect, url_for, flash, session, request, abort, send_from_directory
-from flask_wtf import FlaskForm
-import pyrebase
-import firebase_admin
-from firebase_admin import credentials, firestore , db
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, Length,Optional
+import os
+import json
 import logging
 from datetime import datetime
+
+from flask import Flask, jsonify, render_template, redirect, url_for, flash, session, request, abort, send_from_directory
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Email, Length, Optional
+
+import pyrebase
+import firebase_admin
+from firebase_admin import credentials, firestore, db
 from jinja2.exceptions import TemplateNotFound
-import os
+
 from dotenv import load_dotenv
-import json
-from openai import OpenAI  # ← ADD THIS LINE
-import logging
+from openai import OpenAI   # corrected import for OpenAI
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 # Load .env
@@ -535,36 +538,6 @@ def course(course_name):
 
 
 
-@app.route('/create_test', methods=['GET', 'POST'])
-def create_test():
-    """Renders the page for creating a new test and handles submission."""
-    if 'user_role' not in session:
-        flash('You must be logged in to create a test.', 'error')
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        test_title = request.form.get('test-title')
-        test_description = request.form.get('test-description')
-
-        if 'posts' not in session:
-            session['posts'] = []
-
-        new_test_post = {
-            'type': 'test',
-            'title': test_title,
-            'content': test_description,
-            'author': session.get('user_name', 'Teacher'),
-            'date': datetime.now().strftime('%b %d, %Y')
-        }
-
-        session['posts'].insert(0, new_test_post)
-        session.modified = True 
-
-        flash('Test has been published successfully!', 'success')
-        # Redirect to a default classroom (ID 1) for demonstration
-        return redirect(url_for('classroom', classroom_id=1))
-        
-    return render_template('create_test.html')
 
 
 
@@ -761,6 +734,45 @@ def join_classroom_by_code(code):
 
 
 #CLASSROOM
+@app.route('/create_test/<classroom_id>')
+def create_test(classroom_id):
+    """
+    Renders the create_test.html page for a specific classroom.
+    """
+    return render_template('create_test.html', classroom_id=classroom_id)
+    
+
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    if 'user_email' not in session:
+        return jsonify({'success': False, 'message': 'User not logged in'}), 401
+
+    data = request.get_json() or {}
+    classroom_id = data.get('classroom_id')
+    message = data.get('message')
+
+    if not classroom_id or not message:
+        return jsonify({'success': False, 'message': 'Missing classroom_id or message'}), 400
+
+    try:
+        sender_email = session['user_email']
+        activities_ref = realtime_db.reference(f'classrooms/{classroom_id}/activities')
+
+        new_message_ref = activities_ref.push({
+            'type': 1,
+            'message': message.strip(),
+            'sender': sender_email,
+            'timestamp': datetime.now().isoformat()
+        })
+
+        return jsonify({'success': True, 'id': new_message_ref.key}), 200
+
+    except Exception as e:
+        print("Error sending message:", e)
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+
 @app.route('/get_join_requests/<classroom_id>', methods=['GET'])
 def get_join_requests(classroom_id):
     try:
@@ -941,7 +953,52 @@ def remove_member():
         print("Error removing member:", e)
         return jsonify({'success': False, 'message': str(e)}), 500
 
+#CREATE_TEST
+@app.route('/publish_test/<classroom_id>', methods=['POST'])
+def publish_test(classroom_id):
+    try:
+        data = request.json
+        sender_email = session['user_email']
+        test_data = data.get('test')
 
+        if not test_data:
+            return jsonify({"success": False, "error": "No test data received"}), 400
+
+        # Reference to classroom activities
+        activities_ref = db.reference(f'classrooms/{classroom_id}/activities')
+
+        # Push the new test activity
+        new_activity = activities_ref.push({
+            'type': 3,
+            'test': test_data,
+            'sender': sender_email,
+            'timestamp': datetime.now().isoformat()
+        })
+
+        return jsonify({"success": True, "message": "Test published successfully!", "id": new_activity.key}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    
+#ASSESMENT
+@app.route('/get_test_data/<classroom_id>/<test_ref>', methods=['GET'])
+def get_test_data(classroom_id, test_ref):
+    """Fetch test details from Firebase Realtime DB"""
+    try:
+        test_path = f"classrooms/{classroom_id}/activities/{test_ref}"
+        print(f"📡 Fetching test path: {test_path}")  # Debug log
+
+        test_data = db.reference(test_path).get()
+
+        if not test_data:
+            return jsonify({"success": False, "error": "Test not found"}), 404
+        
+        print(json.dumps(test_data, indent=2))
+
+        return jsonify({"success": True, "test": test_data}), 200
+
+    except Exception as e:
+        print("🔥 Error fetching test data:", e)
+        return jsonify({"success": False, "error": str(e)}), 500    
 
 
 
