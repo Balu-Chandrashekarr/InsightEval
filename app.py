@@ -992,8 +992,6 @@ def get_test_data(classroom_id, test_ref):
         if not test_data:
             return jsonify({"success": False, "error": "Test not found"}), 404
         
-        print(json.dumps(test_data, indent=2))
-
         return jsonify({"success": True, "test": test_data}), 200
 
     except Exception as e:
