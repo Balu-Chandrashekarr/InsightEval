@@ -121,16 +121,16 @@
         </div>
     </div>
 
-    <script>
+   <script>
   // Extract parameters
   const urlParams = new URLSearchParams(window.location.search);
   const course = urlParams.get('course')?.toLowerCase();
   const classroomId = urlParams.get('classroom');
   const testRef = urlParams.get('test');
 
-  console.log("🧠 Classroom:", classroomId);
-  console.log("🧩 Test Ref:", testRef);
-  console.log("📚 Course:", course);
+  console.log("Classroom:", classroomId);
+  console.log("Test Ref:", testRef);
+  console.log("Course:", course);
 
   // Map course to title and JSON file
   const courseTitles = {
@@ -148,7 +148,6 @@
       'dmml': '/json/dmml_questions.json'
   };
 
-  // Set title placeholder
   document.getElementById('course-title').textContent = courseTitles[course];
 
   // =========================
@@ -156,16 +155,13 @@
   // =========================
   async function loadQuestions() {
     if (classroomId && testRef) {
-      // ✅ Case 1: Classroom Test (Backend Fetch)
       console.log("Fetching classroom test from backend...");
       try {
         const response = await fetch(`/get_test_data/${classroomId}/${testRef}`);
         const data = await response.json();
-
         if (!data.success) throw new Error(data.error || "Failed to fetch test data");
         const wrapper = data.test;
         const test = wrapper.test ? wrapper.test : wrapper;
-
         document.getElementById("course-title").textContent = test.title;
         renderQuestions(test.questions || []);
       } catch (err) {
@@ -173,17 +169,13 @@
         document.getElementById('assessment-form').innerHTML =
           '<p class="text-red-600">Error loading classroom test. Please try again later.</p>';
       }
-
     } else {
-      // ✅ Case 2: Predefined course JSON
       console.log("Loading static course assessment...");
       try {
         const response = await fetch(courseJson[course]);
         if (!response.ok) throw new Error('Failed to load questions');
         const data = await response.json();
-
         const questions = data.questions;
-        // Shuffle and select 20
         for (let i = questions.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [questions[i], questions[j]] = [questions[j], questions[i]];
@@ -201,7 +193,7 @@
   loadQuestions();
 
   // =========================
-  // RENDER FUNCTION
+  // RENDER FUNCTION (NOW SUPPORTS CODING QUESTIONS)
   // =========================
   function renderQuestions(questions) {
     if (!questions || questions.length === 0) {
@@ -234,20 +226,66 @@
       const questionDiv = document.createElement('div');
       questionDiv.id = `question-${index}`;
       questionDiv.className = 'question';
-      questionDiv.innerHTML = `
-        <h3>${q.question}</h3>
-        ${q.options.map((opt, i) => `
-          <div class="option">
-            <input type="radio" name="q${num}" value="${opt}" id="q${num}_opt${i}">
-            <label for="q${num}_opt${i}">${opt}</label>
+
+      let questionHTML = '';
+
+      if (q.type === "coding" || (!q.options && q.answer)) {
+        // CODING QUESTION
+        questionHTML = `
+          <h3 class="text-xl font-bold mb-6">${q.question || "Write a program to solve the following problem:"}</h3>
+          <div class="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
+            <div class="bg-gray-800 px-4 py-3 flex justify-between items-center">
+              <select id="lang-${index}" class="bg-gray-700 text-white text-sm rounded px-3 py-1">
+                <option value="71">Python</option>
+                <option value="62">Java</option>
+                <option value="54">C++</option>
+                <option value="63">JavaScript</option>
+                <option value="52">C</option>
+              </select>
+              <button type="button" onclick="runCode(${index})" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded">
+                Run Code
+              </button>
+            </div>
+            <textarea id="code-${index}" class="w-full h-96 bg-gray-900 text-green-400 font-mono text-lg p-4 resize-none" 
+                      placeholder="// Write your code here...">${q.template || ""}</textarea>
           </div>
-        `).join('')}
-      `;
+
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-bold text-gray-700 mb-2">Input:</h4>
+              <textarea id="input-${index}" class="w-full h-32 p-4 border rounded-lg font-mono text-sm" 
+                        placeholder="Enter input...">${q.sample_input || ""}</textarea>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-700 mb-2">Output:</h4>
+              <pre id="output-${index}" class="bg-black text-green-400 p-4 rounded-lg h-32 overflow-auto font-mono text-sm">Click Run to see output</pre>
+            </div>
+          </div>
+
+          <input type="hidden" id="coding-answer-${index}" name="q${num}">
+        `;
+      } else {
+        // MCQ / SHORT ANSWER
+        questionHTML = `
+          <h3>${q.question}</h3>
+          ${q.options ? q.options.map((opt, i) => `
+            <div class="option">
+              <input type="radio" name="q${num}" value="${opt}" id="q${num}_opt${i}">
+              <label for="q${num}_opt${i}">${opt}</label>
+            </div>
+          `).join('') : 
+          `<textarea name="q${num}" class="w-full p-4 border rounded-lg mt-4" rows="4" placeholder="Type your answer here..."></textarea>`
+          }
+        `;
+      }
+
+      questionDiv.innerHTML = questionHTML;
       assessmentForm.appendChild(questionDiv);
 
       // Mark answered in sidebar
-      questionDiv.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', () => {
+      const inputs = questionDiv.querySelectorAll('input, textarea');
+      inputs.forEach(input => {
+        input.addEventListener('input', () => {
           const navItem = questionList.children[index];
           if (!navItem.classList.contains('answered')) navItem.classList.add('answered');
         });
@@ -258,17 +296,16 @@
     document.querySelector('.question')?.classList.add('active');
     questionList.firstChild?.classList.add('active');
 
-    // Submit button on last question
+    // Submit button
     const last = document.getElementById(`question-${questions.length - 1}`);
     if (last) {
       const btn = document.createElement('button');
       btn.type = 'submit';
-      btn.className = 'submit-btn visible';
+      btn.className = 'submit-btn visible mt-8';
       btn.textContent = 'Submit Assessment';
       last.appendChild(btn);
     }
 
-    // Handle submission
     assessmentForm.addEventListener('submit', e => {
       e.preventDefault();
       handleSubmit(questions);
@@ -276,20 +313,70 @@
   }
 
   // =========================
-  // SUBMIT HANDLER
+  // RUN CODE FUNCTION (Judge0)
+  // =========================
+  window.runCode = async function(index) {
+    const code = document.getElementById(`code-${index}`).value;
+    const lang = document.getElementById(`lang-${index}`).value;
+    const input = document.getElementById(`input-${index}`).value;
+    const outputEl = document.getElementById(`output-${index}`);
+
+    outputEl.textContent = "Running...";
+    outputEl.style.color = "#60a5fa";
+
+    try {
+      const res = await fetch('/run_code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, language_id: lang, input })
+      });
+      const result = await res.json();
+      outputEl.textContent = result.output || "No output";
+      outputEl.style.color = result.status === "Accepted" ? "#10b981" : "#ef4444";
+    } catch (err) {
+      outputEl.textContent = "Error: Could not connect to compiler";
+      outputEl.style.color = "#ef4444";
+    }
+  };
+
+  // =========================
+  // SUBMIT HANDLER (Saves coding answers)
   // =========================
   function handleSubmit(questions) {
     let score = 0;
     const answers = {};
+
     questions.forEach((q, i) => {
       const num = i + 1;
-      const selected = document.querySelector(`input[name="q${num}"]:checked`);
-      if (selected && selected.value === q.answer) score++;
-      answers[`q${num}`] = {
-        selected: selected?.value || 'Not answered',
-        correct: selected?.value === q.answer,
-        answer: q.answer
-      };
+
+      if (q.type === "coding" || (!q.options && q.answer)) {
+        const codeEl = document.getElementById(`code-${i}`);
+        const submittedCode = codeEl ? codeEl.value.trim() : "";
+        const correct = submittedCode.length > 10; // Basic check (you can improve later)
+        if (correct) score++;
+
+        answers[`q${num}`] = {
+          selected: submittedCode ? "Code submitted" : "Not answered",
+          correct: correct,
+          answer: q.answer || "Code accepted"
+        };
+
+        // Save code to hidden field
+        const hidden = document.getElementById(`coding-answer-${i}`);
+        if (hidden) hidden.value = submittedCode;
+      } else {
+        const selected = document.querySelector(`input[name="q${num}"]:checked`) || 
+                        document.querySelector(`textarea[name="q${num}"]`);
+        const value = selected ? selected.value.trim() : 'Not answered';
+        const isCorrect = value === q.answer;
+        if (isCorrect) score++;
+
+        answers[`q${num}`] = {
+          selected: value,
+          correct: isCorrect,
+          answer: q.answer
+        };
+      }
     });
 
     const percentage = (score / questions.length) * 100;
@@ -298,10 +385,11 @@
       score,
       percentage: percentage.toFixed(2),
       course,
+      classroom: classroomId || '',
+      test: testRef || '',
       answers: JSON.stringify(answers)
     });
 
-    // Redirect to results page
     window.location.href = `/courses/result?${params.toString()}`;
   }
 </script>

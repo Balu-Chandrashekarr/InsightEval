@@ -15,6 +15,9 @@ from jinja2.exceptions import TemplateNotFound
 
 from dotenv import load_dotenv
 from openai import OpenAI   # corrected import for OpenAI
+import requests
+from flask import request, jsonify
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -210,6 +213,53 @@ Output ONLY valid JSON:
     except Exception as e:
         logger.exception("AI generation failed")
         return jsonify({"error": "AI generation failed", "details": str(e)}), 500
+    
+
+# 4. NOW — add the /run_code route (AFTER app is created!)
+@app.route('/run_code', methods=['POST'])
+def run_code():
+    data = request.json
+    source_code = data.get('code')
+    language_id = data.get('language_id', 71)  # 71 = Python
+    stdin = data.get('input', '')
+
+    JUDGE0_URL = "https://judge0-ce.p.rapidapi.com"
+    RAPIDAPI_KEY = "f106eb3bc9msh970dca68389f22dp18d538jsn9745aa68f4bf"  # ← Put your key here
+
+    payload = {
+        "source_code": source_code,
+        "language_id": language_id,
+        "stdin": stdin,
+        "redirect_stderr_to_stdout": True
+    }
+
+    headers = {
+        "x-rapidapi-key": RAPIDAPI_KEY,
+        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Submit code
+        submission = requests.post(
+            f"{JUDGE0_URL}/submissions?base64_encoded=false&wait=false",
+            json=payload, headers=headers
+        ).json()
+        token = submission['token']
+
+        # Get result
+        import time
+        time.sleep(2)
+        result = requests.get(f"{JUDGE0_URL}/submissions/{token}", headers=headers).json()
+
+        return jsonify({
+            "output": result.get('stdout') or result.get('stderr') or result.get('compile_output') or "No output",
+            "status": result['status']['description'],
+            "time": result.get('time', '0'),
+            "memory": result.get('memory', '0')
+        })
+    except Exception as e:
+        return jsonify({"output": f"Error: {str(e)}", "status": "Error"}), 500
 @app.route("/micro_quiz")
 def micro_quiz():
     return render_template("micro_quiz.html")
