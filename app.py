@@ -158,24 +158,22 @@ def ai_feedback_quiz():
     weak_topics = detect_weak_topics(wrong_questions)
 
     prompt = f"""You are an expert tutor giving honest, constructive feedback.
-
 Course: {course.upper()}
-Score: {score}/20 ({score * 5:.0f}%)
+Score: {score}/{max(1, len(answered))} ({(score / max(1, len(answered))) * 100:.0f}%)
 Weak topics: {", ".join(weak_topics) if weak_topics else "None identified"}
 
 INSTRUCTIONS:
 1. Write a 120–150 word feedback.
-2. Tone MUST match the score:
-   - 0–4/20: "You struggled significantly. Here's what went wrong..."
-   - 5–9/20: "You faced challenges. Let's fix the basics..."
-   - 10–14/20: "Good effort! You know some parts, but..."
-   - 15–17/20: "Strong performance! Just a few gaps..."
-   - 18–20/20: "Excellent! You're mastering this..."
-   
-
+2. Tone MUST match the score percentage:
+   - 0–20%: "You struggled significantly. Here's what went wrong..."
+   - 21–45%: "You faced challenges. Let's fix the basics..."
+   - 46–70%: "Good effort! You know some parts, but..."
+   - 71–89%: "Strong performance! Just a few gaps..."
+   - 90–100%: "Excellent! You're mastering this..."
+    
 3. Structure:
    - Start with tone-matched opener
-   - 1 strength (even if score is 0: "You attempted all questions")
+   - 1 strength (even if score is 0)
    - 2–3 weaknesses (based on weak topics)
    - 3 numbered tips (actionable, 1-line each)
    - End with encouragement
@@ -196,6 +194,7 @@ Output ONLY valid JSON:
   }}
 }}
 """
+
 
     try:
         response = chat_client.chat.completions.create(

@@ -3,254 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assessment Result</title>
+    <title>InsightEval - Test Result</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            background-color: #f3f4f6;
+            background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
             color: #1f2937;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
         .result-wrapper {
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .result-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899);
         }
         h1 {
-            font-size: 2.25rem;
+            font-size: 2.5rem;
             font-weight: 800;
             color: #1e40af;
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e7ff;
+            text-align: center;
         }
-        .result-section {
-            margin-bottom: 20px;
-        }
-        .result-section p {
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
-        .evaluation-summary {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f9fafb;
-            border-radius: 8px;
-            border-left: 4px solid #6b7280;
-        }
-        .evaluation-summary ul {
-            list-style: disc;
-            padding-left: 20px;
-        }
-        .evaluation-summary li {
-            margin: 8px 0;
-            font-size: 0.95rem;
+        .score-circle {
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            margin: 30px auto;
+            font-weight: 900;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .back-btn, .micro-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 700;
             text-decoration: none;
-            transition: background-color 0.3s ease;
-            margin-top: 15px;
-            margin-right: 10px;
+            transition: all 0.3s ease;
+            margin: 10px;
+            display: inline-block;
         }
         .back-btn {
-            background-color: #3b82f6;
+            background: linear-gradient(to right, #3b82f6, #2563eb);
             color: white;
         }
-        .back-btn:hover {
-            background-color: #2563eb;
-        }
+        .back-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(59,131,246,0.4); }
         .micro-btn {
-            background-color: #7c3aed;
+            background: linear-gradient(to right, #8b5cf6, #7c3aed);
             color: white;
         }
-        .micro-btn:hover {
-            background-color: #6d28d9;
-        }
+        .micro-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(139,92,246,0.4); }
         .ai-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
-            border-radius: 12px;
-            border: 1px solid #c7d2fe;
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #fef3c7 100%);
+            border-radius: 16px;
+            border: 2px solid #dbeafe;
         }
-        .ai-section h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #4c1d95;
-            margin-bottom: 12px;
-        }
-        .loading {
-            color: #6b7280;
-            font-style: italic;
-        }
+        .loading { color: #6b7280; font-style: italic; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="result-wrapper">
-            <h1 id="course-title"></h1>
-            <div class="result-section" id="result-content"></div>
+            <h1 id="result-title">Test Result</h1>
+            <div id="main-content"></div>
 
-            <!-- AI SECTION -->
-            <div id="ai-section" class="ai-section">
-                <h3>InsightEval AI-Powered Learning Boost</h3>
-                <div id="feedback-loading" class="loading">Loading questions and analyzing...</div>
-                <div id="feedback-text" class="mt-4 text-gray-800 leading-relaxed"></div>
-                <button id="start-micro" class="micro-btn hidden">
-                    Start AI Micro-Quiz
+            <!-- AI Section (only for JSON-based assessments) -->
+            <div id="ai-section" class="ai-section hidden">
+                <h3 class="text-2xl font-bold text-purple-800 mb-4">InsightEval AI-Powered Learning Boost</h3>
+                <div id="feedback-loading" class="loading">Analyzing your performance with AI...</div>
+                <div id="feedback-text" class="mt-6 text-lg text-gray-800 leading-relaxed"></div>
+                <button id="start-micro" class="micro-btn hidden mt-6">
+                    Start Personalized Micro-Quiz (5 Questions)
                 </button>
             </div>
 
-            <a href="/dashboard" class="back-btn">Back to Dashboard</a>
+            <div class="text-center mt-10">
+                <a href="/dashboard" class="back-btn">Back to Dashboard</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // === 1. Parse URL ===
-        const urlParams = new URLSearchParams(window.location.search);
-        const course = (urlParams.get('course') || '').toLowerCase();
-        const score = parseInt(urlParams.get('score') || 0);
-        const percentage = urlParams.get('percentage') || '0';
-        const answersJson = urlParams.get('answers') || '{}';
-        let answers = {};
-        try {
-            answers = JSON.parse(decodeURIComponent(answersJson));
-        } catch (e) {
-            console.error("Failed to parse answers:", e);
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const score = parseInt(urlParams.get('score') || 0);
+            const percentage = parseFloat(urlParams.get('percentage') || 0).toFixed(1);
+            const answersJson = urlParams.get('answers') || '{}';
+            const classroom = urlParams.get('classroom');
+            const testId = urlParams.get('test');
+            const course = (urlParams.get('course') || '').toLowerCase();
 
-        // === 2. Course Title ===
-        const courseTitles = {
-            'dsa': 'Final Assessment: Data Structures and Algorithms',
-            'oops': 'Final Assessment: Object-Oriented Programming',
-            'dbms': 'Final Assessment: Database Management Systems',
-            'os': 'Final Assessment: Operating Systems',
-            'dmml': 'Final Assessment: Data Mining and Machine Learning'
-        };
-        document.getElementById('course-title').textContent = courseTitles[course] || 'Final Assessment';
+            let answers = {};
+            try { answers = JSON.parse(decodeURIComponent(answersJson)); } catch(e) {}
 
-        // === 3. Show Result ===
-        const resultContent = document.getElementById('result-content');
-        resultContent.innerHTML = `
-            <p class="mb-2">Marks Obtained: <span class="font-semibold">${score}/20</span> (${percentage}%)</p>
-            ${score >= 16 
-                ? '<p class="text-green-700 mb-4">Congratulations! You have passed the assessment.</p>' 
-                : '<p class="text-red-700 mb-4">You did not pass. Please review and retry.</p>'
-            }
-            <div class="evaluation-summary">
-                <p class="font-bold mb-2">Review of All Questions:</p>
-                <ul>
-                    ${Object.entries(answers).map(([key, value]) => `
-                        <li>${key.replace('q', 'Question ')}: 
-                            ${value.selected !== 'Not answered' ? `Selected: ${value.selected}, ` : ''} 
-                            Correct Answer: ${value.answer}
-                            ${value.correct ? ' <span class="text-green-600">(Correct)</span>' : value.selected !== 'Not answered' ? ' <span class="text-red-600">(Incorrect)</span>' : ''}
-                        </li>
-                    `).join('')}
-                </ul>
-            </div>
-        `;
+            const isClassroomTest = classroom && testId;
 
-        // === 4. Load Questions JSON ===
-        let allQuestions = [];
-        console.log("Fetching questions from:", `/json/${course}_questions.json`);
-        fetch(`/json/${course}_questions.json`)
-            .then(r => {
-                if (!r.ok) throw new Error(`HTTP ${r.status}`);
-                return r.json();
-            })
-            .then(data => {
-                allQuestions = data.questions || [];
-                console.log("Loaded Questions:", allQuestions.map(q => ({id: q.id, question: q.question})));
-                generateAIFeedback();
-            })
-            .catch(err => {
-                console.error("Failed to load questions:", err);
-                document.getElementById('feedback-loading').innerHTML = 
-                    `<span class="text-red-600">Failed to load questions: ${err.message}</span>`;
-            });
-
-        // === 5. Generate AI Feedback ===
-        async function generateAIFeedback() {
-            const loadingEl = document.getElementById('feedback-loading');
-            loadingEl.textContent = "Analyzing your answers...";
-
-            // Extract wrong question IDs (numeric)
-            const wrongIds = Object.entries(answers)
-                .filter(([_, v]) => !v.correct && v.selected && v.selected !== 'Not answered')
-                .map(([k]) => {
-                    const num = parseInt(k.replace('q', ''));
-                    return isNaN(num) ? null : num;
-                })
-                .filter(id => id !== null);
-
-            console.log("Wrong Question IDs:", wrongIds);
-
-            // Match with full questions
-            const wrongQuestions = allQuestions
-                .filter(q => wrongIds.includes(q.id))
-                .map(q => q.question);
-
-            console.log("Wrong Question Texts:", wrongQuestions);
-
-            // Always send at least one (for testing)
-            const payload = {
-                course: course || 'unknown',
-                score: score,
-                wrong_questions: wrongQuestions.length > 0 ? wrongQuestions : ["Sample weak area"]
+            // BLOCK OLD JSON 404s
+            const originalFetch = window.fetch;
+            window.fetch = function(resource, options) {
+                if (typeof resource === 'string' && resource.includes('questions.json')) {
+                    return Promise.resolve(new Response(JSON.stringify({questions: []}), {status: 200}));
+                }
+                return originalFetch(resource, options);
             };
 
-            console.log("Sending to AI:", payload);
+            const mainContent = document.getElementById('main-content');
 
-            try {
-                const resp = await fetch("/api/ai_feedback_quiz", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
+            if (isClassroomTest) {
+                // TEACHER-CREATED CLASSROOM TEST RESULT
+                document.getElementById('result-title').textContent = "Classroom Test Completed!";
+                document.getElementById('ai-section').classList.add('hidden');
 
-                if (!resp.ok) {
-                    const text = await resp.text();
-                    throw new Error(`HTTP ${resp.status}: ${text}`);
-                }
+                const bgColor = score >= 16 ? 'from-green-500 to-emerald-600' :
+                               score >= 12 ? 'from-blue-500 to-cyan-600' :
+                               score >= 8 ? 'from-yellow-500 to-orange-600' : 'from-red-500 to-rose-600';
 
-                const data = await resp.json();
-                console.log("AI Response:", data);
+                mainContent.innerHTML = `
+                    <div class="text-center">
+                        <p class="text-xl text-gray-700 mb-8">This test was created by your teacher</p>
+                        <div class="score-circle bg-gradient-to-br ${bgColor}">
+                            <div class="text-6xl">${score}</div>
+                            <div class="text-2xl opacity-90">out of 20</div>
+                        </div>
+                        <div class="text-6xl font-bold text-gray-800 mt-6">${percentage}%</div>
+                        <p class="text-2xl font-medium mt-6 ${score >= 16 ? 'text-green-600' : score >= 10 ? 'text-blue-600' : 'text-red-600'}">
+                            ${score >= 16 ? 'Excellent! You Passed!' : 
+                              score >= 12 ? 'Great Effort!' : 
+                              score >= 8 ? 'Good Attempt!' : 'Keep Practicing!'}
+                        </p>
+                        <div class="mt-10 p-8 bg-gray-50 rounded-2xl">
+                            <h3 class="font-bold text-xl mb-4">Your Answers:</h3>
+                            <div class="space-y-3 text-left max-w-2xl mx-auto">
+                                ${Object.entries(answers).map(([q, a]) => `
+                                    <div class="p-4 rounded-lg ${a.correct ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}">
+                                        <span class="font-medium">${q.replace('q', 'Question ')}</span>: 
+                                        ${a.selected && a.selected !== 'Not answered' ? `<strong>You:</strong> ${a.selected} → ` : ''}
+                                        <strong>Correct:</strong> ${a.answer}
+                                        ${a.correct ? ' Correct' : ' Incorrect'}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>`;
+            } else {
+                // OLD JSON-BASED ASSESSMENT (KEEP AI FEEDBACK)
+                document.getElementById('result-title').textContent = 
+                    {dsa: 'Data Structures & Algorithms', oops: 'OOP Concepts', dbms: 'Database Systems', os: 'Operating Systems', dmml: 'Data Mining & ML'}[course] || 'Final Assessment';
 
-                if (data.error) {
-                    loadingEl.innerHTML = `<span class="text-red-600">AI Error: ${data.error}</span>`;
-                    return;
-                }
+                const scoreColor = score >= 16 ? 'from-green-400 to-emerald-500' :
+                                  score >= 12 ? 'from-blue-400 to-cyan-500' :
+                                  score >= 8 ? 'from-yellow-400 to-orange-500' : 'from-red-400 to-rose-500';
 
-                document.getElementById('feedback-text').innerHTML = 
-                    (data.feedback || "No feedback generated.").replace(/\n/g, '<br>');
-                loadingEl.classList.add('hidden');
+                mainContent.innerHTML = `
+                    <div class="text-center">
+                        <div class="score-circle bg-gradient-to-br ${scoreColor}">
+                            <div class="text-6xl">${score}/${Object.keys(answers).length}</div>
 
-                // Show micro-quiz button
-                window.microQuiz = data.micro_quiz?.questions || [];
-                const btn = document.getElementById('start-micro');
-                btn.classList.remove('hidden');
-                btn.onclick = () => {
-                    localStorage.setItem('microQuiz', JSON.stringify(window.microQuiz));
-                    location.href = '/micro_quiz';
-                };
+                            <div class="text-2xl opacity-90">${percentage}%</div>
+                        </div>
+                       <p class="text-3xl font-bold mt-6 ${score >= (Object.keys(answers).length * 0.8) ? 'text-green-600' : 'text-red-600'}">
+    ${score >= (Object.keys(answers).length * 0.5) ? 'Passed!' : 'Not Passed'}
+</p>
 
-            } catch (err) {
-                console.error("AI Request Failed:", err);
-                loadingEl.innerHTML = `<span class="text-red-600">AI Request Failed: ${err.message}</span>`;
+                    </div>
+                    <div class="evaluation-summary mt-8 p-6 bg-gray-50 rounded-xl">
+                        <p class="font-bold mb-3">Question Review:</p>
+                        <ul class="space-y-2">
+                            ${Object.entries(answers).map(([k, v]) => `
+                                <li class="${v.correct ? 'text-green-700' : 'text-red-700'}">
+                                    ${k.replace('q','Question ')}: 
+                                    ${v.selected && v.selected !== 'Not answered' ? v.selected + ' → ' : ''}
+                                    <strong>${v.answer}</strong>
+                                    ${v.correct ? ' Correct' : ' Incorrect'}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>`;
+
+                // Keep AI feedback for old assessments
+                document.getElementById('ai-section').classList.remove('hidden');
+                generateAIFeedback();
             }
-        }
+
+            async function generateAIFeedback() {
+                const loading = document.getElementById('feedback-loading');
+                loading.textContent = "Generating personalized AI feedback...";
+
+                const wrongQuestions = Object.entries(answers)
+                    .filter(([_, v]) => !v.correct && v.selected && v.selected !== 'Not answered')
+                    .map(([_, v]) => v.answer);
+
+                try {
+                    const resp = await fetch("/api/ai_feedback_quiz", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            course: course || "general",
+                            score: score,
+                            wrong_questions: wrongQuestions.length > 0 ? wrongQuestions : ["general review"]
+                        })
+                    });
+
+                    if (!resp.ok) throw new Error("AI unavailable");
+
+                    const data = await resp.json();
+                    document.getElementById('feedback-text').innerHTML = 
+                        (data.feedback || "Great effort! Keep learning.").replace(/\n/g, '<br><br>');
+                    loading.classList.add('hidden');
+
+                    if (data.micro_quiz?.questions?.length > 0) {
+                        window.microQuiz = data.micro_quiz.questions;
+                        document.getElementById('start-micro').classList.remove('hidden');
+                        document.getElementById('start-micro').onclick = () => {
+                            localStorage.setItem('microQuiz', JSON.stringify(window.microQuiz));
+                            location.href = '/micro_quiz';
+                        };
+                    }
+                } catch (err) {
+                    document.getElementById('feedback-text').innerHTML = 
+                        "<p class='text-orange-600'>AI feedback temporarily unavailable. Your result is saved!</p>";
+                    loading.classList.add('hidden');
+                }
+            }
+        });
     </script>
 </body>
 </html>
