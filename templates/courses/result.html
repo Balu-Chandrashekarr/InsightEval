@@ -126,7 +126,9 @@
             if (isClassroomTest) {
                 // TEACHER-CREATED CLASSROOM TEST RESULT
                 document.getElementById('result-title').textContent = "Classroom Test Completed!";
-                document.getElementById('ai-section').classList.add('hidden');
+                document.getElementById('ai-section').classList.remove('hidden');
+                generateAIFeedback();
+
 
                 const bgColor = score >= 16 ? 'from-green-500 to-emerald-600' :
                                score >= 12 ? 'from-blue-500 to-cyan-600' :
@@ -137,7 +139,8 @@
                         <p class="text-xl text-gray-700 mb-8">This test was created by your teacher</p>
                         <div class="score-circle bg-gradient-to-br ${bgColor}">
                             <div class="text-6xl">${score}</div>
-                            <div class="text-2xl opacity-90">out of 20</div>
+                            <div class="text-2xl opacity-90">out of ${Object.keys(answers).length}</div>
+
                         </div>
                         <div class="text-6xl font-bold text-gray-800 mt-6">${percentage}%</div>
                         <p class="text-2xl font-medium mt-6 ${score >= 16 ? 'text-green-600' : score >= 10 ? 'text-blue-600' : 'text-red-600'}">
