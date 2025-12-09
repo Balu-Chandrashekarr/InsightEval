@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("add-mcq-btn").addEventListener("click", () => addQuestion("mcq"));
     document.getElementById("add-short-answer-btn").addEventListener("click", () => addQuestion("short_answer"));
-    document.getElementById("add-code-btn").addEventListener("click", () => addQuestion("code"));
+    document.getElementById("add-code-btn").addEventListener("click", () => addQuestion("coding"));
 
     // Add Question Function
     function addQuestion(type) {
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>`;
         }
 
-        else if (type === "code") {
+        else if (type === "coding") {
             html = `
             <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="coding">
                 <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
@@ -250,17 +250,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 questions.push({
                     id: i + 1,
+                    type: "mcq",
                     question: questionText,
                     options: options.filter(o => o !== ""),
                     answer: correctText || "N/A",
                 });
-            } else {
+            } else if (type === "short_answer") {
                 const answer = div.querySelector("[data-answer]")?.value.trim() || "";
                 questions.push({
                     id: i + 1,
+                    type: "short_answer",
                     question: questionText,
                     options: [],
                     answer: answer || "N/A",
+                });
+            }
+            else{
+                const expectedOutput = div.querySelector("[data-expected-output]")?.value.trim() || "";
+                questions.push({
+                    id: i + 1,
+                    type: "coding",
+                    question: questionText,
+                    options: [],
+                    expected_output: expectedOutput || "N/A",
                 });
             }
         });
