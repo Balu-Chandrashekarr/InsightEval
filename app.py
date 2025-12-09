@@ -222,9 +222,10 @@ def run_code():
     source_code = data.get('code')
     language_id = data.get('language_id', 71)  # 71 = Python
     stdin = data.get('input', '')
+    expected_output = data.get('expected_output', '').strip()   # <--- ADD THIS
 
     JUDGE0_URL = "https://judge0-ce.p.rapidapi.com"
-    RAPIDAPI_KEY = "f106eb3bc9msh970dca68389f22dp18d538jsn9745aa68f4bf"  # ← Put your key here
+    RAPIDAPI_KEY = "f106eb3bc9msh970dca68389f22dp18d538jsn9745aa68f4bf"
 
     payload = {
         "source_code": source_code,
@@ -247,19 +248,33 @@ def run_code():
         ).json()
         token = submission['token']
 
-        # Get result
+        # Wait then get result
         import time
         time.sleep(2)
         result = requests.get(f"{JUDGE0_URL}/submissions/{token}", headers=headers).json()
 
+        actual_output = (result.get('stdout') or 
+                         result.get('stderr') or 
+                         result.get('compile_output') or 
+                         "").strip()
+
+        # -----------------------------
+        # 🎯 MARKING LOGIC (ADD HERE)
+        # -----------------------------
+        mark = 1 if actual_output == expected_output else 0
+
         return jsonify({
-            "output": result.get('stdout') or result.get('stderr') or result.get('compile_output') or "No output",
+            "output": actual_output,
             "status": result['status']['description'],
             "time": result.get('time', '0'),
-            "memory": result.get('memory', '0')
+            "memory": result.get('memory', '0'),
+            "expected_output": expected_output,
+            "mark": mark   # <--- RETURN MARKING
         })
+
     except Exception as e:
         return jsonify({"output": f"Error: {str(e)}", "status": "Error"}), 500
+
 @app.route("/micro_quiz")
 def micro_quiz():
     return render_template("micro_quiz.html")
