@@ -141,29 +141,73 @@ def ai_feedback_quiz():
         return jsonify({"error": "AI not configured"}), 500
 
     data = request.get_json(silent=True) or {}
-    course = data.get("course", "").lower()
-    score  = int(data.get("score", 0))
-
-    # Accept two payload styles
+    course = data.get("course", "general").upper()
     answered = data.get("answered", [])
-    wrong_questions = data.get("wrong_questions", [])
 
-    # If only answered → extract texts
-    if answered and not wrong_questions:
-        questions = load_questions(course)
-        qmap = {q["id"]: q for q in questions}
-        wrong_questions = [
-            qmap[a["id"]]["question"]
-            for a in answered
-            if not a.get("correct") and a["id"] in qmap
-        ]
+    if not answered:
+        return jsonify({"error": "No answers provided"}), 400
 
-    weak_topics = detect_weak_topics(wrong_questions)
+    # === 1. AI-GRADE ALL SHORT_ANSWER QUESTIONS ===
+    for q in answered:
+        if q.get("type") == "short_answer":
+            student = q.get("selected", "").strip()
+            expected = q.get("answer", "").strip()
+            question = q.get("question", "Short answer")
 
-    prompt = f"""You are an expert tutor giving honest, constructive feedback.
-Course: {course.upper()}
-Score: {score}/{max(1, len(answered))} ({(score / max(1, len(answered))) * 100:.0f}%)
-Weak topics: {", ".join(weak_topics) if weak_topics else "None identified"}
+            if not student or student in ["Not answered", ""]:
+                q["correct"] = False
+                q["explanation"] = "No answer submitted"
+                continue
+
+            prompt = f"""Grade this student's short answer.
+
+Question: {question}
+Expected: {expected}
+Student said: {student}
+
+Is it essentially correct? Answer with ONLY this JSON:
+{{"grade": "CORRECT" or "INCORRECT", "explanation": "1 short sentence"}}
+"""
+
+            try:
+                resp = chat_client.chat.completions.create(
+                    model="mistralai/mistral-7b-instruct:free",
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.1,
+                    max_tokens=100
+                )
+                raw = resp.choices[0].message.content.strip()
+                raw = raw.replace("```json", "").replace("```", "").strip()
+                result = json.loads(raw)
+
+                q["correct"] = result["grade"] == "CORRECT"
+                q["explanation"] = result.get("explanation", "Graded by AI")
+            except Exception as e:
+                logger.error(f"LLM grading failed: {e}")
+                q["correct"] = False
+                q["explanation"] = "Auto-grading failed"
+        else:
+            # For non-short-answer questions, just keep their existing correctness
+            pass
+
+    # === 2. RECALCULATE FINAL SCORE ===
+    earned = sum(q.get("marks", 1) for q in answered if q.get("correct"))
+    total = sum(q.get("marks", 1) for q in answered)
+
+    #    # === 3. GENERATE MICRO-QUIZ ON THE TEST TOPIC (ALWAYS) ===
+    # Use wrong questions if any, otherwise use ALL questions from the test
+    if any(not q.get("correct", True) for q in answered):
+        topic_qs = [q.get("question", "concept") for q in answered if not q.get("correct")]
+    else:
+        topic_qs = [q.get("question", "concept") for q in answered]  # even perfect score → revise the topic
+
+    # Take first 3 as focus topics
+    weak = ", ".join([q[:70] + "..." if len(q) > 70 else q for q in topic_qs[:3]]) or course
+
+    feedback_prompt = f"""You are a kind, expert tutor.
+
+Student scored {earned}/{total} ({(earned/total*100):.1f}%) in {course}
+Weak areas: {weak}
 
 INSTRUCTIONS:
 1. Write a 120–150 word feedback.
@@ -173,7 +217,7 @@ INSTRUCTIONS:
    - 46–70%: "Good effort! You know some parts, but..."
    - 71–89%: "Strong performance! Just a few gaps..."
    - 90–100%: "Excellent! You're mastering this..."
-    
+   
 3. Structure:
    - Start with tone-matched opener
    - 1 strength (even if score is 0)
@@ -198,23 +242,38 @@ Output ONLY valid JSON:
 }}
 """
 
-
     try:
-        response = chat_client.chat.completions.create(
+        resp = chat_client.chat.completions.create(
             model="mistralai/mistral-7b-instruct:free",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=700
+            messages=[{"role": "user", "content": feedback_prompt}],
+            temperature=0.8,
+            max_tokens=1000
         )
-        raw = response.choices[0].message.content
-        cleaned = raw.strip().strip("```json").strip("```").strip()
-        result = json.loads(cleaned)
-        return jsonify(result)
-    except Exception as e:
-        logger.exception("AI generation failed")
-        return jsonify({"error": "AI generation failed", "details": str(e)}), 500
-    
+        raw = resp.choices[0].message.content.strip()
+        raw = raw.replace("```json", "").replace("```", "").strip()
 
+        # ROBUST JSON PARSING
+        start = raw.find("{")
+        end = raw.rfind("}") + 1
+        if start == -1 or end == 0:
+            raise ValueError("No JSON")
+        json_str = raw[start:end]
+        result = json.loads(json_str)
+
+    except Exception as e:
+        logger.error(f"Feedback generation failed: {e}")
+        result = {
+            "feedback": "Great effort! Every attempt makes you stronger.",
+            "micro_quiz": {"questions": []}
+        }
+
+    return jsonify({
+        "feedback": result.get("feedback", "Keep learning!"),
+        "micro_quiz": result.get("micro_quiz", {"questions": []}),
+        "score": earned,
+        "total_marks": total,
+        "answers": answered
+    })
 # 4. NOW — add the /run_code route (AFTER app is created!)
 @app.route('/run_code', methods=['POST'])
 def run_code():
@@ -261,7 +320,13 @@ def run_code():
         # -----------------------------
         # 🎯 MARKING LOGIC (ADD HERE)
         # -----------------------------
-        mark = 1 if actual_output == expected_output else 0
+        def normalize(text):
+            return text.replace("\r", "").strip()
+
+        actual_clean = normalize(actual_output)
+        expected_clean = normalize(expected_output)
+
+        mark = 1 if actual_clean == expected_clean else 0
 
         return jsonify({
             "output": actual_output,
@@ -1028,13 +1093,22 @@ def publish_test(classroom_id):
         if not test_data:
             return jsonify({"success": False, "error": "No test data received"}), 400
 
-        # Reference to classroom activities
+        # 🔹 ADD MARKS HERE
+        for q in test_data.get('questions', []):
+            if q.get('type') == 'mcq':
+                q['marks'] = 1
+            elif q.get('type') == 'short_answer':
+                q['marks'] = 5
+            elif q.get('type') == 'coding':
+                q['marks'] = 10
+            else:
+                q['marks'] = 1  # default
+
         activities_ref = db.reference(f'classrooms/{classroom_id}/activities')
 
-        # Push the new test activity
         new_activity = activities_ref.push({
             'type': 3,
-            'test': test_data,
+            'test': test_data,  # now contains marks
             'sender': sender_email,
             'timestamp': datetime.now().isoformat()
         })
@@ -1042,6 +1116,7 @@ def publish_test(classroom_id):
         return jsonify({"success": True, "message": "Test published successfully!", "id": new_activity.key}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
     
 #ASSESMENT
 @app.route('/get_test_data/<classroom_id>/<test_ref>', methods=['GET'])

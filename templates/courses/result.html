@@ -97,152 +97,192 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const score = parseInt(urlParams.get('score') || 0);
-            const percentage = parseFloat(urlParams.get('percentage') || 0).toFixed(1);
-            const answersJson = urlParams.get('answers') || '{}';
-            const classroom = urlParams.get('classroom');
-            const testId = urlParams.get('test');
-            const course = (urlParams.get('course') || '').toLowerCase();
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const urlParams = new URLSearchParams(window.location.search);
 
-            let answers = {};
-            try { answers = JSON.parse(decodeURIComponent(answersJson)); } catch(e) {}
+    const earnedMarks = parseInt(urlParams.get('score') || 0);
+    const totalMarks = parseInt(urlParams.get('total') || 0);
+    const percentage = parseFloat(urlParams.get('percentage') || 0);
+    const answersJson = urlParams.get('answers') || '{}';
+    const answeredJson = urlParams.get('answered') || '[]';
+    const classroom = urlParams.get('classroom');
+    const testId = urlParams.get('test');
+    const course = (urlParams.get('course') || '').toLowerCase();
 
-            const isClassroomTest = classroom && testId;
+    let answers = {};
+    let answered = [];
 
-            // BLOCK OLD JSON 404s
-            const originalFetch = window.fetch;
-            window.fetch = function(resource, options) {
-                if (typeof resource === 'string' && resource.includes('questions.json')) {
-                    return Promise.resolve(new Response(JSON.stringify({questions: []}), {status: 200}));
-                }
-                return originalFetch(resource, options);
-            };
+    try {
+        answers = JSON.parse(decodeURIComponent(answersJson));
+        answered = JSON.parse(decodeURIComponent(answeredJson));
+    } catch (e) {
+        console.error("Failed to parse answers:", e);
+    }
 
-            const mainContent = document.getElementById('main-content');
+    const isClassroomTest = !!classroom && !!testId;
+    const mainContent = document.getElementById('main-content');
+    const aiSection = document.getElementById('ai-section');
 
-            if (isClassroomTest) {
-                // TEACHER-CREATED CLASSROOM TEST RESULT
-                document.getElementById('result-title').textContent = "Classroom Test Completed!";
-                document.getElementById('ai-section').classList.remove('hidden');
-                generateAIFeedback();
+    const bgColor = percentage >= 90 ? 'from-green-500 to-emerald-600' :
+                    percentage >= 70 ? 'from-blue-500 to-cyan-600' :
+                    percentage >= 50 ? 'from-yellow-500 to-orange-600' :
+                    'from-red-500 to-rose-600';
 
+    const perf = percentage >= 90 ? { text: "Outstanding! You're a Top Performer!", color: "text-green-600" } :
+                 percentage >= 70 ? { text: "Excellent Work! You Passed with Flying Colors!", color: "text-blue-600" } :
+                 percentage >= 50 ? { text: "Good Effort! You Passed", color: "text-yellow-600" } :
+                 { text: "Keep Practicing – You'll Get There!", color: "text-red-600" };
 
-                const bgColor = score >= 16 ? 'from-green-500 to-emerald-600' :
-                               score >= 12 ? 'from-blue-500 to-cyan-600' :
-                               score >= 8 ? 'from-yellow-500 to-orange-600' : 'from-red-500 to-rose-600';
+    document.getElementById('result-title').textContent = isClassroomTest 
+        ? "Classroom Test Completed!" 
+        : "Assessment Result";
 
-                mainContent.innerHTML = `
-                    <div class="text-center">
-                        <p class="text-xl text-gray-700 mb-8">This test was created by your teacher</p>
-                        <div class="score-circle bg-gradient-to-br ${bgColor}">
-                            <div class="text-6xl">${score}</div>
-                            <div class="text-2xl opacity-90">out of ${Object.keys(answers).length}</div>
+    mainContent.innerHTML = `
+        <div class="text-center">
+            ${isClassroomTest ? '<p class="text-xl text-gray-700 mb-8 opacity-90 font-medium">This test was created by your instructor</p>' : ''}
 
-                        </div>
-                        <div class="text-6xl font-bold text-gray-800 mt-6">${percentage}%</div>
-                        <p class="text-2xl font-medium mt-6 ${score >= 16 ? 'text-green-600' : score >= 10 ? 'text-blue-600' : 'text-red-600'}">
-                            ${score >= 16 ? 'Excellent! You Passed!' : 
-                              score >= 12 ? 'Great Effort!' : 
-                              score >= 8 ? 'Good Attempt!' : 'Keep Practicing!'}
-                        </p>
-                        <div class="mt-10 p-8 bg-gray-50 rounded-2xl">
-                            <h3 class="font-bold text-xl mb-4">Your Answers:</h3>
-                            <div class="space-y-3 text-left max-w-2xl mx-auto">
-                                ${Object.entries(answers).map(([q, a]) => `
-                                    <div class="p-4 rounded-lg ${a.correct ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}">
-                                        <span class="font-medium">${q.replace('q', 'Question ')}</span>: 
-                                        ${a.selected && a.selected !== 'Not answered' ? `<strong>You:</strong> ${a.selected} → ` : ''}
-                                        <strong>Correct:</strong> ${a.answer}
-                                        ${a.correct ? ' Correct' : ' Incorrect'}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>`;
-            } else {
-                // OLD JSON-BASED ASSESSMENT (KEEP AI FEEDBACK)
-                document.getElementById('result-title').textContent = 
-                    {dsa: 'Data Structures & Algorithms', oops: 'OOP Concepts', dbms: 'Database Systems', os: 'Operating Systems', dmml: 'Data Mining & ML'}[course] || 'Final Assessment';
+            <div class="score-circle bg-gradient-to-br ${bgColor} shadow-2xl hover:scale-105 transition-all duration-300 rounded-full w-64 h-64 mx-auto flex flex-col items-center justify-center">
+                <div class="text-8xl font-black text-white drop-shadow-2xl">${earnedMarks}</div>
+                <div class="text-3xl text-white opacity-90">/ ${totalMarks}</div>
+                <div class="text-sm text-white mt-2 opacity-80 font-medium">Total Marks</div>
+            </div>
 
-                const scoreColor = score >= 16 ? 'from-green-400 to-emerald-500' :
-                                  score >= 12 ? 'from-blue-400 to-cyan-500' :
-                                  score >= 8 ? 'from-yellow-400 to-orange-500' : 'from-red-400 to-rose-500';
+            <div class="text-9xl font-extrabold text-gray-800 mt-10 drop-shadow-2xl">${percentage.toFixed(1)}%</div>
+            <p class="text-4xl font-bold mt-6 ${perf.color} tracking-wide">${perf.text}</p>
 
-                mainContent.innerHTML = `
-                    <div class="text-center">
-                        <div class="score-circle bg-gradient-to-br ${scoreColor}">
-                            <div class="text-6xl">${score}/${Object.keys(answers).length}</div>
+            <div class="mt-16 p-10 bg-gradient-to-b from-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 max-w-5xl mx-auto">
+                <h3 class="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                    Detailed Answer Review
+                </h3>
 
-                            <div class="text-2xl opacity-90">${percentage}%</div>
-                        </div>
-                       <p class="text-3xl font-bold mt-6 ${score >= (Object.keys(answers).length * 0.8) ? 'text-green-600' : 'text-red-600'}">
-    ${score >= (Object.keys(answers).length * 0.5) ? 'Passed!' : 'Not Passed'}
-</p>
+                <div class="space-y-8">
+                    ${Object.entries(answers).map(([qKey, ans]) => {
+                        const qNum = qKey.replace('q', 'Question ');
 
-                    </div>
-                    <div class="evaluation-summary mt-8 p-6 bg-gray-50 rounded-xl">
-                        <p class="font-bold mb-3">Question Review:</p>
-                        <ul class="space-y-2">
-                            ${Object.entries(answers).map(([k, v]) => `
-                                <li class="${v.correct ? 'text-green-700' : 'text-red-700'}">
-                                    ${k.replace('q','Question ')}: 
-                                    ${v.selected && v.selected !== 'Not answered' ? v.selected + ' → ' : ''}
-                                    <strong>${v.answer}</strong>
-                                    ${v.correct ? ' Correct' : ' Incorrect'}
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>`;
+                        // CRITICAL FIX: Extract type from question object, not just ans.type
+                        const rawType = ans.type || "mcq";
+                        const questionType = rawType.toString().toLowerCase().trim();
 
-                // Keep AI feedback for old assessments
-                document.getElementById('ai-section').classList.remove('hidden');
-                generateAIFeedback();
-            }
-
-            async function generateAIFeedback() {
-                const loading = document.getElementById('feedback-loading');
-                loading.textContent = "Generating personalized AI feedback...";
-
-                const wrongQuestions = Object.entries(answers)
-                    .filter(([_, v]) => !v.correct && v.selected && v.selected !== 'Not answered')
-                    .map(([_, v]) => v.answer);
-
-                try {
-                    const resp = await fetch("/api/ai_feedback_quiz", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            course: course || "general",
-                            score: score,
-                            wrong_questions: wrongQuestions.length > 0 ? wrongQuestions : ["general review"]
-                        })
-                    });
-
-                    if (!resp.ok) throw new Error("AI unavailable");
-
-                    const data = await resp.json();
-                    document.getElementById('feedback-text').innerHTML = 
-                        (data.feedback || "Great effort! Keep learning.").replace(/\n/g, '<br><br>');
-                    loading.classList.add('hidden');
-
-                    if (data.micro_quiz?.questions?.length > 0) {
-                        window.microQuiz = data.micro_quiz.questions;
-                        document.getElementById('start-micro').classList.remove('hidden');
-                        document.getElementById('start-micro').onclick = () => {
-                            localStorage.setItem('microQuiz', JSON.stringify(window.microQuiz));
-                            location.href = '/micro_quiz';
+                        const typeInfo = {
+                            mcq: { name: "Multiple Choice", color: "blue" },
+                            short_answer: { name: "Short Answer", color: "green" },
+                            coding: { name: "Coding", color: "purple" }
                         };
-                    }
-                } catch (err) {
-                    document.getElementById('feedback-text').innerHTML = 
-                        "<p class='text-orange-600'>AI feedback temporarily unavailable. Your result is saved!</p>";
-                    loading.classList.add('hidden');
-                }
+                        const t = typeInfo[questionType] || typeInfo.mcq;
+
+                        const marks = Number(ans.marks || ans.total_marks || 1);
+                        const markText = marks === 1 ? "1 mark" : `${marks} marks`;
+
+                        const userAnswer = ans.selected && !["Not answered", "Code submitted"].includes(ans.selected)
+                            ? ans.selected.trim()
+                            : null;
+
+                        const correctAnswerText = questionType === "coding"
+                            ? "Correct code execution and logic expected"
+                            : (ans.answer || "N/A");
+
+                        return `
+                        <div class="relative p-8 rounded-3xl border-4 transition-all hover:shadow-2xl ${
+                            ans.correct
+                                ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-400'
+                                : 'bg-gradient-to-r from-rose-50 to-pink-50 border-rose-400'
+                        }">
+                            <div class="flex flex-wrap justify-between items-start gap-6 mb-6">
+                                <div class="flex items-center gap-6">
+                                    <div class="text-3xl font-black text-gray-800">${qNum}</div>
+                                    <span class="px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider text-white bg-${t.color}-600 shadow-lg">
+                                        ${t.name}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-6">
+                                    <span class="text-lg font-bold text-gray-700 bg-white px-6 py-3 rounded-full shadow-md border-2">
+                                        ${markText}
+                                    </span>
+                                    <span class="text-3xl font-bold ${ans.correct ? 'text-emerald-600' : 'text-rose-600'}">
+                                        ${ans.correct ? 'Correct' : 'Incorrect'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            ${userAnswer ? `
+                                <div class="mb-5">
+                                    <strong class="text-gray-700 text-lg">Your Answer:</strong>
+                                    <div class="mt-3 p-6 bg-white rounded-2xl font-medium text-gray-800 border-2 border-gray-200 whitespace-pre-wrap text-sm leading-relaxed shadow-inner">
+                                        ${userAnswer.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="mb-5 italic text-gray-500 text-lg">No answer submitted</div>
+                            `}
+
+                            ${!ans.correct ? `
+                                <div class="p-6 bg-amber-50 border-2 border-amber-300 rounded-2xl">
+                                    <strong class="text-amber-800 text-lg">Correct Answer:</strong>
+                                    <div class="mt-3 font-semibold text-amber-900 whitespace-pre-wrap leading-relaxed">
+                                        ${correctAnswerText}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${ans.correct ? `
+                                <div class="mt-6 text-right">
+                                    <span class="inline-flex items-center gap-3 text-emerald-700 font-bold text-xl">
+                                        Perfect Job!
+                                    </span>
+                                </div>
+                            ` : ''}
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+
+    aiSection.classList.remove('hidden');
+
+    async function generateAIFeedback() {
+        const loading = document.getElementById('feedback-loading');
+        const feedbackText = document.getElementById('feedback-text');
+        const microBtn = document.getElementById('start-micro');
+
+        loading.textContent = "Our AI is analyzing your performance...";
+
+        try {
+            const response = await fetch("/api/ai_feedback_quiz", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    course: course || "general",
+                    answered: answered
+                })
+            });
+
+            if (!response.ok) throw new Error("AI unavailable");
+
+            const data = await response.json();
+
+            feedbackText.innerHTML = (data.feedback || "Great effort!")
+                .replace(/\n/g, '<br><br>')
+                .replace(/(1\.|2\.|3\.)/g, '<br><strong>$1</strong>');
+
+            if (data.micro_quiz?.questions?.length >= 5) {
+                window.microQuiz = data.micro_quiz.questions;
+                microBtn.classList.remove('hidden');
+                microBtn.onclick = () => {
+                    localStorage.setItem('microQuiz', JSON.stringify(window.microQuiz));
+                    location.href = '/micro_quiz';
+                };
             }
-        });
-    </script>
+        } catch (err) {
+            feedbackText.innerHTML = "<p class='text-orange-600'>AI feedback temporarily unavailable.</p>";
+        } finally {
+            loading.classList.add('hidden');
+        }
+    }
+
+    generateAIFeedback();
+});
+</script>
 </body>
 </html>

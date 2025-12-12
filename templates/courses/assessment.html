@@ -339,59 +339,144 @@
     }
   };
 
-  // =========================
-  // SUBMIT HANDLER (Saves coding answers)
-  // =========================
-  function handleSubmit(questions) {
-    let score = 0;
+ // =========================
+// SUBMIT HANDLER – NOW SUPPORTS PROPER MARKS (1, 5, 10)
+// =========================
+// =========================
+// FINAL handleSubmit() – PERFECT MARKING & TYPES
+// =========================
+// Replace the handleSubmit function in assessment.html
+
+async function handleSubmit(questions) {
+    let totalMarks = 0;
     const answers = {};
+    const answered = [];
 
+    // Collect all answers (including short answers that need AI grading)
     questions.forEach((q, i) => {
-      const num = i + 1;
+        const num = i + 1;
+        const marks = q.marks || 1;
+        totalMarks += marks;
 
-      if (q.type === "coding" || (!q.options && q.answer)) {
-        const codeEl = document.getElementById(`code-${i}`);
-        const submittedCode = codeEl ? codeEl.value.trim() : "";
-        const correct = submittedCode.length > 10; // Basic check (you can improve later)
-        if (correct) score++;
+        let selected = "Not answered";
+        let correctAnswer = q.answer || "N/A";
+        let isCorrect = false;
+        const questionType = (q.type || "mcq").toLowerCase();
+        const questionText = q.question || "No question text";
 
-        answers[`q${num}`] = {
-          selected: submittedCode ? "Code submitted" : "Not answered",
-          correct: correct,
-          answer: q.answer || "Code accepted"
+        if (questionType === "coding") {
+            const codeEl = document.getElementById(`code-${i}`);
+            const code = codeEl ? codeEl.value.trim() : "";
+            selected = code ? code : "Not answered";
+            correctAnswer = q.expected_output || "Correct code execution expected";
+            isCorrect = false; // Will be graded by backend
+
+        } else if (questionType === "short_answer") {
+            const textarea = document.querySelector(`textarea[name="q${num}"]`);
+            selected = textarea?.value.trim() || "Not answered";
+            correctAnswer = q.answer || "N/A";
+            isCorrect = false; // ← AI will grade this!
+
+        } else {
+            // MCQ
+            const checked = document.querySelector(`input[name="q${num}"]:checked`);
+            selected = checked ? checked.value.trim() : "Not answered";
+            correctAnswer = q.answer || "N/A";
+            isCorrect = selected === correctAnswer;
+        }
+
+        const answerObj = {
+            selected: selected,
+            correct: isCorrect,
+            answer: correctAnswer,
+            question: questionText,
+            marks: marks,
+            total_marks: marks,
+            type: questionType
         };
 
-        // Save code to hidden field
-        const hidden = document.getElementById(`coding-answer-${i}`);
-        if (hidden) hidden.value = submittedCode;
-      } else {
-        const selected = document.querySelector(`input[name="q${num}"]:checked`) || 
-                        document.querySelector(`textarea[name="q${num}"]`);
-        const value = selected ? selected.value.trim() : 'Not answered';
-        const isCorrect = value === q.answer;
-        if (isCorrect) score++;
-
-        answers[`q${num}`] = {
-          selected: value,
-          correct: isCorrect,
-          answer: q.answer
-        };
-      }
+        answers[`q${num}`] = answerObj;
+        answered.push(answerObj);
     });
 
-    const percentage = (score / questions.length) * 100;
+    // Show loading indicator
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Grading subjective answers with AI...";
+    submitBtn.style.opacity = "0.6";
 
-    const params = new URLSearchParams({
-      score,
-      percentage: percentage.toFixed(2),
-      course,
-      classroom: classroomId || '',
-      test: testRef || '',
-      answers: JSON.stringify(answers)
-    });
+    try {
+        // 🎯 SEND TO BACKEND FOR AI GRADING
+        const response = await fetch("/api/ai_feedback_quiz", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                course: course || "general",
+                answered: answered
+            })
+        });
 
-    window.location.href = `/courses/result?${params.toString()}`;
-  }
+        if (!response.ok) {
+            throw new Error("Failed to grade answers");
+        }
+
+        const aiResult = await response.json();
+
+        // 🎯 USE AI-CORRECTED ANSWERS
+        const correctedAnswers = aiResult.answers || answered;
+        const finalScore = aiResult.score || 0;
+        const finalTotal = aiResult.total_marks || totalMarks;
+        const percentage = finalTotal > 0 ? (finalScore / finalTotal) * 100 : 0;
+
+        // Convert corrected answers back to the format result.html expects
+        const answersForUrl = {};
+        correctedAnswers.forEach((ans, i) => {
+            answersForUrl[`q${i + 1}`] = ans;
+        });
+
+        // Navigate to results with AI-corrected data
+        const params = new URLSearchParams({
+            score: finalScore,
+            total: finalTotal,
+            percentage: percentage.toFixed(1),
+            answers: JSON.stringify(answersForUrl),
+            answered: JSON.stringify(correctedAnswers),
+            course: course || "general",
+            classroom: classroomId || "",
+            test: testRef || "",
+            ai_graded: "true"  // Flag to show AI was used
+        });
+
+        window.location.href = `/courses/result?${params.toString()}`;
+
+    } catch (error) {
+        console.error("Error grading answers:", error);
+        
+        // Fallback: use original client-side grading
+        alert("AI grading unavailable. Using basic grading instead.");
+        
+        let earnedMarks = 0;
+        answered.forEach(ans => {
+            if (ans.correct) earnedMarks += ans.marks;
+        });
+
+        const percentage = totalMarks > 0 ? (earnedMarks / totalMarks) * 100 : 0;
+
+        const params = new URLSearchParams({
+            score: earnedMarks,
+            total: totalMarks,
+            percentage: percentage.toFixed(1),
+            answers: JSON.stringify(answers),
+            answered: JSON.stringify(answered),
+            course: course || "general",
+            classroom: classroomId || "",
+            test: testRef || ""
+        });
+
+        window.location.href = `/courses/result?${params.toString()}`;
+    }
+}
 </script>
 
 </body>

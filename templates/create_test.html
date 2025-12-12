@@ -254,6 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     question: questionText,
                     options: options.filter(o => o !== ""),
                     answer: correctText || "N/A",
+                     marks: 1,
                 });
             } else if (type === "short_answer") {
                 const answer = div.querySelector("[data-answer]")?.value.trim() || "";
@@ -263,6 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     question: questionText,
                     options: [],
                     answer: answer || "N/A",
+                     marks: 5,
                 });
             }
             else{
@@ -273,6 +275,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     question: questionText,
                     options: [],
                     expected_output: expectedOutput || "N/A",
+                     marks: 10,
                 });
             }
         });
