@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Test Result</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #5e7bff;
+            --primary-dark: #3a52c7;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: linear-gradient(to bottom right, #f8fafc, #e0e7ff);
+            color: var(--gray-800);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0 0 25px 0;
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+
+        .header-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .header-info strong {
+            display: block;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+
+        .content {
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f0f5ff, #e0eaff);
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            box-shadow: var(--shadow-md);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .student-name {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--gray-900);
+        }
+
+        .marks-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 20px 0;
+            line-height: 1;
+        }
+
+        .total-marks {
+            font-size: 1.3rem;
+            color: var(--gray-600);
+            margin-top: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 25px;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .status-undergoing {
+            background: #fff4e5;
+            color: var(--warning);
+        }
+
+        .ai-feedback {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--gray-100);
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header-info {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .content {
+                padding: 40px 20px;
+            }
+
+            .marks-display {
+                font-size: 3.8rem;
+            }
+
+            .student-name {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            .result-card {
+                padding: 30px 20px;
+            }
+
+            .marks-display {
+                font-size: 3.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>My Test Result</h1>
+            <div class="header-info">
+                <div>
+                    <strong>Test Name</strong>
+                    Data Structures and Algorithms Assessment
+                </div>
+                <div>
+                    <strong>Test Code</strong>
+                    DSA-2025-001
+                </div>
+                <div>
+                    <strong>Published</strong>
+                    December 12, 2025 10:00 AM
+                </div>
+                <div>
+                    <strong>Total Marks</strong>
+                    20
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="result-card">
+                <div class="student-name">student1</div>
+                
+                <div class="marks-display">15</div>
+                <div class="total-marks">out of 20</div>
+                
+                <div class="status status-completed">Completed</div>
+                
+                <div class="ai-feedback">
+                    <strong>AI Feedback:</strong><br>
+                    Student weak in DSA concepts
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

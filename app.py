@@ -863,6 +863,29 @@ def join_classroom_by_code(code):
 
 
 #CLASSROOM
+@app.route("/student_result.html")
+def student_result():
+    # Get query parameters from URL
+    classroom_id = request.args.get("classroom")
+    test_ref = request.args.get("test")
+
+    # (Optional) Use these IDs to fetch student-specific test results from DB or Firestore
+    # For now, you can just pass them to the template
+    return render_template("student_result.html", classroom_id=classroom_id,test_ref=test_ref)
+
+
+@app.route("/teacher_result.html")
+def teacher_result():
+    classroom_id = request.args.get("classroom")
+    test_ref = request.args.get("test")
+
+    # (Optional) You can later use classroom_id and test_ref 
+    # to fetch test data or results from Firestore / Firebase / DB
+
+    return render_template("teacher_result.html", classroom_id=classroom_id, test_ref=test_ref)
+
+
+
 @app.route('/create_test/<classroom_id>')
 def create_test(classroom_id):
     """
