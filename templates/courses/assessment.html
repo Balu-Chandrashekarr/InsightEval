@@ -422,12 +422,46 @@ async function handleSubmit(questions) {
         }
 
         const aiResult = await response.json();
+        const feedback = aiResult.feedback || "No feedback provided.";
 
         // 🎯 USE AI-CORRECTED ANSWERS
         const correctedAnswers = aiResult.answers || answered;
         const finalScore = aiResult.score || 0;
         const finalTotal = aiResult.total_marks || totalMarks;
         const percentage = finalTotal > 0 ? (finalScore / finalTotal) * 100 : 0;
+
+        if (classroomId && testRef) {
+            try {
+                // 🧠 Prepare the data to save in Firebase
+                const updateData = {
+                    status: "Completed",
+                    score: finalScore,
+                    total: finalTotal,
+                    percentage: percentage.toFixed(2),
+                    feedback: feedback
+                };
+
+                // ✅ Send to backend
+                const resp = await fetch("/update_test_status", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        classroom_id: classroomId,
+                        test_ref: testRef,
+                        update_data: updateData
+                    })
+                });
+
+                const result = await resp.json();
+                if (result.success) {
+                    console.log("✅ Result saved to Firebase successfully!");
+                } else {
+                    console.warn("⚠️ Failed to save result:", result.message);
+                }
+            } catch (err) {
+                console.error("❌ Error saving result:", err);
+            }
+        }
 
         // Convert corrected answers back to the format result.html expects
         const answersForUrl = {};

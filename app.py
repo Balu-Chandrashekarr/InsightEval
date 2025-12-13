@@ -863,6 +863,38 @@ def join_classroom_by_code(code):
 
 
 #CLASSROOM
+@app.route('/update_test_status', methods=['POST'])
+def update_test_status():
+    try:
+        data = request.get_json()
+        classroom_id = data.get('classroom_id')
+        test_ref = data.get('test_ref')
+        student_email = session.get('user_email')
+        update_data = data.get('update_data')  # dict of fields to update (status, score, etc.)
+
+        if not classroom_id or not test_ref or not student_email or not update_data:
+            return jsonify({"success": False, "message": "Missing data"}), 400
+
+        safe_email = student_email.replace('.', '_')
+
+        # ✅ Firebase path
+        result_ref = db.reference(
+            f'classrooms/{classroom_id}/activities/{test_ref}/test/results/{safe_email}'
+        )
+
+        # ✅ Add timestamp automatically
+        update_data["timestamp"] = datetime.now().isoformat()
+
+        # ✅ Update or create entry
+        result_ref.update(update_data)
+
+        return jsonify({"success": True, "message": "Status updated successfully"})
+
+    except Exception as e:
+        print("Error in update_test_status:", e)
+        return jsonify({"success": False, "message": str(e)}), 500
+    
+
 @app.route("/student_result.html")
 def student_result():
     # Get query parameters from URL
@@ -1114,17 +1146,8 @@ def publish_test(classroom_id):
 
         if not test_data:
             return jsonify({"success": False, "error": "No test data received"}), 400
-
-        # 🔹 ADD MARKS HERE
-        for q in test_data.get('questions', []):
-            if q.get('type') == 'mcq':
-                q['marks'] = 1
-            elif q.get('type') == 'short_answer':
-                q['marks'] = 5
-            elif q.get('type') == 'coding':
-                q['marks'] = 10
-            else:
-                q['marks'] = 1  # default
+        
+        test_data['results'] = {"_init": True}
 
         activities_ref = db.reference(f'classrooms/{classroom_id}/activities')
 

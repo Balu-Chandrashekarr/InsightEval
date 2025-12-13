@@ -623,111 +623,128 @@ document.addEventListener('click', async (e) => {
     </script>
     <script type="module">
         //functions
-            function createPostCard(type, content, sender = "Unknown", pDate, file) {
-        let created = formatMessageDate(pDate);
+    function createPostCard(type, content, sender = "Unknown", pDate, file) {
+    let created = formatMessageDate(pDate);
 
-        if (sender === classroom_details.ownerEmail)
-            sender = "Teacher";
-        else if (sender === classroom_details.userEmail)
-            sender = "You";
+    if (sender === classroom_details.ownerEmail)
+        sender = "Teacher";
+    else if (sender === classroom_details.userEmail)
+        sender = "You";
 
-        let html = '';
+    let html = '';
 
-                    // 🗣️ ANNOUNCEMENT
-        if (type === 'announcement') {
-                html = `
-                <div class="flex justify-start">
-                    <div class="bg-white rounded-2xl rounded-tl-md shadow-sm px-5 py-4 w-full">
-                    <p class="text-gray-800 leading-relaxed">${content}</p>
-                    <p class="text-xs text-gray-500 mt-3 text-right">${sender} · ${created}</p>
-                    </div>
-                </div>`;
-        }
-        // 📘 STUDY MATERIAL else if (type === 'material' && file) { const fileName = file.name || 'StudyMaterial.pdf'; const fileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB'; html = <div class="flex justify-start"> <div class="bg-white rounded-2xl rounded-tl-md shadow-sm overflow-hidden w-full"> <a href="${file.url || '#'}" download="${fileName}" class="flex items-center justify-between p-5 hover:bg-gray-50 transition"> <div> <p class="font-medium text-gray-800">${fileName}</p> <p class="text-xs text-gray-500 mt-1">${fileSize} · ${file.type?.toUpperCase() || 'FILE'}</p> </div> <i class="fas fa-download text-xl text-gray-500"></i> </a> <div class="text-right pr-5 pb-3"> <span class="text-xs text-gray-500">${created}</span> </div> </div> </div>; }
-
-        // 🧩 TEST MESSAGE
-        else if (type === 'test') {
-            let testInfo = typeof content === 'string' ? JSON.parse(content) : content;
-            const start = new Date(testInfo.start_time);
-            const end = new Date(testInfo.end_time);
-            const now = new Date();
-
-            let status = '';
-            let statusColor = 'gray';
-            if (now < start) {
-                status = 'Upcoming';
-                statusColor = 'blue';
-            } else if (now >= start && now <= end) {
-                status = 'LIVE';
-                statusColor = 'green';
-            } else {
-                status = 'Ended';
-                statusColor = 'red';
-            }
-
-            const startStr = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const endStr = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            // 🧠 Check if current user is the teacher (You)
-            const isTeacher = window.c_user?.user_name === "You";
-
-            html = `
-            <div class="flex justify-start">
-            <div class="bg-white rounded-2xl rounded-tl-md shadow-sm w-full">
-                <div class="p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center gap-2.5">
-                    <i class="fas fa-file-alt text-${statusColor}-600"></i>
-                    <p class="font-medium text-gray-800 text-base">${testInfo.title || "Untitled Test"}</p>
-                    </div>
-                    <span class="bg-${statusColor}-500 text-white px-2.5 py-0.5 rounded-full text-xs font-bold">${status}</span>
-                </div>
-
-                <p class="text-gray-700 text-sm">Code: 
-                    <span class="font-bold text-${statusColor}-700">${testInfo.code || "N/A"}</span>
-                </p>
-
-                <div class="mt-3 flex items-center justify-between text-xs">
-                    <div class="text-gray-600">
-                    <p><i class="far fa-clock mr-1"></i> <strong>Start:</strong> ${startStr}</p>
-                    <p class="mt-0.5"><i class="far fa-stopwatch mr-1"></i> <strong>End:</strong> ${endStr}</p>
-                    </div>
-
-                    ${isTeacher 
-                        // 👇 Always show "View Results" for teacher
-                        ? `<button 
-                            class="view-results-btn bg-blue-600 hover:bg-blue-700 
-                            text-white text-sm font-medium px-6 py-2 rounded-lg transition"
-                            data-ref="${testInfo.refKey}">
-                            View Results
-                        </button>`
-                        // 👇 Normal behavior for students
-                        : status === 'LIVE'
-                            ? `<button 
-                                class="start-test-btn bg-green-600 hover:bg-green-700 
-                                text-white text-sm font-medium px-6 py-2 rounded-lg transition"
-                                data-ref="${testInfo.refKey}">
-                                Start Test
-                            </button>`
-                            : status === 'Ended'
-                            ? `<button 
-                                class="view-results-btn bg-blue-600 hover:bg-blue-700 
-                                text-white text-sm font-medium px-6 py-2 rounded-lg transition"
-                                data-ref="${testInfo.refKey}">
-                                View Results
-                            </button>`
-                            : ''
-                    }
-                </div>
-
+    // 🗣️ ANNOUNCEMENT
+    if (type === 'announcement') {
+        html = `
+        <div class="flex justify-start">
+            <div class="bg-white rounded-2xl rounded-tl-md shadow-sm px-5 py-4 w-full">
+                <p class="text-gray-800 leading-relaxed">${content}</p>
                 <p class="text-xs text-gray-500 mt-3 text-right">${sender} · ${created}</p>
+            </div>
+        </div>`;
+    }
+
+    // 📘 STUDY MATERIAL
+    else if (type === 'material' && file) {
+        const fileName = file.name || 'StudyMaterial.pdf';
+        const fileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+
+        html = `
+        <div class="flex justify-start">
+            <div class="bg-white rounded-2xl rounded-tl-md shadow-sm overflow-hidden w-full">
+                <a href="${file.url || '#'}" download="${fileName}" class="flex items-center justify-between p-5 hover:bg-gray-50 transition">
+                    <div>
+                        <p class="font-medium text-gray-800">${fileName}</p>
+                        <p class="text-xs text-gray-500 mt-1">${fileSize} · ${file.type?.toUpperCase() || 'FILE'}</p>
+                    </div>
+                    <i class="fas fa-download text-xl text-gray-500"></i>
+                </a>
+                <div class="text-right pr-5 pb-3">
+                    <span class="text-xs text-gray-500">${created}</span>
                 </div>
             </div>
-            </div>`;
+        </div>`;
+    }
+
+    // 🧩 TEST MESSAGE
+    else if (type === 'test') {
+        let testInfo = typeof content === 'string' ? JSON.parse(content) : content;
+        const start = new Date(testInfo.start_time);
+        const end = new Date(testInfo.end_time);
+        const now = new Date();
+
+        let status = '';
+        let statusColor = 'gray';
+        if (now < start) {
+            status = 'Upcoming';
+            statusColor = 'blue';
+        } else if (now >= start && now <= end) {
+            status = 'LIVE';
+            statusColor = 'green';
+        } else {
+            status = 'Ended';
+            statusColor = 'red';
         }
 
-        return html;
+        const startStr = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const endStr = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        const isTeacher = (classroom_details.userEmail === classroom_details.ownerEmail);
+        const safeUserEmail = classroom_details.userEmail.replace('.', '_');
+
+        // ✅ Check if user already has result entry
+        const hasResult = testInfo.results && testInfo.results[safeUserEmail];
+
+        // 👇 Determine button based on role & status
+        let buttonHTML = '';
+        if (isTeacher || hasResult || status === 'Ended') {
+            buttonHTML = `
+                <button class="view-results-btn bg-blue-600 hover:bg-blue-700 
+                        text-white text-sm font-medium px-6 py-2 rounded-lg transition"
+                        data-ref="${testInfo.refKey}">
+                    View Results
+                </button>`;
+        }else if (status === 'LIVE') {
+            buttonHTML = `
+                <button class="start-test-btn bg-green-600 hover:bg-green-700 
+                        text-white text-sm font-medium px-6 py-2 rounded-lg transition"
+                        data-ref="${testInfo.refKey}">
+                    Start Test
+                </button>`;
+        }
+
+        html = `
+        <div class="flex justify-start">
+            <div class="bg-white rounded-2xl rounded-tl-md shadow-sm w-full">
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fas fa-file-alt text-${statusColor}-600"></i>
+                            <p class="font-medium text-gray-800 text-base">${testInfo.title || "Untitled Test"}</p>
+                        </div>
+                        <span class="bg-${statusColor}-500 text-white px-2.5 py-0.5 rounded-full text-xs font-bold">${status}</span>
+                    </div>
+
+                    <p class="text-gray-700 text-sm">
+                        Code: <span class="font-bold text-${statusColor}-700">${testInfo.code || "N/A"}</span>
+                    </p>
+
+                    <div class="mt-3 flex items-center justify-between text-xs">
+                        <div class="text-gray-600">
+                            <p><i class="far fa-clock mr-1"></i> <strong>Start:</strong> ${startStr}</p>
+                            <p class="mt-0.5"><i class="far fa-stopwatch mr-1"></i> <strong>End:</strong> ${endStr}</p>
+                        </div>
+                        ${buttonHTML}
+                    </div>
+
+                    <p class="text-xs text-gray-500 mt-3 text-right">${sender} · ${created}</p>
+                </div>
+            </div>
+        </div>`;
     }
+
+    return html;
+}
 
     // 🔗 Handle start test + view results routing
     document.addEventListener('click', (e) => {
@@ -748,9 +765,30 @@ document.addEventListener('click', async (e) => {
 
         // 👇 Student flow
         if (startBtn) {
-            const testUrl = `/courses/assessment?classroom=${encodeURIComponent(classroomId)}&test=${encodeURIComponent(refKey)}`;
-            console.log("Redirecting to:", testUrl);
-            window.location.href = testUrl;
+            const confirmStart = confirm("Are you sure you want to attend this test now?");
+            if (!confirmStart) return;
+            
+            fetch('/update_test_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    classroom_id: classroomId,
+                    test_ref: refKey,
+                    update_data: {
+                        status: "Attempting"
+                    }
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("✅ Status: Attempting");
+                    window.location.href = `/courses/assessment?classroom=${encodeURIComponent(classroomId)}&test=${encodeURIComponent(refKey)}`;
+                } else {
+                    alert("⚠️ " + data.message);
+                }
+            });
+
         } 
         else if (resultBtn) {
             window.location.href = `/student_result.html?classroom=${encodeURIComponent(classroomId)}&test=${encodeURIComponent(refKey)}`;

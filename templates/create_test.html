@@ -146,71 +146,97 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("add-short-answer-btn").addEventListener("click", () => addQuestion("short_answer"));
     document.getElementById("add-code-btn").addEventListener("click", () => addQuestion("coding"));
 
-    // Add Question Function
-    function addQuestion(type) {
-        questionCounter++;
-        const qid = `q${questionCounter}`;
-        let html = "";
+// Add Question Function
+function addQuestion(type) {
+    questionCounter++;
+    const qid = `q${questionCounter}`;
+    let html = "";
 
-        if (type === "mcq") {
-            html = `
-            <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="mcq">
-                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
-                    <span>Question ${questionCounter}</span>
-                    <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-blue-100 text-blue-800">
-                        <i class="fas fa-check-circle"></i> Multiple Choice
-                    </span>
-                </h3>
-                <input type="text" placeholder="Enter your question..." class="w-full p-2 border rounded-md mb-3" data-qtext>
-                <div class="space-y-2 pl-4" data-options>
-                    ${[...Array(4)].map((_, i) => mcqOptionHTML(qid, i)).join("")}
-                </div>
-                <button type="button" class="text-sm text-blue-500 hover:underline mt-2" onclick="addOption(this, '${qid}')">
-                    + Add Option
-                </button>
-            </div>`;
-        }
+    // 🟦 MULTIPLE CHOICE QUESTION
+    if (type === "mcq") {
+        html = `
+        <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="mcq">
+            <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
+                <span>Question ${questionCounter}</span>
+                <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-blue-100 text-blue-800">
+                    <i class="fas fa-check-circle"></i> Multiple Choice
+                </span>
+            </h3>
 
-        else if (type === "short_answer") {
-            html = `
-            <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="short_answer">
-                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
-                    <span>Question ${questionCounter}</span>
-                    <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-green-100 text-green-700">
-                        <i class="fas fa-paragraph"></i> Short Answer
-                    </span>
-                </h3>
-                <textarea placeholder="Enter your question..." rows="3" class="w-full p-2 border rounded-md mb-3" data-qtext></textarea>
-                <input type="text" placeholder="Enter the correct answer..." class="w-full p-2 border rounded-md" data-answer>
-            </div>`;
-        }
+            <input type="text" placeholder="Enter your question..." class="w-full p-2 border rounded-md mb-3" data-qtext>
 
-        else if (type === "coding") {
-            html = `
-            <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="coding">
-                <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
-                    <span>Question ${questionCounter}</span>
-                    <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-gray-800 text-white">
-                        <i class="fas fa-code"></i> Coding
-                    </span>
-                </h3>
-                <textarea placeholder="Describe the coding problem..." rows="4" class="w-full p-3 border rounded-md font-mono text-sm mb-3" data-qtext></textarea>
-                <textarea placeholder="Enter expected output (for auto-grading)..." rows="3" 
-          class="w-full p-3 border rounded-md font-mono text-sm" data-expected-output></textarea>
-            </div>`;
-        }
+            <div class="space-y-2 pl-4" data-options>
+                ${[...Array(4)].map((_, i) => mcqOptionHTML(qid, i)).join("")}
+            </div>
+            <button type="button" class="text-sm text-blue-500 hover:underline mt-2" onclick="addOption(this, '${qid}')">
+                + Add Option
+            </button>
 
-        questionsContainer.insertAdjacentHTML("beforeend", html);
+            <!-- Marks Input -->
+            <div class="mt-3">
+                <label class="text-sm text-gray-600">Marks:</label>
+                <input type="number" min="1" value="1" class="w-24 p-1.5 border rounded-md ml-2" data-marks>
+            </div>
+        </div>`;
     }
+
+    // 🟩 SHORT ANSWER QUESTION
+    else if (type === "short_answer") {
+        html = `
+        <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="short_answer">
+            <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
+                <span>Question ${questionCounter}</span>
+                <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-green-100 text-green-700">
+                    <i class="fas fa-paragraph"></i> Short Answer
+                </span>
+            </h3>
+
+            <textarea placeholder="Enter your question..." rows="3" class="w-full p-2 border rounded-md mb-3" data-qtext></textarea>
+            <input type="text" placeholder="Enter the correct answer..." class="w-full p-2 border rounded-md mb-3" data-answer>
+
+            <!-- Marks Input -->
+            <div>
+                <label class="text-sm text-gray-600">Marks:</label>
+                <input type="number" min="1" value="2" class="w-24 p-1.5 border rounded-md ml-2" data-marks>
+            </div>
+        </div>`;
+    }
+
+    // ⬛ CODING QUESTION
+    else if (type === "coding") {
+        html = `
+        <div class="p-4 border rounded-lg bg-gray-50 relative" data-type="coding">
+            <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-4">
+                <span>Question ${questionCounter}</span>
+                <span class="flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-lg bg-gray-800 text-white">
+                    <i class="fas fa-code"></i> Coding
+                </span>
+            </h3>
+
+            <textarea placeholder="Describe the coding problem..." rows="4" class="w-full p-3 border rounded-md font-mono text-sm mb-3" data-qtext></textarea>
+            <textarea placeholder="Enter expected output (for auto-grading)..." rows="3" 
+                class="w-full p-3 border rounded-md font-mono text-sm mb-3" data-expected-output></textarea>
+
+            <!-- Marks Input -->
+            <div>
+                <label class="text-sm text-gray-600">Marks:</label>
+                <input type="number" min="1" value="5" class="w-24 p-1.5 border rounded-md ml-2" data-marks>
+            </div>
+        </div>`;
+    }
+
+    questionsContainer.insertAdjacentHTML("beforeend", html);
+}
+
 
     // MCQ option generator
     function mcqOptionHTML(qid, index) {
@@ -239,6 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Array.from(questionsContainer.children).forEach((div, i) => {
             const type = div.dataset.type;
             const questionText = div.querySelector("[data-qtext]")?.value.trim() || "";
+            const marks = parseFloat(div.querySelector("[data-marks]")?.value)
             if (!questionText) return;
 
             if (type === "mcq") {
@@ -254,7 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     question: questionText,
                     options: options.filter(o => o !== ""),
                     answer: correctText || "N/A",
-                     marks: 1,
+                    marks: marks || 1
                 });
             } else if (type === "short_answer") {
                 const answer = div.querySelector("[data-answer]")?.value.trim() || "";
@@ -264,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     question: questionText,
                     options: [],
                     answer: answer || "N/A",
-                     marks: 5,
+                     marks: marks || 5
                 });
             }
             else{
@@ -275,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     question: questionText,
                     options: [],
                     expected_output: expectedOutput || "N/A",
-                     marks: 10,
+                    marks: marks || 10
                 });
             }
         });
