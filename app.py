@@ -924,7 +924,6 @@ def send_message():
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
-
 @app.route('/get_join_requests/<classroom_id>', methods=['GET'])
 def get_join_requests(classroom_id):
     try:

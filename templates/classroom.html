@@ -547,7 +547,7 @@
                                 <!-- Right: Action Buttons -->
                                 <div class="flex items-center gap-2">
                                     <button class="view-btn p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-all duration-200 group-hover:scale-110" 
-                                            title="View Profile" data-id="${member.id}">
+                                            title="View Profile" data-id="${member.email}">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
                                             stroke-width="2" stroke="currentColor" class="w-5 h-5">
                                             <path stroke-linecap="round" stroke-linejoin="round" 
@@ -555,7 +555,7 @@
                                         </svg>
                                     </button>
                                     <button class="remove-btn p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition-all duration-200 group-hover:scale-110" 
-                                            title="Remove" data-id="${member.id}">
+                                            title="Remove" data-id="${member.email}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" 
                                                 d="M6 18L18 6M6 6l12 12"/>
@@ -572,6 +572,43 @@
                     console.error("Error fetching members:", err);
                 }
             }
+// 🗑️ Handle member removal
+document.addEventListener('click', async (e) => {
+    const removeBtn = e.target.closest('.remove-btn');
+    if (!removeBtn) return;
+
+    const memberEmail = removeBtn.getAttribute('data-id'); // stored as original email (e.g. student1@insighteval.com)
+    if (!memberEmail) return;
+
+    if (!confirm(`Are you sure you want to remove ${memberEmail}?`)) return;
+
+    try {
+        const resp = await fetch('/remove_member', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                classroom_id: classroom_details.id,  // already available in your scope
+                member_email: memberEmail
+            })
+        });
+
+        const result = await resp.json();
+
+        if (resp.ok && result.success) {
+            alert('✅ ' + result.message);
+            fetchMembers(); // Refresh list after successful removal
+        } else {
+            alert('❌ Error: ' + (result.message || 'Unable to remove member.'));
+        }
+    } catch (error) {
+        console.error('Error removing member:', error);
+        alert('⚠️ Something went wrong while removing the member.');
+    }
+});
+
+
 
 
 
@@ -596,8 +633,20 @@
 
         let html = '';
 
+                    // 🗣️ ANNOUNCEMENT
+        if (type === 'announcement') {
+                html = `
+                <div class="flex justify-start">
+                    <div class="bg-white rounded-2xl rounded-tl-md shadow-sm px-5 py-4 w-full">
+                    <p class="text-gray-800 leading-relaxed">${content}</p>
+                    <p class="text-xs text-gray-500 mt-3 text-right">${sender} · ${created}</p>
+                    </div>
+                </div>`;
+        }
+        // 📘 STUDY MATERIAL else if (type === 'material' && file) { const fileName = file.name || 'StudyMaterial.pdf'; const fileSize = (file.size / (1024 * 1024)).toFixed(1) + ' MB'; html = <div class="flex justify-start"> <div class="bg-white rounded-2xl rounded-tl-md shadow-sm overflow-hidden w-full"> <a href="${file.url || '#'}" download="${fileName}" class="flex items-center justify-between p-5 hover:bg-gray-50 transition"> <div> <p class="font-medium text-gray-800">${fileName}</p> <p class="text-xs text-gray-500 mt-1">${fileSize} · ${file.type?.toUpperCase() || 'FILE'}</p> </div> <i class="fas fa-download text-xl text-gray-500"></i> </a> <div class="text-right pr-5 pb-3"> <span class="text-xs text-gray-500">${created}</span> </div> </div> </div>; }
+
         // 🧩 TEST MESSAGE
-        if (type === 'test') {
+        else if (type === 'test') {
             let testInfo = typeof content === 'string' ? JSON.parse(content) : content;
             const start = new Date(testInfo.start_time);
             const end = new Date(testInfo.end_time);
