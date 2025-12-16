@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import time
 from datetime import datetime
 
 from flask import Flask, jsonify, render_template, redirect, url_for, flash, session, request, abort, send_from_directory
@@ -186,13 +187,105 @@ Is it essentially correct? Answer with ONLY this JSON:
                 logger.error(f"LLM grading failed: {e}")
                 q["correct"] = False
                 q["explanation"] = "Auto-grading failed"
+
+        elif q.get("type") == "coding":
+            code = q.get("code", "")
+            lang = q.get("lang", "71")
+            test_cases = q.get("test_cases", [])
+            hidden_cases = q.get("hidden_test_cases", [])
+            all_cases = test_cases + hidden_cases
+            total_marks = q.get("marks", 10)
+
+            if not code.strip():
+                q["correct"] = False
+                q["explanation"] = "No code submitted"
+                q["earned_marks"] = 0
+                continue
+
+            JUDGE0_URL = "https://judge0-ce.p.rapidapi.com"
+            RAPIDAPI_KEY = "f106eb3bc9msh970dca68389f22dp18d538jsn9745aa68f4bf"
+
+            total_cases = len(all_cases) if all_cases else 1
+            passed = 0
+            marks_per_case = total_marks / total_cases
+
+            for case in all_cases:
+                stdin = case.get("stdin", "")
+                expected = case.get("expected", "")
+                try:
+                    payload = {
+                        "source_code": code,
+                        "language_id": lang,
+                        "stdin": stdin,
+                        "redirect_stderr_to_stdout": True
+                    }
+                    headers = {
+                        "x-rapidapi-key": RAPIDAPI_KEY,
+                        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+                        "Content-Type": "application/json"
+                    }
+
+                    submission = requests.post(
+                        f"{JUDGE0_URL}/submissions?base64_encoded=false&wait=false",
+                        json=payload, headers=headers
+                    ).json()
+                    token = submission.get('token')
+                    if not token:
+                        continue
+
+                    time.sleep(2)
+                    result = requests.get(
+                        f"{JUDGE0_URL}/submissions/{token}", headers=headers
+                    ).json()
+
+                    actual_output = (result.get('stdout') or
+                                    result.get('stderr') or
+                                    result.get('compile_output') or
+                                    "").strip()
+
+                    def normalize(txt):
+                        return txt.replace("\r", "").strip()
+
+                    if normalize(actual_output) == normalize(expected):
+                        passed += 1
+
+                except Exception as e:
+                    logger.error(f"Judge0 call failed: {e}")
+
+            earned_marks = round(passed * marks_per_case, 2)
+
+            q["passed_cases"] = passed
+            q["total_cases"] = total_cases
+            q["earned_marks"] = earned_marks
+            q["correct"] = passed == total_cases
+            q["explanation"] = (
+                f"Passed {passed}/{total_cases} test cases → "
+                f"Earned {earned_marks}/{total_marks} marks"
+            )
+    
+
         else:
             # For non-short-answer questions, just keep their existing correctness
             pass
 
     # === 2. RECALCULATE FINAL SCORE ===
-    earned = sum(q.get("marks", 1) for q in answered if q.get("correct"))
-    total = sum(q.get("marks", 1) for q in answered)
+    earned = 0
+    total = 0
+
+    for q in answered:
+        q_marks = q.get("marks", 0)
+        q_earned = q.get("earned_marks", None)
+
+        # always add full marks to total
+        total += q_marks
+
+        # if partial marks exist → use them
+        if q_earned is not None:
+            earned += q_earned
+        # otherwise, for MCQ/short answer: add full marks if correct
+        elif q.get("correct"):
+            earned += q_marks
+            
 
     #    # === 3. GENERATE MICRO-QUIZ ON THE TEST TOPIC (ALWAYS) ===
     # Use wrong questions if any, otherwise use ALL questions from the test

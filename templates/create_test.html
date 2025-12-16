@@ -222,12 +222,22 @@ function addQuestion(type) {
                 </span>
             </h3>
 
+            <!-- Problem Description -->
             <textarea placeholder="Describe the coding problem..." rows="4" class="w-full p-3 border rounded-md font-mono text-sm mb-3" data-qtext></textarea>
-            <textarea placeholder="Enter expected output (for auto-grading)..." rows="3" 
-                class="w-full p-3 border rounded-md font-mono text-sm mb-3" data-expected-output></textarea>
+
+            <!-- Test Cases Section -->
+            <div class="mt-4">
+                <h4 class="font-semibold text-gray-700 mb-2">🧪 Test Cases</h4>
+                <div class="space-y-3" data-testcases></div>
+
+                <div class="flex gap-3 mt-2">
+                    <button type="button" class="text-sm text-blue-600 hover:underline" onclick="addTestCase(this, false)">+ Add Test Case</button>
+                    <button type="button" class="text-sm text-purple-600 hover:underline" onclick="addTestCase(this, true)">+ Add Hidden Test Case</button>
+                </div>
+            </div>
 
             <!-- Marks Input -->
-            <div>
+            <div class="mt-4">
                 <label class="text-sm text-gray-600">Marks:</label>
                 <input type="number" min="1" value="5" class="w-24 p-1.5 border rounded-md ml-2" data-marks>
             </div>
@@ -255,6 +265,24 @@ function addQuestion(type) {
         const container = btn.previousElementSibling;
         const optionCount = container.children.length;
         container.insertAdjacentHTML("beforeend", mcqOptionHTML(qid, optionCount));
+    };
+
+    window.addTestCase = function (btn, hidden = false) {
+        const container = btn.closest("[data-type='coding']").querySelector("[data-testcases]");
+        const typeLabel = hidden ? "Hidden Test Case" : "Test Case";
+        const bgColor = hidden ? "bg-purple-50" : "bg-blue-50";
+
+        const testCaseHTML = `
+        <div class="p-3 border rounded-md ${bgColor} relative" data-hidden="${hidden}">
+            <button class="absolute top-2 right-2 text-gray-400 hover:text-red-500" onclick="this.parentElement.remove()">
+                <i class="fas fa-times-circle"></i>
+            </button>
+            <h5 class="font-medium text-gray-700 mb-2">${typeLabel}</h5>
+            <textarea placeholder="stdin (input)" rows="2" class="w-full p-2 border rounded-md font-mono text-sm mb-2" data-stdin></textarea>
+            <textarea placeholder="expected output" rows="2" class="w-full p-2 border rounded-md font-mono text-sm" data-expected></textarea>
+        </div>`;
+
+        container.insertAdjacentHTML("beforeend", testCaseHTML);
     };
 
     // ✅ Publish Test 
@@ -294,17 +322,33 @@ function addQuestion(type) {
                      marks: marks || 5
                 });
             }
-            else{
-                const expectedOutput = div.querySelector("[data-expected-output]")?.value.trim() || "";
-                questions.push({
-                    id: i + 1,
-                    type: "coding",
-                    question: questionText,
-                    options: [],
-                    expected_output: expectedOutput || "N/A",
-                    marks: marks || 10
-                });
-            }
+            else if (type === "coding") {
+            const testCaseDivs = div.querySelectorAll("[data-testcases] > div");
+            const testCases = [];
+            const hiddenTestCases = [];
+
+            // Separate visible and hidden test cases
+            testCaseDivs.forEach((t) => {
+                const stdin = t.querySelector("[data-stdin]")?.value.trim() || "";
+                const expected = t.querySelector("[data-expected]")?.value.trim() || "";
+                const isHidden = t.dataset.hidden === "true";
+
+                if (!stdin && !expected) return; // skip empty
+
+                const testCase = { stdin, expected };
+                if (isHidden) hiddenTestCases.push(testCase);
+                else testCases.push(testCase);
+            });
+
+            questions.push({
+                id: i + 1,
+                type: "coding",
+                question: questionText,
+                marks: marks || 10,
+                test_cases: testCases,
+                hidden_test_cases: hiddenTestCases
+            });
+        }
         });
 
         if (questions.length === 0) {

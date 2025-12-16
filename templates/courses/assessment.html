@@ -154,6 +154,7 @@
   // MAIN LOADER FUNCTION
   // =========================
   async function loadQuestions() {
+
     if (classroomId && testRef) {
       console.log("Fetching classroom test from backend...");
       try {
@@ -230,41 +231,71 @@
       let questionHTML = '';
 
       if (q.type === "coding") {
-        // CODING QUESTION
-        questionHTML = `
-          <h3 class="text-xl font-bold mb-6">${q.question || "Write a program to solve the following problem:"}</h3>
-          <div class="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
-            <div class="bg-gray-800 px-4 py-3 flex justify-between items-center">
-              <select id="lang-${index}" class="bg-gray-700 text-white text-sm rounded px-3 py-1">
-                <option value="71">Python</option>
-                <option value="62">Java</option>
-                <option value="54">C++</option>
-                <option value="63">JavaScript</option>
-                <option value="52">C</option>
-              </select>
-              <button type="button" onclick="runCode(${index})" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded">
-                Run Code
-              </button>
+      // CODING QUESTION (UPDATED)
+      const visibleCases = q.test_cases || [];
+      const sampleCasesHTML = visibleCases.length > 0
+        ? `
+          <details class="mt-5 bg-gray-50 border rounded-lg p-4">
+            <summary class="font-semibold cursor-pointer text-gray-800">📘 View Sample Test Cases</summary>
+            <div class="mt-3 space-y-3">
+              ${visibleCases.map((tc, i) => `
+                <div class="border rounded-md p-3 bg-white">
+                  <p class="text-sm text-gray-600 font-semibold">Test Case ${i + 1}</p>
+                  <p class="text-sm mt-1"><b>Input:</b></p>
+                  <pre class="bg-gray-100 text-gray-800 p-2 rounded font-mono text-sm whitespace-pre-wrap">${tc.stdin}</pre>
+                  <p class="text-sm mt-1"><b>Expected Output:</b></p>
+                  <pre class="bg-gray-100 text-gray-800 p-2 rounded font-mono text-sm whitespace-pre-wrap">${tc.expected}</pre>
+                </div>
+              `).join("")}
             </div>
-            <textarea id="code-${index}" class="w-full h-96 bg-gray-900 text-green-400 font-mono text-lg p-4 resize-none" 
-                      placeholder="// Write your code here...">${q.template || ""}</textarea>
-          </div>
+          </details>
+        `
+        : "";
 
-          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 class="font-bold text-gray-700 mb-2">Input:</h4>
-              <textarea id="input-${index}" class="w-full h-32 p-4 border rounded-lg font-mono text-sm" 
-                        placeholder="Enter input...">${q.sample_input || ""}</textarea>
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-700 mb-2">Output:</h4>
-              <pre id="output-${index}" class="bg-black text-green-400 p-4 rounded-lg h-32 overflow-auto font-mono text-sm">Click Run to see output</pre>
-            </div>
-          </div>
+      questionHTML = `
+        <h3 class="text-xl font-bold mb-4 whitespace-pre-wrap">${q.question || "Solve the following coding problem:"}</h3>
+        <p class="text-gray-600 mb-6 text-sm">Marks: ${q.marks || 10}</p>
 
-          <input type="hidden" id="coding-answer-${index}" name="q${num}">
-        `;
-      } else {
+        <!-- CODE EDITOR -->
+        <div class="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
+          <div class="bg-gray-800 px-4 py-3 flex justify-between items-center">
+            <select id="lang-${index}" class="bg-gray-700 text-white text-sm rounded px-3 py-1">
+              <option value="71">Python</option>
+              <option value="62">Java</option>
+              <option value="54">C++</option>
+              <option value="63">JavaScript</option>
+              <option value="52">C</option>
+            </select>
+            <button type="button" onclick="runCode(${index})"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded">
+              Run Code
+            </button>
+          </div>
+          <textarea id="code-${index}" 
+                    class="w-full h-96 bg-gray-900 text-green-400 font-mono text-lg p-4 resize-none"
+                    placeholder="// Write your code here...">${q.template || ""}</textarea>
+        </div>
+
+        <!-- INPUT / OUTPUT PANEL -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-bold text-gray-700 mb-2">Input:</h4>
+            <textarea id="input-${index}" class="w-full h-32 p-4 border rounded-lg font-mono text-sm" 
+                      placeholder="Enter custom input...">${q.sample_input || ""}</textarea>
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-700 mb-2">Output:</h4>
+            <pre id="output-${index}" 
+                 class="bg-black text-green-400 p-4 rounded-lg h-32 overflow-auto font-mono text-sm">
+Click Run to see output
+            </pre>
+          </div>
+        </div>
+
+        ${sampleCasesHTML}
+        <input type="hidden" id="coding-answer-${index}" name="q${num}">
+      `;
+    }  else {
         // MCQ / SHORT ANSWER
         questionHTML = `
           <h3>${q.question}</h3>
@@ -359,6 +390,10 @@ async function handleSubmit(questions) {
         totalMarks += marks;
 
         let selected = "Not answered";
+        let code = "";              // 🔹 changed to let
+        let lang = "";              // 🔹 changed to let
+        let testCases = [];         // 🔹 changed to let
+        let hiddenTestCases = [];   // 🔹 changed to let
         let correctAnswer = q.answer || "N/A";
         let isCorrect = false;
         const questionType = (q.type || "mcq").toLowerCase();
@@ -366,11 +401,17 @@ async function handleSubmit(questions) {
 
         if (questionType === "coding") {
             const codeEl = document.getElementById(`code-${i}`);
-            const code = codeEl ? codeEl.value.trim() : "";
+            const langEl = document.getElementById(`lang-${i}`);
+            code = codeEl ? codeEl.value.trim() : "";
+            lang = langEl ? langEl.value : "71"; // default Python
+
             selected = code ? code : "Not answered";
             correctAnswer = q.expected_output || "Correct code execution expected";
             isCorrect = false; // Will be graded by backend
 
+            // Add test cases (visible + hidden)
+            testCases = q.test_cases || [];
+            hiddenTestCases = q.hidden_test_cases || [];
         } else if (questionType === "short_answer") {
             const textarea = document.querySelector(`textarea[name="q${num}"]`);
             selected = textarea?.value.trim() || "Not answered";
@@ -392,6 +433,10 @@ async function handleSubmit(questions) {
             question: questionText,
             marks: marks,
             total_marks: marks,
+            code: code || "",
+            lang: lang || 71,
+            test_cases: testCases || [],
+            hidden_test_cases: hiddenTestCases || [],
             type: questionType
         };
 
