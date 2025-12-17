@@ -226,10 +226,11 @@
     font-size: 1.1rem;
     color: #1e293b;
     line-height: 1.6;
-    display: none;
     text-align: left;
   "
-></div>
+>
+<strong>🤖 AI Feedback</strong><br><br>
+Loading AI feedback...</div>
 
         <a href="/dashboard" class="back-btn">
           ← Back to Dashboard
@@ -339,19 +340,14 @@ function submit() {
   .then(res => res.json())
   .then(data => {
     const fb = document.getElementById("aiFeedback");
-    fb.style.display = "block";
     fb.innerHTML = `<strong>🤖 AI Feedback</strong><br><br>${data.feedback}`;
   })
   .catch(() => {
     const fb = document.getElementById("aiFeedback");
-    fb.style.display = "block";
     fb.textContent = "AI feedback is currently unavailable.";
   });
 
   localStorage.removeItem("microQuiz");
-
-  // Scroll to result
-  document.getElementById("result").scrollIntoView({ behavior: "smooth" });
 }
 
 render();
