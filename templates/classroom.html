@@ -50,29 +50,44 @@
 </head>
 <body class="bg-gray-100 font-sans">
     <main class="p-8 w-full h-screen flex flex-col">
+        <!--Alert classroom-->
+        <div id="alert-classroom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
+                    <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+                    <h2 class="text-2xl font-bold mb-4 border-b pb-3">Alert Classroom</h2>
+                    <form id="add-classroom-form" class="space-y-4">
+                        <div>
+                            <label for="new-remainder-name" class="block text-sm font-medium text-gray-700">Remainder</label>
+                            <input type="text" id="new-remainder-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        <div>
+                            <label for="new-due-time" class="block text-sm font-medium text-gray-700">Ends In</label>
+                            <input type="datetime-local" id="new-due-time" 
+                              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        <div class="flex justify-end pt-4">
+                            <button type="button" class="close-modal-btn bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
+                            <button type="submit" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600">Alert</button>
+                        </div>
+                    </form>
+            </div>
+        </div>
         <header class="flex justify-between items-center mb-6">
             <div>
                 <h1 id="classroom-name" class="text-3xl font-bold text-gray-800"></h1>
                 <p id="subcode" class="text-md text-gray-600"></p>
             </div>
 
-            <!-- NOTIFICATION BELL (ONLY) -->
-            <div class="relative">
-                <button id="notification-bell" class="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
-                   <i id="notibell" class="fas fa-bell text-gray-600 text-lg"></i>
-                    <span id="notification-badge" class="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">2</span>
+            <div class="flex space-x-3">
+    <!-- Leave Classroom Icon -->
+                <button id="leave-classroom" class="relative p-2 rounded-full hover:bg-red-100 text-red-600 transition-colors" title="Leave Classroom">
+                    <i class="fas fa-sign-out-alt text-lg"></i>
                 </button>
-                <div id="notification-dropdown" class="notification-dropdown absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 z-50">
-                    <div class="p-4 border-b border-gray-100">
-                        <h3 class="font-bold text-gray-800">Notifications</h3>
-                    </div>
-                    <div id="notification-list" class="max-h-96 overflow-y-auto">
-                        <!-- JS fills -->
-                    </div>
-                    <div class="p-3 border-t border-gray-100 text-center">
-                        <a href="#" class="text-sm text-blue-600 hover:underline">View all</a>
-                    </div>
-                </div>
+
+                <!-- Alert Icon -->
+                <button id="alert-btn" class="relative p-2 rounded-full hover:bg-blue-100 text-blue-600 transition-colors" title="Alert Students">
+                    
+                </button>
             </div>
         </header>
 
@@ -161,6 +176,8 @@
         window.classroomId = window.location.pathname.split('/').pop();
 
         
+
+        
         document.addEventListener('DOMContentLoaded', function() {
             // === USER & DATA ===
             //const pathParts = window.location.pathname.split('/');
@@ -179,6 +196,64 @@
             document.getElementById("classroom-name").textContent = classroom_details.name || "Untitled Class";
             document.getElementById("subcode").textContent = classroom_details.subjectCode+" | "+c_user.user_name || "yxt-000 | Unknown";
 
+            const leaveBtn = document.getElementById('leave-classroom');
+            const alertBtn = document.getElementById('alert-btn');
+            const addModal = document.getElementById('alert-classroom-modal');
+            const closeButtons = document.querySelectorAll('.close-modal-btn');
+            const tomorrow = new Date(); 
+            tomorrow.setDate(tomorrow.getDate() + 1); 
+            tomorrow.setHours(10, 0); 
+            const dateStr = tomorrow.toISOString().slice(0, 16); 
+            document.getElementById('new-due-time').value = dateStr; 
+
+            const openModal = (modal) => {
+                if (modal) modal.classList.remove('hidden');
+            };
+            const closeModal = (modal) => {
+                if (modal) modal.classList.add('hidden');
+            };
+            leaveBtn.addEventListener('click', () => {
+                if(c_user.user_name === "You"){
+                    alert("❌ Owners cannot leave their own classroom!");
+                    return;
+                }
+                if (confirm("Are you sure you want to leave this classroom?")) {    
+                    removeMember(user_email);
+                }
+            });
+            alertBtn.addEventListener('click', () => {
+                openModal(addModal);
+            });
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    closeModal(addModal);
+                });
+            });
+
+
+            async function removeMember(memberEmail) {
+                try {
+                    const resp = await fetch('/remove_member', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            classroom_id: classroomId,
+                            member_email: memberEmail
+                        })
+                    });
+
+                    const result = await resp.json();
+
+                    if (resp.ok && result.success) {
+                        window.location.href = '/dashboard';
+                    } else {
+                        alert('❌ Error: ' + (result.message || 'Unable to Leave Classrom at moment.'));
+                    }
+                } catch (error) {
+                    console.error('Error removing member:', error);
+                    alert('⚠️ Something went wrong while leaving classroom.');
+                }
+            }
           
             // Demo join requests
             let joinRequests = [];
@@ -203,71 +278,7 @@
             }
 
 
-            // === NOTIFICATIONS (NO JOIN REQUESTS) ===
-            let notifications = [
-                { id: 1, type: 'assignment', message: 'Assignment #3 due tomorrow', time: '1 hour ago', read: false },
-                { id: 2, type: 'post', message: 'New announcement posted', time: '3 hours ago', read: false }
-            ];
-
-            const notificationBell = document.getElementById('notification-bell');
-            const notificationDropdown = document.getElementById('notification-dropdown');
-            const notificationList = document.getElementById('notification-list');
-            const notificationBadge = document.getElementById('notification-badge');
-
-            function updateNotificationBadge() {
-                const unread = notifications.filter(n => !n.read).length;
-                notificationBadge.textContent = unread;
-                notificationBadge.style.display = unread > 0 ? 'flex' : 'none';
-            }
-
-            function renderNotifications() {
-                if (notifications.length === 0) {
-                    notificationList.innerHTML = `<p class="p-4 text-center text-sm text-gray-500">No notifications</p>`;
-                    return;
-                }
-                notificationList.innerHTML = notifications.map(notif => `
-                    <div class="notification-item p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${!notif.read ? 'bg-blue-50' : ''}" data-id="${notif.id}">
-                        <div class="flex items-start space-x-3">
-                            <div class="mt-1">
-                                ${notif.type === 'assignment' ? '<i class="fas fa-clipboard-list text-red-600"></i>' : 
-                                  '<i class="fas fa-bullhorn text-blue-600"></i>'}
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-800">${notif.message}</p>
-                                <p class="text-xs text-gray-500">${notif.time}</p>
-                            </div>
-                            ${!notif.read ? '<div class="w-2 h-2 bg-blue-600 rounded-full"></div>' : ''}
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            notificationBell.addEventListener('click', (e) => {
-                e.stopPropagation();
-                notificationDropdown.classList.toggle('show');
-            });
-
-            window.addEventListener('click', () => {
-                if (notificationDropdown.classList.contains('show')) {
-                    notificationDropdown.classList.remove('show');
-                }
-            });
-
-            notificationList.addEventListener('click', function(e) {
-                const item = e.target.closest('.notification-item');
-                if (!item) return;
-                const id = parseInt(item.dataset.id);
-                const notif = notifications.find(n => n.id === id);
-                if (notif && !notif.read) {
-                    notif.read = true;
-                    updateNotificationBadge();
-                    renderNotifications();
-                }
-            });
-
-            updateNotificationBadge();
-            renderNotifications();
-
+           
             // === RANDOM NEON ===
             function randomNeon() {
                 const neons = [
@@ -284,7 +295,7 @@
 
             const neonGradient = randomNeon();
             document.getElementById('neon-bar').className = `absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b ${neonGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`;
-            document.getElementById('notibell').className = `fas fa-bell text-lg bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent`;
+            document.getElementById('alert-btn').className = `fas fa-exclamation-triangle text-lg bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent`;
 
             // === TABS & RED BADGE ON REQUESTS ===
             const tabMembers = document.getElementById('tab-members');
@@ -528,6 +539,9 @@
                     // ✅ Render all members
                     members.forEach(member => {
                         const firstLetter = member.name ? member.name.charAt(0).toUpperCase() : '?';
+                        
+                        // Check if current user is owner
+                        const isOwner = c_user.user_name === "You";
 
                         const item = document.createElement('div');
                         item.innerHTML = `
@@ -546,14 +560,7 @@
 
                                 <!-- Right: Action Buttons -->
                                 <div class="flex items-center gap-2">
-                                    <button class="view-btn p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-all duration-200 group-hover:scale-110" 
-                                            title="View Profile" data-id="${member.email}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-                                            stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" 
-                                                d="M12 14c-3.314 0-6 2.014-6 4.5V21h12v-2.5c0-2.486-2.686-4.5-6-4.5zM12 12a4 4 0 100-8 4 4 0 000 8z" />
-                                        </svg>
-                                    </button>
+                                    ${isOwner ? `
                                     <button class="remove-btn p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition-all duration-200 group-hover:scale-110" 
                                             title="Remove" data-id="${member.email}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -561,6 +568,7 @@
                                                 d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
                                     </button>
+                                    ` : ''}
                                 </div>
                             </div>
                         `;
@@ -568,45 +576,46 @@
                         studentList.appendChild(item);
                     });
 
+
                 } catch (err) {
                     console.error("Error fetching members:", err);
                 }
             }
 // 🗑️ Handle member removal
-document.addEventListener('click', async (e) => {
-    const removeBtn = e.target.closest('.remove-btn');
-    if (!removeBtn) return;
+            document.addEventListener('click', async (e) => {
+                const removeBtn = e.target.closest('.remove-btn');
+                if (!removeBtn) return;
 
-    const memberEmail = removeBtn.getAttribute('data-id'); // stored as original email (e.g. student1@insighteval.com)
-    if (!memberEmail) return;
+                const memberEmail = removeBtn.getAttribute('data-id'); // stored as original email (e.g. student1@insighteval.com)
+                if (!memberEmail) return;
 
-    if (!confirm(`Are you sure you want to remove ${memberEmail}?`)) return;
+                if (!confirm(`Are you sure you want to remove ${memberEmail}?`)) return;
 
-    try {
-        const resp = await fetch('/remove_member', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                classroom_id: classroom_details.id,  // already available in your scope
-                member_email: memberEmail
-            })
-        });
+                try {
+                    const resp = await fetch('/remove_member', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            classroom_id: classroom_details.id,  // already available in your scope
+                            member_email: memberEmail
+                        })
+                    });
 
-        const result = await resp.json();
+                    const result = await resp.json();
 
-        if (resp.ok && result.success) {
-            alert('✅ ' + result.message);
-            fetchMembers(); // Refresh list after successful removal
-        } else {
-            alert('❌ Error: ' + (result.message || 'Unable to remove member.'));
-        }
-    } catch (error) {
-        console.error('Error removing member:', error);
-        alert('⚠️ Something went wrong while removing the member.');
-    }
-});
+                    if (resp.ok && result.success) {
+                        alert('✅ ' + result.message);
+                        fetchMembers(); // Refresh list after successful removal
+                    } else {
+                        alert('❌ Error: ' + (result.message || 'Unable to remove member.'));
+                    }
+                } catch (error) {
+                    console.error('Error removing member:', error);
+                    alert('⚠️ Something went wrong while removing the member.');
+                }
+            });
 
 
 
