@@ -10,87 +10,98 @@
             margin: 0;
             background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
             color: #1e293b;
-            min-height: 100vh;
+            height: 100vh;
             padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .hero-section {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.05) 100%);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-            padding: 60px 40px;
+            padding: 20px 30px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .hero-section h1 {
-            font-size: 3rem;
+            font-size: 1.5rem;
             font-weight: 900;
             background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin: 0 0 30px 0;
+            margin: 0 0 14px 0;
             letter-spacing: -0.02em;
         }
 
         .test-info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            max-width: 1600px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .info-card {
             background: white;
             border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 10px;
+            padding: 10px 16px;
             box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
             transition: all 0.3s ease;
         }
 
         .info-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
         }
 
         .info-label {
-            font-size: 0.875rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .info-value {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 800;
             color: #1e293b;
         }
 
         .content-wrapper {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 60px 40px;
+            padding: 20px 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            width: 100%;
         }
 
         .controls-section {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            margin-bottom: 40px;
+            gap: 12px;
+            margin-right: 5px;
+            justify-content: right;
+            margin-bottom: -55px;
+            flex-shrink: 0;
         }
 
         .btn {
-            padding: 14px 32px;
+            padding: 10px 24px;
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -98,27 +109,38 @@
         }
 
         .btn:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
         }
 
         .section-title {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 800;
             background: linear-gradient(135deg, #2563eb, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 30px;
-            text-align: center;
+            margin-bottom: 16px;
+            margin-left: 10px;
+            text-align: left;
+            flex-shrink: 0;
         }
 
         .table-container {
             background: white;
             border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 20px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .table-wrapper {
+            overflow-y: auto;
+            flex: 1;
         }
 
         table {
@@ -131,17 +153,20 @@
             color: white;
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             letter-spacing: 0.05em;
-            padding: 20px 16px;
+            padding: 14px 12px;
             text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         td {
-            padding: 20px 16px;
+            padding: 14px 12px;
             border-bottom: 1px solid #e2e8f0;
             color: #475569;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         tr:last-child td {
@@ -154,14 +179,13 @@
 
         tbody tr:hover {
             background-color: #f8fafc;
-            transform: scale(1.01);
         }
 
         .status {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 50px;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -181,7 +205,7 @@
 
         .marks {
             font-weight: 800;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             background: linear-gradient(135deg, #2563eb, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -199,13 +223,23 @@
         }
 
         .feedback {
-            max-width: 400px;
-            line-height: 1.5;
+            max-width: 350px;
+            line-height: 1.4;
             color: #64748b;
+            font-size: 0.85rem;
         }
 
         /* Responsive */
         @media (max-width: 1024px) {
+            body {
+                height: auto;
+                overflow: auto;
+            }
+
+            .content-wrapper {
+                min-height: auto;
+            }
+
             table, thead, tbody, th, td, tr { 
                 display: block; 
             }
@@ -218,9 +252,9 @@
             
             tr { 
                 border: 1px solid rgba(59, 130, 246, 0.15);
-                border-radius: 16px; 
-                margin-bottom: 20px; 
-                padding: 20px;
+                border-radius: 12px; 
+                margin-bottom: 16px; 
+                padding: 16px;
                 background: white;
                 box-shadow: 0 4px 16px rgba(59, 130, 246, 0.08);
             }
@@ -230,14 +264,14 @@
                 position: relative; 
                 padding-left: 45%; 
                 text-align: right; 
-                padding-top: 12px; 
-                padding-bottom: 12px; 
+                padding-top: 10px; 
+                padding-bottom: 10px; 
             }
             
             td:before { 
                 content: attr(data-label); 
                 position: absolute; 
-                left: 16px; 
+                left: 12px; 
                 width: 40%; 
                 padding-right: 10px; 
                 white-space: nowrap; 
@@ -258,23 +292,27 @@
                 max-width: 100%;
                 text-align: right;
             }
+
+            .table-wrapper {
+                overflow-y: visible;
+            }
         }
 
         @media (max-width: 768px) {
             .hero-section h1 {
-                font-size: 2rem;
+                font-size: 1.35rem;
             }
 
             .hero-section {
-                padding: 40px 20px;
+                padding: 16px;
             }
 
             .content-wrapper {
-                padding: 40px 20px;
+                padding: 20px 16px;
             }
 
             .test-info-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .controls-section {
@@ -289,7 +327,15 @@
 
         @media (max-width: 480px) {
             .hero-section h1 {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+            }
+
+            .test-info-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -306,32 +352,46 @@
                 <div class="info-label">Total Marks</div>
                 <div class="info-value" id="total-marks">Loading...</div>
             </div>
+            <div class="info-card">
+                <div class="info-label">Students Attended</div>
+                <div class="info-value" id="total-students">Loading...</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Average Score</div>
+                <div class="info-value" id="average-score">Loading...</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Highest Score</div>
+                <div class="info-value" id="highest-score">Loading...</div>
+            </div>
         </div>
     </div>
 
     <div class="content-wrapper">
         <div class="controls-section">
-            <button class="btn" onclick="sortTableByMarks()">📊 Sort by Highest Marks</button>
-            <button class="btn" onclick="sortTableByEmail()">📧 Sort by Email ID</button>
+            <button class="btn" onclick="sortTableByMarks()">Sort by Highest Marks</button>
+            <button class="btn" onclick="sortTableByName()">Sort by Name</button>
         </div>
 
         <h2 class="section-title">Student Results</h2>
         
         <div class="table-container">
-            <table id="resultsTable">
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>AI Feedback</th>
-                        <th>Marks</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data will be populated by JavaScript -->
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>AI Feedback</th>
+                            <th>Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -359,6 +419,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("test-title").textContent = data.test_info?.title || "Test Results Dashboard";
         document.getElementById("test-code").textContent = data.test_info?.code || "N/A";
         document.getElementById("total-marks").textContent = data.test_info?.total || 0;
+
+        // Calculate statistics
+        const completedStudents = data.students.filter(s => s.status.toLowerCase() === "completed");
+        const totalStudents = completedStudents.length;
+        
+        let totalScore = 0;
+        let highestScore = 0;
+        
+        completedStudents.forEach(student => {
+            const score = parseFloat(student.marks.split("/")[0]) || 0;
+            totalScore += score;
+            if (score > highestScore) {
+                highestScore = score;
+            }
+        });
+        
+        const averageScore = totalStudents > 0 ? (totalScore / totalStudents).toFixed(1) : 0;
+        const totalMarks = data.test_info?.total || 0;
+        const averagePercentage = totalMarks > 0 ? ((averageScore / totalMarks) * 100).toFixed(1) : 0;
+        
+        // Update statistics display
+        document.getElementById("total-students").textContent = totalStudents;
+        document.getElementById("average-score").textContent = `${averagePercentage}%`;
+        document.getElementById("highest-score").textContent = `${highestScore}/${totalMarks}`;
 
         // Fill students table
         const tbody = document.querySelector("#resultsTable tbody");
@@ -421,7 +505,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Sorting functions
 function sortTableByMarks() { sortTable(4, 'desc'); }
-function sortTableByEmail() { sortTable(0, 'asc'); }
+function sortTableByName() { sortTable(1, 'asc'); }
 
 function sortTable(colIndex, order) {
     const table = document.getElementById("resultsTable");
