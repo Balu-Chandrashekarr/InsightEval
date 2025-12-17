@@ -278,43 +278,147 @@
                 <!-- Courses Content -->
                 <div id="courses-content" class="content-section hidden">
                     <div class="bg-white rounded-lg shadow-sm p-4">
-                        <h1 class="text-2xl font-semibold text-center mb-4">Courses</h1>
+                        <h1 class="text-2xl font-semibold text-center mb-8">Courses</h1>
                         <div class="course-container flex flex-wrap justify-center gap-4">
-                            <a href="{{ url_for('course', course_name='dsa') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer"  data-course="DSA">
-                                    <h2 class="mt-2.5 text-lg font-semibold">DSA</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
-                                </div>
+                            <a href="{{ url_for('course', course_name='dsa') }}"
+                            class="group relative bg-white rounded-2xl shadow-md border border-gray-200 
+                                    overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03]">
+
+                            <!-- Glowing background (behind content) -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 
+                                        group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+
+                            <!-- Left accent bar (slides in on hover) -->
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-indigo-500 
+                                        transform -translate-x-2 group-hover:translate-x-0 
+                                        transition-transform duration-500 ease-in-out z-0"></div>
+
+                            <!-- Inner content -->
+                            <div class="relative z-10 w-48 h-36 flex flex-col justify-center items-center 
+                                        text-center cursor-pointer p-3">
+                                <h2 class="mt-2.5 text-lg font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors duration-300">
+                                DSA
+                                </h2>
+                                <p class="text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+                                Date: September 25, 2025
+                                </p>
+                                <div class="stars text-xl text-yellow-400 group-hover:scale-110 transform transition duration-300">★★★</div>
+                            </div>
                             </a>
-                            <a href="{{ url_for('course', course_name='oops') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer"  data-course="OOPS">
-                                    <h2 class="mt-2.5 text-lg font-semibold">OOPS</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
+
+                            <a href="{{ url_for('course', course_name='oops') }}"
+                            class="group relative bg-white rounded-2xl shadow-md border border-gray-200 
+                                    overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03]">
+
+                            <!-- Glowing background (behind content) -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 opacity-0 
+                                        group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+
+                            <!-- Left accent bar (slides in on hover) -->
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-purple-500 to-pink-500 
+                                        transform -translate-x-2 group-hover:translate-x-0 
+                                        transition-transform duration-500 ease-in-out z-0"></div>
+
+                            <!-- Inner content -->
+                            <div class="relative z-10 w-48 h-36 flex flex-col justify-center items-center 
+                                        text-center cursor-pointer p-3">
+                                <h2 class="mt-2.5 text-lg font-semibold text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
+                                OOPS
+                                </h2>
+                                <p class="text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+                                Date: September 25, 2025
+                                </p>
+                                <div class="stars text-xl text-yellow-400 group-hover:scale-110 transform transition duration-300">
+                                ★★★
                                 </div>
+                            </div>
                             </a>
-                            <a href="{{ url_for('course', course_name='dbms') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer" data-course="DBMS" >
-                                    <h2 class="mt-2.5 text-lg font-semibold">DBMS</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
+
+                            
+                            <a href="{{ url_for('course', course_name='dbms') }}"
+                            class="group relative bg-white rounded-2xl shadow-md border border-gray-200 
+                                    overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03]">
+
+                            <!-- Glowing background (behind content) -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 opacity-0 
+                                        group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+
+                            <!-- Left accent bar (slides in on hover) -->
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-green-500 to-emerald-500 
+                                        transform -translate-x-2 group-hover:translate-x-0 
+                                        transition-transform duration-500 ease-in-out z-0"></div>
+
+                            <!-- Inner content -->
+                            <div class="relative z-10 w-48 h-36 flex flex-col justify-center items-center 
+                                        text-center cursor-pointer p-3">
+                                <h2 class="mt-2.5 text-lg font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                                DBMS
+                                </h2>
+                                <p class="text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+                                Date: September 25, 2025
+                                </p>
+                                <div class="stars text-xl text-yellow-400 group-hover:scale-110 transform transition duration-300">
+                                ★★★
                                 </div>
+                            </div>
                             </a>
-                            <a href="{{ url_for('course', course_name='os') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer" data-course="OS">
-                                    <h2 class="mt-2.5 text-lg font-semibold">OS</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
+
+                            <a href="{{ url_for('course', course_name='os') }}"
+                            class="group relative bg-white rounded-2xl shadow-md border border-gray-200 
+                                    overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03]">
+
+                            <!-- Glowing background (behind content) -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-slate-50 to-blue-50 opacity-0 
+                                        group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+
+                            <!-- Left accent bar (slides in on hover) -->
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-slate-500 to-blue-500 
+                                        transform -translate-x-2 group-hover:translate-x-0 
+                                        transition-transform duration-500 ease-in-out z-0"></div>
+
+                            <!-- Inner content -->
+                            <div class="relative z-10 w-48 h-36 flex flex-col justify-center items-center 
+                                        text-center cursor-pointer p-3">
+                                <h2 class="mt-2.5 text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
+                                OS
+                                </h2>
+                                <p class="text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+                                Date: September 25, 2025
+                                </p>
+                                <div class="stars text-xl text-yellow-400 group-hover:scale-110 transform transition duration-300">
+                                ★★★
                                 </div>
+                            </div>
                             </a>
-                            <a href="{{ url_for('course', course_name='dmml') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer" data-course="DMML">
-                                    <h2 class="mt-2.5 text-lg font-semibold">DMML</h2>
-                                    <p class="text-sm">Date: September 25, 2025</p>
-                                    <div class="stars text-xl text-yellow-400">★★★</div>
+
+                            <a href="{{ url_for('course', course_name='dmml') }}"
+                            class="group relative bg-white rounded-2xl shadow-md border border-gray-200 
+                                    overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.03]">
+
+                            <!-- Glowing background (behind content) -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-pink-50 to-orange-50 opacity-0 
+                                        group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+
+                            <!-- Left accent bar (slides in on hover) -->
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-pink-500 to-orange-500 
+                                        transform -translate-x-2 group-hover:translate-x-0 
+                                        transition-transform duration-500 ease-in-out z-0"></div>
+
+                            <!-- Inner content -->
+                            <div class="relative z-10 w-48 h-36 flex flex-col justify-center items-center 
+                                        text-center cursor-pointer p-3">
+                                <h2 class="mt-2.5 text-lg font-semibold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
+                                DMML
+                                </h2>
+                                <p class="text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+                                Date: September 25, 2025
+                                </p>
+                                <div class="stars text-xl text-yellow-400 group-hover:scale-110 transform transition duration-300">
+                                ★★★
                                 </div>
+                            </div>
                             </a>
+
                         </div>
                         <footer class="text-center mt-5 text-xs text-gray-500">
                             <p>Learning is a journey, not a race — every step forward is progress.</p>
@@ -746,7 +850,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     const bio = card.dataset.bio || "No bio available";
                     const pic = card.dataset.pic || "https://via.placeholder.com/128x128";
                     const roleBadgeDiv = document.getElementById("view-role-badge");
-                    if (card.dataset.role === "faculty") {
+                    if (card.dataset.role === "Faculty") {
                         roleBadgeDiv.innerHTML = `
                             <span class="text-sm font-medium text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">
                                 Faculty
