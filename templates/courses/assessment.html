@@ -468,6 +468,7 @@ async function handleSubmit(questions) {
 
         const aiResult = await response.json();
         const feedback = aiResult.feedback || "No feedback provided.";
+        const micro_quiz = aiResult.micro_quiz || [];
 
         // 🎯 USE AI-CORRECTED ANSWERS
         const correctedAnswers = aiResult.answers || answered;
@@ -506,6 +507,30 @@ async function handleSubmit(questions) {
             } catch (err) {
                 console.error("❌ Error saving result:", err);
             }
+        }else {
+            try {
+                // 🧠 Prepare data for storing stars
+                const starsData = {
+                    marks: finalScore, // use the score obtained
+                    course_id: course // replace with your course identifier
+                };
+
+                // ✅ Send to backend to store stars
+                const starResp = await fetch("/api/store_stars", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(starsData)
+                });
+
+                const starResult = await starResp.json();
+                if (starResult.success) {
+                    console.log(`⭐ Stored ${starResult.stars} stars successfully!`);
+                } else {
+                    console.warn("⚠️ Failed to store stars:", starResult.error);
+                }
+            } catch (err) {
+                console.error("❌ Error storing stars:", err);
+            }
         }
 
         // Convert corrected answers back to the format result.html expects
@@ -515,46 +540,88 @@ async function handleSubmit(questions) {
         });
 
         // Navigate to results with AI-corrected data
-        const params = new URLSearchParams({
+        // Prepare data object to send to backend
+        const resultData = {
             score: finalScore,
             total: finalTotal,
-            percentage: percentage.toFixed(1),
-            answers: JSON.stringify(answersForUrl),
-            answered: JSON.stringify(correctedAnswers),
+            percentage: percentage.toFixed(1) || "0.0",
+            answers: answersForUrl || answers,
+            answered: correctedAnswers || [],
             course: course || "general",
             classroom: classroomId || "",
             test: testRef || "",
-            ai_graded: "true"  // Flag to show AI was used
+            feedback : feedback|| "No feedback provided.",
+            micro_quiz: micro_quiz|| [],
+            ai_graded: true
+        };
+
+        // Send the result data to backend instead of URL
+        const saveResp = await fetch("/save_result_data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(resultData)
         });
 
-        window.location.href = `/courses/result?${params.toString()}`;
+        const saveJson = await saveResp.json();
+
+        if (saveJson.success && saveJson.result_id) {
+            // Redirect with short, clean URL
+            console.log("222222");
+            window.location.href = `/courses/result?id=${saveJson.result_id}`;
+        } else {
+            alert("Failed to save result data.");
+        }
+
 
     } catch (error) {
-        console.error("Error grading answers:", error);
-        
-        // Fallback: use original client-side grading
-        alert("AI grading unavailable. Using basic grading instead.");
-        
-        let earnedMarks = 0;
-        answered.forEach(ans => {
-            if (ans.correct) earnedMarks += ans.marks;
+    console.error("❌ Error grading answers:", error);
+    alert("AI grading unavailable. Using basic grading instead.");
+
+    // ✅ Basic fallback: local grading (MCQs only)
+    let earnedMarks = 0;
+    answered.forEach(ans => {
+        if (ans.correct) earnedMarks += ans.marks;
+    });
+
+    const percentage = totalMarks > 0 ? (earnedMarks / totalMarks) * 100 : 0;
+
+    // ✅ Prepare fallback result data (same structure)
+    const fallbackData = {
+        score: earnedMarks,
+        total: totalMarks,
+        percentage: percentage.toFixed(1),
+        answers: answers,
+        answered: answered,
+        course: course || "general",
+        classroom: classroomId || "",
+        test: testRef || "",
+        micro_quiz: [],
+        ai_graded: false,
+        feedback: "AI grading unavailable. This score is based on automatic MCQ evaluation only."
+    };
+
+    try {
+        // ✅ Save fallback result on backend (same route)
+        const saveResp = await fetch("/save_result_data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(fallbackData)
         });
+        
+        const saveJson = await saveResp.json();
 
-        const percentage = totalMarks > 0 ? (earnedMarks / totalMarks) * 100 : 0;
-
-        const params = new URLSearchParams({
-            score: earnedMarks,
-            total: totalMarks,
-            percentage: percentage.toFixed(1),
-            answers: JSON.stringify(answers),
-            answered: JSON.stringify(answered),
-            course: course || "general",
-            classroom: classroomId || "",
-            test: testRef || ""
-        });
-
-        window.location.href = `/courses/result?${params.toString()}`;
+        if (saveJson.success && saveJson.result_id) {
+            console.log("11111111.");
+            window.location.href = `/courses/result?id=${saveJson.result_id}`;
+        } else {
+            throw new Error("Failed to save fallback result");
+        }
+    } catch (err2) {
+        console.error("Fallback result saving failed:", err2);
+        alert("Something went wrong saving your result. Please try again.");
     }
+}
+
 }
 </script>
 

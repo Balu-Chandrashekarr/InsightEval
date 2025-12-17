@@ -191,24 +191,16 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Teacher Test Results</h1>
+       <div class="header">
+            <h1 id="test-title">Test Title</h1>
             <div class="header-info">
                 <div>
-                    <strong>Test Name</strong>
-                    Data Structures & Algorithms Assessment
-                </div>
-                <div>
                     <strong>Test Code</strong>
-                    DSA-2025-001
-                </div>
-                <div>
-                    <strong>Published</strong>
-                    December 12, 2025 10:00 AM
+                    <span id="test-code">Loading...</span>
                 </div>
                 <div>
                     <strong>Total Marks</strong>
-                    20
+                    <span id="total-marks">Loading...</span>
                 </div>
             </div>
         </div>
@@ -223,11 +215,11 @@
             <table id="resultsTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>AI Feedback</th>
-                        <th>Status</th>
-                        <th>Marks</th>
                         <th>Email</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>AI Feedback</th>
+                        <th>Marks</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -257,33 +249,108 @@
         </div>
     </div>
 
-    <script>
-        function sortTableByMarks() { sortTable(3, 'desc'); }
-        function sortTableByEmail() { sortTable(4, 'asc'); }
+   <script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const classroom = urlParams.get("classroom");
+    const test = urlParams.get("test");
 
-        function sortTable(colIndex, order) {
-            const table = document.getElementById("resultsTable");
-            const tbody = table.tBodies[0];
-            const rows = Array.from(tbody.rows);
+    if (!classroom || !test) {
+        alert("Missing classroom or test ID");
+        return;
+    }
 
-            rows.sort((a, b) => {
-                let valA = a.cells[colIndex].textContent.trim();
-                let valB = b.cells[colIndex].textContent.trim();
+    try {
+        const res = await fetch(`/api/get_test_results?classroom=${classroom}&test=${test}`);
+        const data = await res.json();
 
-                if (colIndex === 3) {
-                    valA = valA === 'N/A' ? -1 : parseFloat(valA) || 0;
-                    valB = valB === 'N/A' ? -1 : parseFloat(valB) || 0;
-                }
-
-                if (order === 'desc') {
-                    return valB > valA ? 1 : (valB < valA ? -1 : 0);
-                } else {
-                    return valA > valB ? 1 : (valA < valB ? -1 : 0);
-                }
-            });
-
-            rows.forEach(row => tbody.appendChild(row));
+        if (!data.success) {
+            document.body.innerHTML = `<h2 style="text-align:center;color:red;">${data.error || "No results found"}</h2>`;
+            return;
         }
-    </script>
+
+        // 🧾 Fill test info
+        document.getElementById("test-title").textContent = data.test_info?.title || "Test Title";
+        document.getElementById("test-code").textContent = data.test_info?.code || "N/A";
+        document.getElementById("total-marks").textContent = data.test_info?.total || 0;
+
+        // 👩‍🎓 Fill students table
+        const tbody = document.querySelector("#resultsTable tbody");
+        tbody.innerHTML = ""; // Clear static sample rows
+
+        data.students.forEach(student => {
+            const tr = document.createElement("tr");
+
+            // Email
+            const emailTd = document.createElement("td");
+            emailTd.textContent = student.student_email;
+            tr.appendChild(emailTd);
+
+            // Name
+            const nameTd = document.createElement("td");
+            nameTd.textContent = student.student_name;
+            tr.appendChild(nameTd);
+
+            // Status
+            const statusTd = document.createElement("td");
+            const statusSpan = document.createElement("span");
+            statusSpan.classList.add("status");
+            if (student.status.toLowerCase() === "completed") {
+                statusSpan.classList.add("status-completed");
+                statusSpan.textContent = "Completed";
+            } else {
+                statusSpan.classList.add("status-undergoing");
+                statusSpan.textContent = "Undergoing";
+            }
+            statusTd.appendChild(statusSpan);
+            tr.appendChild(statusTd);
+
+            // Feedback
+            const feedbackTd = document.createElement("td");
+            feedbackTd.textContent = student.feedback;
+            tr.appendChild(feedbackTd);
+
+            // Marks
+            const marksTd = document.createElement("td");
+            marksTd.classList.add("marks");
+            marksTd.textContent = student.marks;
+            tr.appendChild(marksTd);
+
+            tbody.appendChild(tr);
+        });
+
+    } catch (err) {
+        console.error("❌ Error fetching test results:", err);
+        document.body.innerHTML = `<h2 style="text-align:center;color:red;">Error loading results. Please try again later.</h2>`;
+    }
+});
+
+// ✅ Sorting functions (same as before)
+function sortTableByMarks() { sortTable(4, 'desc'); }
+function sortTableByEmail() { sortTable(0, 'asc'); }
+
+function sortTable(colIndex, order) {
+    const table = document.getElementById("resultsTable");
+    const tbody = table.tBodies[0];
+    const rows = Array.from(tbody.rows);
+
+    rows.sort((a, b) => {
+        let valA = a.cells[colIndex].textContent.trim();
+        let valB = b.cells[colIndex].textContent.trim();
+
+        // Marks column (convert to numbers)
+        if (colIndex === 4) {
+            valA = parseFloat(valA.split("/")[0]) || 0;
+            valB = parseFloat(valB.split("/")[0]) || 0;
+        }
+
+        if (order === 'desc') return valB - valA;
+        else return valA > valB ? 1 : (valA < valB ? -1 : 0);
+    });
+
+    rows.forEach(row => tbody.appendChild(row));
+}
+</script>
+
 </body>
 </html>

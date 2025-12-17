@@ -177,42 +177,63 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>My Test Result</h1>
+            <h1 id="test-title">Test Title</h1>
             <div class="header-info">
                 <div>
-                    <strong>Test Name</strong>
-                    Data Structures and Algorithms Assessment
-                </div>
-                <div>
                     <strong>Test Code</strong>
-                    DSA-2025-001
-                </div>
-                <div>
-                    <strong>Published</strong>
-                    December 12, 2025 10:00 AM
+                    <span id="test-code">Loading...</span>
                 </div>
                 <div>
                     <strong>Total Marks</strong>
-                    20
+                    <span id="total-marks">Loading...</span>
                 </div>
             </div>
         </div>
 
         <div class="content">
             <div class="result-card">
-                <div class="student-name">student1</div>
+                <div class="student-name"></div>
                 
-                <div class="marks-display">15</div>
-                <div class="total-marks">out of 20</div>
+                <div class="marks-display"></div>
+                <div class="total-marks"></div>
                 
                 <div class="status status-completed">Completed</div>
                 
                 <div class="ai-feedback">
                     <strong>AI Feedback:</strong><br>
-                    Student weak in DSA concepts
+                    
                 </div>
             </div>
         </div>
     </div>
 </body>
+<script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const classroom = urlParams.get("classroom");
+            const test = urlParams.get("test");
+
+            if (!classroom || !test) {
+                alert("Missing classroom or test ID");
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/get_student_result?classroom=${classroom}&test=${test}`);
+                const data = await res.json();
+
+                document.getElementById("test-title").textContent = data.test_info?.title || "Test Title";
+                document.getElementById("test-code").textContent = data.test_info?.code || "N/A";
+                document.getElementById("total-marks").textContent = data.result?.total || 0;
+                document.querySelector(".student-name").textContent = data.student_email || "Unknown Student";
+                document.querySelector(".marks-display").textContent = data.result?.score || 0;;
+                document.querySelector(".total-marks").textContent = `out of ${data.result?.total || 0}`;
+                document.querySelector(".ai-feedback").innerHTML = `<strong>AI Feedback:</strong><br>${data.result?.feedback|| 'No feedback available'}`;
+            } catch (err) {
+                console.error("Error fetching result:", err);
+                alert("Failed to load result");
+            }
+        });
+</script>
+
 </html>

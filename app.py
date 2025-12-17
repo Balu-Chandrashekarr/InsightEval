@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import uuid
 import time
 from datetime import datetime
 
@@ -55,6 +56,7 @@ config = {
 # ✅ Initialize Pyrebase (client SDK)
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
+global_results = {}
 
 # ✅ Initialize Firebase Admin SDK (server SDK)
 if not firebase_admin._apps:
@@ -285,7 +287,7 @@ Is it essentially correct? Answer with ONLY this JSON:
         # otherwise, for MCQ/short answer: add full marks if correct
         elif q.get("correct"):
             earned += q_marks
-            
+
 
     #    # === 3. GENERATE MICRO-QUIZ ON THE TEST TOPIC (ALWAYS) ===
     # Use wrong questions if any, otherwise use ALL questions from the test
@@ -367,6 +369,7 @@ Output ONLY valid JSON:
         "total_marks": total,
         "answers": answered
     })
+
 # 4. NOW — add the /run_code route (AFTER app is created!)
 @app.route('/run_code', methods=['POST'])
 def run_code():
@@ -1257,6 +1260,91 @@ def publish_test(classroom_id):
 
     
 #ASSESMENT
+@app.route("/api/store_stars", methods=["POST"])
+def store_stars():
+    # ✅ 1. Verify user session
+    if "user_email" not in session:
+        return jsonify({"error": "User not logged in"}), 401
+
+    data = request.get_json() or {}
+    course_id = data.get("course_id")
+    marks = data.get("marks", 0)
+
+    if not course_id:
+        return jsonify({"error": "Missing course_id"}), 400
+
+    # ✅ 2. Convert marks → stars (0–3)
+    def marks_to_stars(m):
+        if m >= 15:
+            return 3
+        elif m >= 10:
+            return 2
+        elif m > 0:
+            return 1
+        else:
+            return 0
+
+    new_stars = marks_to_stars(marks)
+    safe_email = session["user_email"].replace(".", "_")
+
+    try:
+        # ✅ 3. Reference paths
+        user_ref = firestore_db.collection("users").document(safe_email)
+        courses_ref = user_ref.collection("courses")
+        course_ref = courses_ref.document(course_id)
+
+        # ✅ 4. Make sure the user doc exists (create if missing)
+        if not user_ref.get().exists:
+            user_ref.set({"created": True}, merge=True)
+            print(f"🆕 Created user document for {safe_email}")
+
+        # ✅ 5. Check if courses collection and this course exist
+        course_doc = course_ref.get()
+        current_stars = 0
+
+        if course_doc.exists:
+            current_stars = course_doc.to_dict().get("stars", 0)
+            print(f"📘 Found existing course {course_id} with {current_stars} stars")
+        else:
+            print(f"🆕 No course record found for {course_id}, creating new one...")
+
+        # ✅ 6. Update only if improvement
+        if new_stars >= current_stars:
+            course_ref.set({"stars": new_stars}, merge=True)
+            print(f"⭐ Updated {course_id}: {current_stars} → {new_stars}")
+            return jsonify({
+                "success": True,
+                "message": f"Stars updated from {current_stars} → {new_stars} for {course_id}",
+                "stars": new_stars
+            }), 200
+        else:
+            print(f"⚡ No update needed (existing: {current_stars}, new: {new_stars})")
+            return jsonify({
+                "success": True,
+                "message": f"No update needed (existing stars: {current_stars}, new stars: {new_stars})",
+                "stars": current_stars
+            }), 200
+
+    except Exception as e:
+        print("🔥 Error storing stars:", e)
+        return jsonify({"error": str(e)}), 500
+
+
+    
+    
+@app.route("/save_result_data", methods=["POST"])
+def save_result_data():
+    data = request.get_json()
+    if not data:
+        return jsonify({"success": False, "message": "No data provided"}), 400
+
+    result_id = str(uuid.uuid4())
+    global_results[result_id] = data  # ✅ store globally
+
+    print(f"✅ Saved result globally: {result_id}")
+    return jsonify({"success": True, "result_id": result_id})
+
+
 @app.route('/get_test_data/<classroom_id>/<test_ref>', methods=['GET'])
 def get_test_data(classroom_id, test_ref):
     """Fetch test details from Firebase Realtime DB"""
@@ -1274,6 +1362,137 @@ def get_test_data(classroom_id, test_ref):
     except Exception as e:
         print("🔥 Error fetching test data:", e)
         return jsonify({"success": False, "error": str(e)}), 500    
+
+#RESULT
+@app.route("/api/get_result/<result_id>")
+def get_result(result_id):
+    result_data = global_results.get(result_id)
+    if not result_data:
+        return jsonify({"error": "Result not found"}), 404
+    return jsonify(result_data)
+
+#STUDENT_RESULT
+@app.route("/api/get_student_result", methods=["GET"])
+def get_student_result():
+    classroom_id = request.args.get("classroom")
+    test_ref = request.args.get("test")
+    student_email = session.get("user_email")
+
+    # 🧠 Validate required data
+    if not classroom_id or not test_ref:
+        return jsonify({"error": "Missing classroom or test reference"}), 400
+
+    if not student_email:
+        return jsonify({"error": "User not logged in"}), 401
+
+    # Firebase-safe key for emails
+    safe_email = student_email.replace(".","_")
+
+    try:
+        # Path to student result node
+        result_path = f"classrooms/{classroom_id}/activities/{test_ref}/test/results/{safe_email}"
+        result_ref = db.reference(result_path)
+        result_data = result_ref.get()
+
+        if not result_data:
+            return jsonify({"error": "Result not found"}), 404
+
+        # Also fetch test meta info (optional, for header)
+        test_ref_path = f"classrooms/{classroom_id}/activities/{test_ref}"
+        test_info = db.reference(test_ref_path).get()
+
+        # Extract key info (handle missing keys safely)
+        response = {
+            "success": True,
+            "student_email": student_email,
+            "result": result_data,
+            "test_info": {
+                "code": test_info.get("test", {}).get("code", "N/A"),
+                "title": test_info.get("test", {}).get("title", "N/A"),
+                "test_id": test_ref,
+                "classroom_id": classroom_id
+            }
+        }
+        print(json.dumps(response, indent=2))
+
+        return jsonify(response)
+
+    except Exception as e:
+        print("🔥 Error fetching student result:", e)
+        return jsonify({"error": str(e)}), 500
+
+
+#TEACHER_RESULT
+@app.route("/api/get_test_results", methods=["GET"])
+def get_test_results():
+    classroom_id = request.args.get("classroom")
+    test_ref = request.args.get("test")
+
+    if not classroom_id or not test_ref:
+        return jsonify({"error": "Missing classroom or test reference"}), 400
+
+    try:
+        # 1️⃣ Path: classrooms/{classroom_id}/activities/{test_ref}/test
+        test_path = f"classrooms/{classroom_id}/activities/{test_ref}/test"
+        test_ref_db = db.reference(test_path)
+        test_data = test_ref_db.get() or {}
+
+        # 2️⃣ Results are within test_data["results"]
+        results_data = test_data.get("results", {}) or {}
+
+        # 3️⃣ Fetch student names from Firestore
+        fs = firestore.client()
+        students = []
+
+        total_marks = test_data.get("total", 0)
+        test_code = test_data.get("code", "N/A")
+        test_title = test_data.get("title", "Untitled Test")
+
+        for encoded_email, result in results_data.items():
+            if encoded_email == "_init":
+                continue
+
+            student_email = encoded_email.replace("_com", ".com")
+            safe_email = student_email.replace(".", "_")
+
+            # 🔹 Get student name from Firestore
+            user_doc = fs.collection("users").document(safe_email).get()
+            student_name = user_doc.to_dict().get("name") if user_doc.exists else "Unknown"
+
+            students.append({
+                "student_name": student_name,
+                "student_email": student_email,
+                "status": result.get("status", "Not Attempted"),
+                "feedback": result.get("feedback", "No feedback provided."),
+                "marks": f"{result.get('score', 0)} / {result.get('total', total_marks)}"
+            })
+            total_marks = result.get('total', total_marks)
+
+        # 4️⃣ Build test info
+        test_info = {
+            "title": test_title,
+            "code": test_code,
+            "total": total_marks
+        }
+
+        # 🧾 Debug print
+        import json
+        print("\n========== 🧠 TEST INFO ==========")
+        print(json.dumps(test_info, indent=2))
+
+        print("\n========== 👩‍🎓 STUDENT RESULTS ==========")
+        print(json.dumps(students, indent=2, ensure_ascii=False))
+
+        return jsonify({
+            "success": True,
+            "test_info": test_info,
+            "students": students
+        })
+
+    except Exception as e:
+        print("🔥 Error fetching test results:", e)
+        return jsonify({"error": str(e)}), 500
+
 
 
 

@@ -28,6 +28,65 @@
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        .stories { display: flex; overflow-x: auto; padding: 15px 10px; background: white; border-bottom: 1px solid #dbdbdb; scrollbar-width: none; }
+        .stories::-webkit-scrollbar { display: none; }
+        .story { text-align: center; margin: 0 8px; flex-shrink: 0; }
+        .story-img { width: 66px; height: 66px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4); }
+        .story-img img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid white; object-fit: cover; }
+        .story p { font-size: 12px; margin-top: 6px; color: #262626; }
+
+        /* Notice Carousel */
+        .notice-carousel {
+        position: relative; margin: 15px; height: 110px; border-radius: 16px; overflow: hidden;
+        box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+        }
+        .notice-slide {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 20px;
+        color: white; opacity: 0; transition: opacity 0.8s ease-in-out;
+        background: linear-gradient(120deg, #4f46e5 0%, #8b5cf6 100%);
+        display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .notice-slide.active { opacity: 1; z-index: 1; }
+
+        .notice-content { position: relative; z-index: 2; }
+        .notice-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+        .notice-subtitle { font-size: 14px; opacity: 0.9; }
+
+        .delete-notice {
+        position: absolute; top: 12px; right: 12px; z-index: 10;
+        background: rgba(255,255,255,0.25); width: 36px; height: 36px;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 18px; color: white; backdrop-filter: blur(10px);
+        }
+        .delete-notice:hover { background: rgba(255,255,255,0.4); transform: scale(1.1); }
+
+        /* Dash Indicators Inside Card */
+        .dash-indicators {
+        display: flex; justify-content: center; gap: 8px; padding-bottom: 10px;
+        }
+        .dash {
+        width: 20px; height: 4px; background: rgba(255,255,255,0.4);
+        border-radius: 2px; transition: all 0.3s;
+        }
+        .dash.active {
+        width: 32px; background: white;
+        }
+
+        .add-notice { margin: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .add-notice input { flex: 1; min-width: 120px; padding: 12px; border: 1px solid #dbdbdb; border-radius: 8px; font-size: 14px; }
+        .add-notice button { padding: 12px 20px; background: #0095f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        .schedule { margin: 15px; }
+        .schedule h2 { margin-bottom: 15px; font-size: 18px; color: #262626; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid #efefef; }
+        th { color: #8e8e8e; font-weight: 600; text-transform: uppercase; font-size: 12px; }
+        .delete-row { color: #ed4956; cursor: pointer; width: 40px; text-align: center; }
+        .delete-row i { font-size: 18px; }
+
+        .add-row { margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .add-row input { flex: 1; min-width: 80px; padding: 10px; border: 1px solid #dbdbdb; border-radius: 8px; font-size: 13px; }
+        .add-row button { padding: 10px 16px; background: #ed4956; color: white; border: none; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -97,68 +156,56 @@
 
                 <!-- Home Content -->
                 <div id="home-content" class="content-section">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                        <h2 class="text-lg font-semibold mb-3">Resume Where You Left Off</h2>
-                        <div class="bg-gray-50 p-4 rounded-lg flex items-center justify-between hover:bg-gray-100 transition-colors cursor-pointer">
-                            <div class="flex items-center space-x-4">
-                                <div class="bg-red-100 p-3 rounded-lg">
-                                    <i class="fas fa-clipboard-list text-xl text-red-600"></i>
-                                </div>
-                                <div>
-                                    <p class="font-semibold">Assignment 3: Dynamic Programming</p>
-                                    <p class="text-sm text-gray-500">Advanced Algorithms - Due: Oct 1, 2025</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-400"></i>
+                    <div class="bg-white rounded-lg shadow-sm p-4">
+                    <div class="stories">
+                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt=""></div><p>Your Story</p></div>
+                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt=""></div><p>emma_watson</p></div>
+                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/men/45.jpg" alt=""></div><p>johndoe</p></div>
+                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/women/65.jpg" alt=""></div><p>sarah_21</p></div>
+                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/men/86.jpg" alt=""></div><p>mike_travel</p></div>
+                    </div>
+
+                    <!-- Notice Carousel with Dash Indicators Inside -->
+                    <div class="notice-carousel" id="carousel">
+                        <div class="notice-slide active">
+                        <div class="delete-notice" onclick="deleteNotice(this)"><i class="fas fa-trash"></i></div>
+                        <div class="notice-content">
+                            <div class="notice-title">Welcome Back!</div>
+                            <div class="notice-subtitle">Don't miss today's important events and updates!</div>
+                        </div>
+                        <div class="dash-indicators" id="dashes">
+                            <!-- Dashes will be injected by JavaScript -->
+                        </div>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                        <h2 class="text-lg font-semibold mb-4">What's Due Soon</h2>
-                        <div class="space-y-4">
-                            <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
-                                <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" aria-label="Complete Greedy Algorithms Worksheet">
-                                <div class="flex-1">
-                                    <p class="font-medium">Submit Greedy Algorithms Worksheet</p>
-                                    <p class="text-xs text-gray-500">Advanced Algorithms</p>
-                                </div>
-                                <span class="text-sm font-medium text-red-600">Due Tomorrow</span>
-                            </div>
-                            <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
-                                <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" aria-label="Complete Quiz 2: SQL Joins">
-                                <div class="flex-1">
-                                    <p class="font-medium">Quiz 2: SQL Joins</p>
-                                    <p class="text-xs text-gray-500">Database Systems</p>
-                                </div>
-                                <span class="text-sm font-medium text-yellow-600">Due in 3 days</span>
-                            </div>
-                            <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
-                                <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" aria-label="Complete Project Proposal Draft">
-                                <div class="flex-1">
-                                    <p class="font-medium">Project Proposal Draft</p>
-                                    <p class="text-xs text-gray-500">Operating Systems</p>
-                                </div>
-                                <span class="text-sm font-medium text-gray-500">Due Oct 10</span>
-                            </div>
+
+                    <div class="add-notice">
+                        <input type="text" id="noticeTitle" placeholder="Notice Title">
+                        <input type="text" id="noticeSubtitle" placeholder="Subtitle (optional)">
+                        <button onclick="addNotice()">Add Notice</button>
+                    </div>
+
+                    <!-- Schedule Table -->
+                    <div class="schedule">
+                        <h2>Today's Schedule</h2>
+                        <table id="scheduleTable">
+                        <thead>
+                            <tr><th>Time</th><th>Event</th><th>Venue</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>10:00 AM</td><td>Team Meeting</td><td>Conference Room A</td><td class="delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></td></tr>
+                            <tr><td>02:30 PM</td><td>Lunch with Client</td><td>Cafe Deluxe</td><td class="delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></td></tr>
+                            <tr><td>05:00 PM</td><td>Yoga Session</td><td>Fitness Center</td><td class="delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></td></tr>
+                        </tbody>
+                        </table>
+
+                        <div class="add-row">
+                        <input type="text" id="newTime" placeholder="Time">
+                        <input type="text" id="newEvent" placeholder="Event">
+                        <input type="text" id="newVenue" placeholder="Venue">
+                        <button onclick="addScheduleRow()">+ Add</button>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                        <h2 class="text-lg font-semibold mb-4">Recent Activity</h2>
-                        <div class="space-y-5">
-                            <div class="flex space-x-4">
-                                <div class="bg-blue-100 h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center"><i class="fas fa-bullhorn text-blue-600"></i></div>
-                                <div>
-                                    <p class="text-sm"><span class="font-semibold">Ms. Senthil Anandhi</span> posted an announcement in <span class="font-semibold">Operating Systems</span></p>
-                                    <p class="text-xs text-gray-500">2 hours ago</p>
-                                </div>
-                            </div>
-                            <div class="flex space-x-4">
-                                <div class="bg-green-100 h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center"><i class="fas fa-book text-green-600"></i></div>
-                                <div>
-                                    <p class="text-sm"><span class="font-semibold">Dr. Evelyn Reed</span> posted new material: <span class="font-semibold">"Lecture 7 Slides"</span></p>
-                                    <p class="text-xs text-gray-500">Yesterday</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -493,6 +540,117 @@
     </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let currentIndex = 0;
+    let autoSlideInterval;
+    const carousel = document.getElementById('carousel');
+    const dashesContainer = document.getElementById('dashes');
+
+    function updateDashes() {
+        dashesContainer.innerHTML = '';
+        for (let i = 0; i < carousel.children.length; i++) {
+        const dash = document.createElement('div');
+        dash.classList.add('dash');
+        if (i === currentIndex) dash.classList.add('active');
+        dashesContainer.appendChild(dash);
+        }
+    }
+
+    function showSlide(index) {
+        const slides = carousel.children;
+        for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove('active');
+        }
+        if (slides.length > 0) {
+        slides[index].classList.add('active');
+        currentIndex = index;
+        }
+        updateDashes();
+    }
+
+    function nextSlide() {
+        if (carousel.children.length === 0) return;
+        currentIndex = (currentIndex + 1) % carousel.children.length;
+        showSlide(currentIndex);
+    }
+
+    function startAutoSlide() {
+        clearInterval(autoSlideInterval);
+        if (carousel.children.length > 1) {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+        }
+    }
+
+    window.addNotice = function() {
+        const title = document.getElementById('noticeTitle').value.trim();
+        const subtitle = document.getElementById('noticeSubtitle').value.trim() || "New update!";
+
+        if (!title) return alert("Please enter a title!");
+
+        const newSlide = document.createElement('div');
+        newSlide.className = 'notice-slide';
+        newSlide.innerHTML = `
+        <div class="delete-notice" onclick="deleteNotice(this)"><i class="fas fa-trash"></i></div>
+        <div class="notice-content">
+            <div class="notice-title">${title}</div>
+            <div class="notice-subtitle">${subtitle}</div>
+        </div>
+        <div class="dash-indicators"></div>
+        `;
+
+        carousel.appendChild(newSlide);
+
+        document.getElementById('noticeTitle').value = '';
+        document.getElementById('noticeSubtitle').value = '';
+
+        showSlide(carousel.children.length - 1);
+        startAutoSlide();
+    }
+
+    window.deleteNotice = function(btn) {
+        const slide = btn.parentElement;
+        const index = Array.from(carousel.children).indexOf(slide);
+        slide.remove();
+
+        if (carousel.children.length === 0) {
+        currentIndex = 0;
+        dashesContainer.innerHTML = '';
+        } else {
+        if (index <= currentIndex && currentIndex > 0) currentIndex--;
+        if (currentIndex >= carousel.children.length) currentIndex = 0;
+        showSlide(currentIndex);
+        }
+        startAutoSlide();
+    }
+
+    window.addScheduleRow = function() {
+        const time = document.getElementById('newTime').value.trim();
+        const event = document.getElementById('newEvent').value.trim();
+        const venue = document.getElementById('newVenue').value.trim();
+
+        if (!time || !event || !venue) return alert("Fill all fields!");
+
+        const tbody = document.querySelector('#scheduleTable tbody');
+        const row = tbody.insertRow();
+        row.innerHTML = `<td>${time}</td><td>${event}</td><td>${venue}</td><td class="delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></td>`;
+
+        document.getElementById('newTime').value = '';
+        document.getElementById('newEvent').value = '';
+        document.getElementById('newVenue').value = '';
+    }
+
+    window.deleteRow = function(icon) {
+        icon.parentElement.remove();
+    }
+
+    // Initialize
+    updateDashes();
+    startAutoSlide();
+    });
+</script>
+    
+
+<script>
 //Global Variables
             window.currentUser = {};
             window.classroomsContainer = document.getElementById('classrooms');
@@ -585,6 +743,7 @@
                 const profileBio = document.getElementById("view-bio");
                 const profilePic = document.getElementById("sprofileViewPic");
                 const sclassroomsContainer = document.getElementById('sclassrooms');
+
                 // Handle clicking a result card
                 document.addEventListener("click", (e) => {
                     const card = e.target.closest(".result-card");

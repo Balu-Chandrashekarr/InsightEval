@@ -98,191 +98,176 @@
     </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const urlParams = new URLSearchParams(window.location.search);
+document.addEventListener("DOMContentLoaded", async function () {
+    const params = new URLSearchParams(window.location.search);
+    const resultId = params.get("id");
 
-    const earnedMarks = parseInt(urlParams.get('score') || 0);
-    const totalMarks = parseInt(urlParams.get('total') || 0);
-    const percentage = parseFloat(urlParams.get('percentage') || 0);
-    const answersJson = urlParams.get('answers') || '{}';
-    const answeredJson = urlParams.get('answered') || '[]';
-    const classroom = urlParams.get('classroom');
-    const testId = urlParams.get('test');
-    const course = (urlParams.get('course') || '').toLowerCase();
-
-    let answers = {};
-    let answered = [];
-
-    try {
-        answers = JSON.parse(decodeURIComponent(answersJson));
-        answered = JSON.parse(decodeURIComponent(answeredJson));
-    } catch (e) {
-        console.error("Failed to parse answers:", e);
+    if (!resultId) {
+        document.body.innerHTML = "<p class='text-center text-red-600 text-lg'>No result ID found.</p>";
+        return;
     }
 
-    const isClassroomTest = !!classroom && !!testId;
     const mainContent = document.getElementById('main-content');
     const aiSection = document.getElementById('ai-section');
 
-    const bgColor = percentage >= 90 ? 'from-green-500 to-emerald-600' :
-                    percentage >= 70 ? 'from-blue-500 to-cyan-600' :
-                    percentage >= 50 ? 'from-yellow-500 to-orange-600' :
-                    'from-red-500 to-rose-600';
+    try {
+        // 🧠 Fetch saved result data from backend
+        const response = await fetch(`/api/get_result/${resultId}`);
+        if (!response.ok) throw new Error("Failed to load result data");
 
-    const perf = percentage >= 90 ? { text: "Outstanding! You're a Top Performer!", color: "text-green-600" } :
-                 percentage >= 70 ? { text: "Excellent Work! You Passed with Flying Colors!", color: "text-blue-600" } :
-                 percentage >= 50 ? { text: "Good Effort! You Passed", color: "text-yellow-600" } :
-                 { text: "Keep Practicing – You'll Get There!", color: "text-red-600" };
+        const data = await response.json();
+        console.log("✅ Result data loaded:", data);
 
-    document.getElementById('result-title').textContent = isClassroomTest 
-        ? "Classroom Test Completed!" 
-        : "Assessment Result";
+        // Extract data from backend response
+        const earnedMarks = data.score || 0;
+        const totalMarks = data.total || data.total_marks || 0;
+        const percentage = totalMarks > 0 ? (earnedMarks / totalMarks) * 100 : 0;
+        const answers = data.answers || {};
+        const feedback = data.feedback || "No feedback available.";
+        const microQuiz = data.micro_quiz || { questions: [] };
 
-    mainContent.innerHTML = `
-        <div class="text-center">
-            ${isClassroomTest ? '<p class="text-xl text-gray-700 mb-8 opacity-90 font-medium">This test was created by your instructor</p>' : ''}
+        const isClassroomTest = !!data.classroom && !!data.test;
 
-            <div class="score-circle bg-gradient-to-br ${bgColor} shadow-2xl hover:scale-105 transition-all duration-300 rounded-full w-64 h-64 mx-auto flex flex-col items-center justify-center">
-                <div class="text-8xl font-black text-white drop-shadow-2xl">${earnedMarks}</div>
-                <div class="text-3xl text-white opacity-90">/ ${totalMarks}</div>
-                <div class="text-sm text-white mt-2 opacity-80 font-medium">Total Marks</div>
-            </div>
+        // 🎨 Visuals and tone setup
+        const bgColor = percentage >= 90 ? 'from-green-500 to-emerald-600' :
+                        percentage >= 70 ? 'from-blue-500 to-cyan-600' :
+                        percentage >= 50 ? 'from-yellow-500 to-orange-600' :
+                        'from-red-500 to-rose-600';
 
-            <div class="text-9xl font-extrabold text-gray-800 mt-10 drop-shadow-2xl">${percentage.toFixed(1)}%</div>
-            <p class="text-4xl font-bold mt-6 ${perf.color} tracking-wide">${perf.text}</p>
+        const perf = percentage >= 90 ? { text: "Outstanding! You're a Top Performer!", color: "text-green-600" } :
+                     percentage >= 70 ? { text: "Excellent Work! You Passed with Flying Colors!", color: "text-blue-600" } :
+                     percentage >= 50 ? { text: "Good Effort! You Passed", color: "text-yellow-600" } :
+                     { text: "Keep Practicing – You'll Get There!", color: "text-red-600" };
 
-            <div class="mt-16 p-10 bg-gradient-to-b from-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 max-w-5xl mx-auto">
-                <h3 class="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-                    Detailed Answer Review
-                </h3>
+        document.getElementById('result-title').textContent = isClassroomTest 
+            ? "Classroom Test Completed!" 
+            : "Assessment Result";
 
-                <div class="space-y-8">
-                    ${Object.entries(answers).map(([qKey, ans]) => {
-                        const qNum = qKey.replace('q', 'Question ');
+        // 🧩 Render the main result section
+        aiSection.innerHTML = `
+            <div class="text-center">
+                ${isClassroomTest ? '<p class="text-xl text-gray-700 mb-8 opacity-90 font-medium">This test was created by your instructor</p>' : ''}
 
-                        // CRITICAL FIX: Extract type from question object, not just ans.type
-                        const rawType = ans.type || "mcq";
-                        const questionType = rawType.toString().toLowerCase().trim();
+                <div class="score-circle bg-gradient-to-br ${bgColor} shadow-2xl rounded-full w-64 h-64 mx-auto flex flex-col items-center justify-center">
+                    <div class="text-8xl font-black text-white drop-shadow-2xl">${earnedMarks}</div>
+                    <div class="text-3xl text-white opacity-90">/ ${totalMarks}</div>
+                    <div class="text-sm text-white mt-2 opacity-80 font-medium">Total Marks</div>
+                </div>
 
-                        const typeInfo = {
-                            mcq: { name: "Multiple Choice", color: "blue" },
-                            short_answer: { name: "Short Answer", color: "green" },
-                            coding: { name: "Coding", color: "purple" }
-                        };
-                        const t = typeInfo[questionType] || typeInfo.mcq;
+                <div class="text-9xl font-extrabold text-gray-800 mt-10 drop-shadow-2xl">${percentage.toFixed(1)}%</div>
+                <p class="text-4xl font-bold mt-6 ${perf.color} tracking-wide">${perf.text}</p>
 
-                        const marks = Number(ans.marks || ans.total_marks || 1);
-                        const markText = marks === 1 ? "1 mark" : `${marks} marks`;
+                <div class="mt-16 p-10 bg-gradient-to-b from-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 max-w-5xl mx-auto">
+                    <h3 class="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                        Detailed Answer Review
+                    </h3>
 
-                        const userAnswer = ans.selected && !["Not answered", "Code submitted"].includes(ans.selected)
-                            ? ans.selected.trim()
-                            : null;
+                    <div class="space-y-8">
+                        ${Object.entries(answers).map(([qKey, ans]) => {
+                            const qNum = qKey.replace('q', 'Question ');
+                            const rawType = ans.type || "mcq";
+                            const questionType = rawType.toString().toLowerCase().trim();
 
-                        const correctAnswerText = questionType === "coding"
-                            ? "Correct code execution and logic expected"
-                            : (ans.answer || "N/A");
+                            const typeInfo = {
+                                mcq: { name: "Multiple Choice", color: "blue" },
+                                short_answer: { name: "Short Answer", color: "green" },
+                                coding: { name: "Coding", color: "purple" }
+                            };
+                            const t = typeInfo[questionType] || typeInfo.mcq;
 
-                        return `
-                        <div class="relative p-8 rounded-3xl border-4 transition-all hover:shadow-2xl ${
-                            ans.correct
-                                ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-400'
-                                : 'bg-gradient-to-r from-rose-50 to-pink-50 border-rose-400'
-                        }">
-                            <div class="flex flex-wrap justify-between items-start gap-6 mb-6">
-                                <div class="flex items-center gap-6">
-                                    <div class="text-3xl font-black text-gray-800">${qNum}</div>
-                                    <span class="px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider text-white bg-${t.color}-600 shadow-lg">
-                                        ${t.name}
-                                    </span>
-                                </div>
-                                <div class="flex items-center gap-6">
-                                    <span class="text-lg font-bold text-gray-700 bg-white px-6 py-3 rounded-full shadow-md border-2">
-                                        ${markText}
-                                    </span>
-                                    <span class="text-3xl font-bold ${ans.correct ? 'text-emerald-600' : 'text-rose-600'}">
-                                        ${ans.correct ? 'Correct' : 'Incorrect'}
-                                    </span>
-                                </div>
-                            </div>
+                            const marks = Number(ans.marks || ans.total_marks || 1);
+                            const markText = marks === 1 ? "1 mark" : `${marks} marks`;
 
-                            ${userAnswer ? `
-                                <div class="mb-5">
-                                    <strong class="text-gray-700 text-lg">Your Answer:</strong>
-                                    <div class="mt-3 p-6 bg-white rounded-2xl font-medium text-gray-800 border-2 border-gray-200 whitespace-pre-wrap text-sm leading-relaxed shadow-inner">
-                                        ${userAnswer.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+                            const userAnswer = ans.selected && !["Not answered", "Code submitted"].includes(ans.selected)
+                                ? ans.selected.trim()
+                                : null;
+
+                            const correctAnswerText = questionType === "coding"
+                                ? "Correct code execution and logic expected"
+                                : (ans.answer || "N/A");
+
+                            return `
+                            <div class="relative p-8 rounded-3xl border-4 transition-all hover:shadow-2xl ${
+                                ans.correct
+                                    ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-400'
+                                    : 'bg-gradient-to-r from-rose-50 to-pink-50 border-rose-400'
+                            }">
+                                <div class="flex flex-wrap justify-between items-start gap-6 mb-6">
+                                    <div class="flex items-center gap-6">
+                                        <div class="text-3xl font-black text-gray-800">${qNum}</div>
+                                        <span class="px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider text-white bg-${t.color}-600 shadow-lg">
+                                            ${t.name}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-6">
+                                        <span class="text-lg font-bold text-gray-700 bg-white px-6 py-3 rounded-full shadow-md border-2">
+                                            ${markText}
+                                        </span>
+                                        <span class="text-3xl font-bold ${ans.correct ? 'text-emerald-600' : 'text-rose-600'}">
+                                            ${ans.correct ? 'Correct' : 'Incorrect'}
+                                        </span>
                                     </div>
                                 </div>
-                            ` : `
-                                <div class="mb-5 italic text-gray-500 text-lg">No answer submitted</div>
-                            `}
 
-                            ${!ans.correct ? `
-                                <div class="p-6 bg-amber-50 border-2 border-amber-300 rounded-2xl">
-                                    <strong class="text-amber-800 text-lg">Correct Answer:</strong>
-                                    <div class="mt-3 font-semibold text-amber-900 whitespace-pre-wrap leading-relaxed">
-                                        ${correctAnswerText}
+                                ${userAnswer ? `
+                                    <div class="mb-5">
+                                        <strong class="text-gray-700 text-lg">Your Answer:</strong>
+                                        <div class="mt-3 p-6 bg-white rounded-2xl font-medium text-gray-800 border-2 border-gray-200 whitespace-pre-wrap text-sm leading-relaxed shadow-inner">
+                                            ${userAnswer.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+                                        </div>
                                     </div>
-                                </div>
-                            ` : ''}
+                                ` : `
+                                    <div class="mb-5 italic text-gray-500 text-lg">No answer submitted</div>
+                                `}
 
-                            ${ans.correct ? `
-                                <div class="mt-6 text-right">
-                                    <span class="inline-flex items-center gap-3 text-emerald-700 font-bold text-xl">
-                                        Perfect Job!
-                                    </span>
-                                </div>
-                            ` : ''}
-                        </div>`;
-                    }).join('')}
+                                ${!ans.correct ? `
+                                    <div class="p-6 bg-amber-50 border-2 border-amber-300 rounded-2xl">
+                                        <strong class="text-amber-800 text-lg">Correct Answer:</strong>
+                                        <div class="mt-3 font-semibold text-amber-900 whitespace-pre-wrap leading-relaxed">
+                                            ${correctAnswerText}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- 🧠 AI Feedback -->
+                <div class="mt-20 text-left bg-white shadow-2xl rounded-3xl p-10 border border-gray-200 max-w-4xl mx-auto">
+                    <h3 class="text-3xl font-bold mb-6 text-indigo-700">AI Feedback</h3>
+                    <p id="feedback-text" class="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap">
+                        ${feedback.replace(/\n/g, "\n\n")}
+                    </p>
+
+                    ${microQuiz?.questions?.length >= 5 ? `
+                        <div class="mt-10 text-center">
+                            <button id="start-micro" class="bg-indigo-600 hover:bg-indigo-700 text-white text-lg px-8 py-3 rounded-full font-semibold shadow-lg transition-all">
+                                Start Micro-Quiz
+                            </button>
+                        </div>
+                    ` : ''}
                 </div>
             </div>
-        </div>
-    `;
+        `;
 
-    aiSection.classList.remove('hidden');
+        aiSection.classList.remove('hidden');
 
-    async function generateAIFeedback() {
-        const loading = document.getElementById('feedback-loading');
-        const feedbackText = document.getElementById('feedback-text');
+        // 🎯 Micro quiz button handler
         const microBtn = document.getElementById('start-micro');
-
-        loading.textContent = "Our AI is analyzing your performance...";
-
-        try {
-            const response = await fetch("/api/ai_feedback_quiz", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    course: course || "general",
-                    answered: answered
-                })
-            });
-
-            if (!response.ok) throw new Error("AI unavailable");
-
-            const data = await response.json();
-
-            feedbackText.innerHTML = (data.feedback || "Great effort!")
-                .replace(/\n/g, '<br><br>')
-                .replace(/(1\.|2\.|3\.)/g, '<br><strong>$1</strong>');
-
-            if (data.micro_quiz?.questions?.length >= 5) {
-                window.microQuiz = data.micro_quiz.questions;
-                microBtn.classList.remove('hidden');
-                microBtn.onclick = () => {
-                    localStorage.setItem('microQuiz', JSON.stringify(window.microQuiz));
-                    location.href = '/micro_quiz';
-                };
-            }
-        } catch (err) {
-            feedbackText.innerHTML = "<p class='text-orange-600'>AI feedback temporarily unavailable.</p>";
-        } finally {
-            loading.classList.add('hidden');
+        if (microBtn && microQuiz?.questions?.length >= 5) {
+            microBtn.onclick = () => {
+                localStorage.setItem('microQuiz', JSON.stringify(microQuiz.questions));
+                location.href = '/micro_quiz';
+            };
         }
-    }
 
-    generateAIFeedback();
+    } catch (err) {
+        console.error("❌ Error loading result:", err);
+        document.body.innerHTML = "<p class='text-center text-red-600 text-lg'>Error loading result data.</p>";
+    }
 });
 </script>
+
 </body>
 </html>
