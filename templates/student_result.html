@@ -5,157 +5,274 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Test Result - InsightEval</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            margin: 0;
             background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
             color: #1e293b;
             min-height: 100vh;
-            padding: 0;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.05) 100%);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-            padding: 60px 40px;
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Section */
+        .header {
             text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
         }
 
-        .hero-section h1 {
-            font-size: 3rem;
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
             font-weight: 900;
             background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin: 0 0 30px 0;
+            margin-bottom: 20px;
             letter-spacing: -0.02em;
         }
 
-        .test-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
+        .test-meta {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 30px;
         }
 
-        .info-card {
+        .meta-item {
             background: white;
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+            padding: 20px 40px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
             transition: all 0.3s ease;
+            animation: scaleIn 0.6s ease-out both;
         }
 
-        .info-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
+        .meta-item:nth-child(1) { animation-delay: 0.2s; }
+        .meta-item:nth-child(2) { animation-delay: 0.3s; }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        .info-label {
+        .meta-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25);
+        }
+
+        .meta-label {
             font-size: 0.875rem;
             font-weight: 600;
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 8px;
         }
 
-        .info-value {
+        .meta-value {
             font-size: 1.5rem;
             font-weight: 800;
-            color: #1e293b;
+            color: #2563eb;
         }
 
-        .content-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 60px 40px;
-        }
-
-        .result-grid {
+        /* Main Layout - Side by Side */
+        .main-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: 1fr 1.5fr;
             gap: 40px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+            animation: slideUp 0.8s ease-out 0.4s both;
         }
 
-        .result-card {
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Score Card - Left Side */
+        .score-card {
             background: white;
-            border: 2px solid rgba(59, 130, 246, 0.15);
-            border-radius: 24px;
-            padding: 50px 40px;
+            border-radius: 32px;
+            padding: 60px 40px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
+            border: 2px solid rgba(59, 130, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
         }
 
-        .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(59, 130, 246, 0.15);
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .score-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(59, 130, 246, 0.25);
         }
 
         .student-name {
             font-size: 2rem;
             font-weight: 800;
             color: #1e293b;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid rgba(59, 130, 246, 0.2);
+            margin-bottom: 40px;
+        }
+
+        .score-display {
+            margin: 40px 0;
         }
 
         .score-circle {
-            width: 220px;
-            height: 220px;
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin: 30px auto;
+            margin: 0 auto 30px;
             background: linear-gradient(135deg, #3b82f6, #2563eb);
-            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 25px 70px rgba(59, 130, 246, 0.4);
             position: relative;
+            animation: rotateIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+        }
+
+        @keyframes rotateIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5) rotate(-180deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
         }
 
         .score-circle::before {
             content: '';
             position: absolute;
-            inset: -4px;
+            inset: -6px;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(96, 165, 250, 0.5), rgba(59, 130, 246, 0.5));
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.6), rgba(59, 130, 246, 0.6));
             z-index: -1;
-            filter: blur(10px);
+            filter: blur(20px);
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.15);
+            }
         }
 
         .marks-display {
-            font-size: 5rem;
+            font-size: 6rem;
             font-weight: 900;
             color: white;
             line-height: 1;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .total-marks {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             color: white;
             opacity: 0.95;
-            margin-top: 10px;
+            margin-top: 15px;
+            font-weight: 600;
         }
 
         .status-badge {
             display: inline-block;
-            padding: 14px 32px;
+            padding: 16px 40px;
             border-radius: 50px;
-            font-size: 1.125rem;
+            font-size: 1.25rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-top: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            margin-top: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .status-badge:hover {
+            transform: scale(1.1);
         }
 
         .status-completed {
@@ -168,88 +285,183 @@
             color: white;
         }
 
-        .feedback-section {
-            background: white;
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 24px;
-            padding: 50px;
-            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
-        }
-
-        .feedback-title {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #2563eb, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .feedback-content {
-            font-size: 1.125rem;
-            color: #475569;
-            line-height: 1.8;
-            white-space: pre-wrap;
-        }
-
         .performance-indicator {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 12px 28px;
             border-radius: 50px;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-top: 20px;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            animation: bounceIn 0.8s ease-out 1.4s both;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .performance-indicator:hover {
+            transform: scale(1.15);
         }
 
         .perf-excellent {
             background: #d1fae5;
             color: #065f46;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
         }
 
         .perf-good {
             background: #dbeafe;
             color: #1e40af;
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
         }
 
         .perf-average {
             background: #fef3c7;
             color: #92400e;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
         }
 
         .perf-needswork {
             background: #fee2e2;
             color: #991b1b;
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
         }
 
-        @media (max-width: 1024px) {
-            .result-grid {
+        /* Feedback Section - Right Side */
+        .feedback-card {
+            background: white;
+            border-radius: 32px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
+            border: 2px solid rgba(59, 130, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feedback-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            animation: heightGrow 1.2s ease-out 1s both;
+        }
+
+        @keyframes heightGrow {
+            from { height: 0; }
+            to { height: 100%; }
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.15);
+        }
+
+        .feedback-icon {
+            font-size: 3rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .feedback-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feedback-content {
+            font-size: 1.2rem;
+            color: #475569;
+            line-height: 2;
+            white-space: pre-wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-layout {
                 grid-template-columns: 1fr;
+            }
+
+            .score-card {
+                max-width: 600px;
+                margin: 0 auto;
             }
         }
 
         @media (max-width: 768px) {
-            .hero-section h1 {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .test-meta {
+                gap: 20px;
+            }
+
+            .meta-item {
+                padding: 15px 30px;
+            }
+
+            .score-circle {
+                width: 220px;
+                height: 220px;
+            }
+
+            .marks-display {
+                font-size: 4.5rem;
+            }
+
+            .student-name {
+                font-size: 1.5rem;
+            }
+
+            .score-card, .feedback-card {
+                padding: 40px 30px;
+            }
+
+            .feedback-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
                 font-size: 2rem;
             }
 
-            .hero-section {
-                padding: 40px 20px;
-            }
-
-            .content-wrapper {
-                padding: 40px 20px;
-            }
-
-            .result-card {
-                padding: 40px 24px;
-            }
-
-            .feedback-section {
-                padding: 30px 24px;
+            .test-meta {
+                flex-direction: column;
+                gap: 15px;
             }
 
             .score-circle {
@@ -258,57 +470,51 @@
             }
 
             .marks-display {
-                font-size: 4rem;
+                font-size: 3.5rem;
             }
 
-            .student-name {
-                font-size: 1.5rem;
+            .total-marks {
+                font-size: 1.25rem;
             }
 
-            .test-info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .result-card {
+            .score-card, .feedback-card {
                 padding: 30px 20px;
             }
 
-            .score-circle {
-                width: 160px;
-                height: 160px;
-            }
-
-            .marks-display {
-                font-size: 3.5rem;
+            .feedback-content {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="hero-section">
-        <h1 id="test-title">Test Result</h1>
-        <div class="test-info-grid">
-            <div class="info-card">
-                <div class="info-label">Test Code</div>
-                <div class="info-value" id="test-code">Loading...</div>
-            </div>
-            <div class="info-card">
-                <div class="info-label">Total Marks</div>
-                <div class="info-value" id="total-marks">Loading...</div>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1 id="test-title">Test Result</h1>
+            <div class="test-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Test Code</span>
+                    <span class="meta-value" id="test-code">Loading...</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Total Marks</span>
+                    <span class="meta-value" id="total-marks">Loading...</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="content-wrapper">
-        <div class="result-grid">
-            <div class="result-card">
+        <!-- Main Content - Side by Side -->
+        <div class="main-layout">
+            <!-- Left: Score Card -->
+            <div class="score-card">
                 <div class="student-name" id="student-name">Student Name</div>
                 
-                <div class="score-circle">
-                    <div class="marks-display" id="marks-display">0</div>
-                    <div class="total-marks" id="marks-total">out of 0</div>
+                <div class="score-display">
+                    <div class="score-circle">
+                        <div class="marks-display" id="marks-display">0</div>
+                        <div class="total-marks" id="marks-total">out of 0</div>
+                    </div>
                 </div>
                 
                 <div class="status-badge status-completed" id="status">Completed</div>
@@ -317,82 +523,83 @@
                     Excellent Performance
                 </div>
             </div>
-        </div>
 
-        <div class="feedback-section">
-            <div class="feedback-title">
-                🤖 AI-Powered Feedback
-            </div>
-            <div class="feedback-content" id="feedback-content">
-                Loading feedback...
+            <!-- Right: Feedback Section -->
+            <div class="feedback-card">
+                <div class="feedback-header">
+                    <div class="feedback-icon">🤖</div>
+                    <div class="feedback-title">AI-Powered Feedback</div>
+                </div>
+                <div class="feedback-content" id="feedback-content">
+                    Loading feedback...
+                </div>
             </div>
         </div>
     </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const classroom = urlParams.get("classroom");
-        const test = urlParams.get("test");
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const classroom = urlParams.get("classroom");
+            const test = urlParams.get("test");
 
-        if (!classroom || !test) {
-            alert("Missing classroom or test ID");
-            return;
-        }
-
-        try {
-            const res = await fetch(`/api/get_student_result?classroom=${classroom}&test=${test}`);
-            const data = await res.json();
-
-            // Populate test info
-            document.getElementById("test-title").textContent = data.test_info?.title || "Test Result";
-            document.getElementById("test-code").textContent = data.test_info?.code || "N/A";
-            document.getElementById("total-marks").textContent = data.result?.total || 0;
-
-            // Populate student result
-            document.getElementById("student-name").textContent = data.student_email || "Unknown Student";
-            document.getElementById("marks-display").textContent = data.result?.score || 0;
-            document.getElementById("marks-total").textContent = `out of ${data.result?.total || 0}`;
-            document.getElementById("feedback-content").textContent = data.result?.feedback || 'No feedback available';
-
-            // Calculate percentage and show performance indicator
-            const score = data.result?.score || 0;
-            const total = data.result?.total || 1;
-            const percentage = (score / total) * 100;
-
-            const perfIndicator = document.getElementById("performance");
-            perfIndicator.style.display = "inline-block";
-
-            if (percentage >= 90) {
-                perfIndicator.textContent = "🏆 Outstanding Performance!";
-                perfIndicator.className = "performance-indicator perf-excellent";
-            } else if (percentage >= 70) {
-                perfIndicator.textContent = "✨ Great Job!";
-                perfIndicator.className = "performance-indicator perf-good";
-            } else if (percentage >= 50) {
-                perfIndicator.textContent = "👍 Good Effort";
-                perfIndicator.className = "performance-indicator perf-average";
-            } else {
-                perfIndicator.textContent = "💪 Keep Practicing";
-                perfIndicator.className = "performance-indicator perf-needswork";
+            if (!classroom || !test) {
+                alert("Missing classroom or test ID");
+                return;
             }
 
-            // Update status
-            const statusBadge = document.getElementById("status");
-            if (data.result?.status === "Completed") {
-                statusBadge.textContent = "✓ Completed";
-                statusBadge.className = "status-badge status-completed";
-            } else {
-                statusBadge.textContent = "⏳ In Progress";
-                statusBadge.className = "status-badge status-undergoing";
+            try {
+                const res = await fetch(`/api/get_student_result?classroom=${classroom}&test=${test}`);
+                const data = await res.json();
+
+                // Populate test info
+                document.getElementById("test-title").textContent = data.test_info?.title || "Test Result";
+                document.getElementById("test-code").textContent = data.test_info?.code || "N/A";
+                document.getElementById("total-marks").textContent = data.result?.total || 0;
+
+                // Populate student result
+                document.getElementById("student-name").textContent = data.student_email || "Unknown Student";
+                document.getElementById("marks-display").textContent = data.result?.score || 0;
+                document.getElementById("marks-total").textContent = `out of ${data.result?.total || 0}`;
+                document.getElementById("feedback-content").textContent = data.result?.feedback || 'No feedback available';
+
+                // Calculate percentage and show performance indicator
+                const score = data.result?.score || 0;
+                const total = data.result?.total || 1;
+                const percentage = (score / total) * 100;
+
+                const perfIndicator = document.getElementById("performance");
+                perfIndicator.style.display = "inline-block";
+
+                if (percentage >= 90) {
+                    perfIndicator.textContent = "🏆 Outstanding Performance!";
+                    perfIndicator.className = "performance-indicator perf-excellent";
+                } else if (percentage >= 70) {
+                    perfIndicator.textContent = "✨ Great Job!";
+                    perfIndicator.className = "performance-indicator perf-good";
+                } else if (percentage >= 50) {
+                    perfIndicator.textContent = "👍 Good Effort";
+                    perfIndicator.className = "performance-indicator perf-average";
+                } else {
+                    perfIndicator.textContent = "💪 Keep Practicing";
+                    perfIndicator.className = "performance-indicator perf-needswork";
+                }
+
+                // Update status
+                const statusBadge = document.getElementById("status");
+                if (data.result?.status === "Completed") {
+                    statusBadge.textContent = "✓ Completed";
+                    statusBadge.className = "status-badge status-completed";
+                } else {
+                    statusBadge.textContent = "⏳ In Progress";
+                    statusBadge.className = "status-badge status-undergoing";
+                }
+
+            } catch (err) {
+                console.error("Error fetching result:", err);
+                alert("Failed to load result");
             }
-
-        } catch (err) {
-            console.error("Error fetching result:", err);
-            alert("Failed to load result");
-        }
-    });
-</script>
-
+        });
+    </script>
 </body>
 </html>

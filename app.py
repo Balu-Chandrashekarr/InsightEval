@@ -370,6 +370,72 @@ Output ONLY valid JSON:
         "answers": answered
     })
 
+@app.route("/api/ai_feedback_microquiz", methods=["POST"])
+def ai_feedback_microquiz():
+    if not chat_client:
+        return jsonify({"feedback": "AI not configured"}), 500
+
+    data = request.get_json() or {}
+    attempts = data.get("attempts", [])
+    score = data.get("score", 0)
+    total = data.get("total", 1)
+
+    # Build topic-wise analysis prompt
+    prompt = f"""
+You are an expert tutor.
+
+The student took a micro-quiz and scored {score}/{total}.
+
+Analyze topic-wise performance based on the attempts below.
+
+For each topic:
+- Mention if the student is strong or weak
+- Give 1 improvement suggestion
+
+Attempts:
+"""
+
+    for i, a in enumerate(attempts, 1):
+        prompt += f"""
+{i}. Question: {a['question']}
+   Correct Answer: {a['correct_answer']}
+   Student Answer: {a['student_answer']}
+   Result: {"Correct" if a['is_correct'] else "Incorrect"}
+"""
+
+    prompt += """
+INSTRUCTIONS:
+- Group mistakes by topic/concept
+- Keep feedback under 120 words
+- Use simple language
+
+Return ONLY this JSON:
+{
+  "feedback": "..."
+}
+"""
+
+    try:
+        resp = chat_client.chat.completions.create(
+            model="mistralai/mistral-7b-instruct:free",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.4,
+            max_tokens=300
+        )
+
+        raw = resp.choices[0].message.content.strip()
+        raw = raw.replace("```json", "").replace("```", "").strip()
+        result = json.loads(raw)
+
+        return jsonify(result)
+
+    except Exception as e:
+        logger.error(f"Micro-quiz AI failed: {e}")
+        return jsonify({
+            "feedback": "Unable to generate topic-wise feedback right now."
+        }), 500
+
+
 # 4. NOW — add the /run_code route (AFTER app is created!)
 @app.route('/run_code', methods=['POST'])
 def run_code():

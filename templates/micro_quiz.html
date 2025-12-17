@@ -215,7 +215,22 @@
         </div>
         
         <p style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin: 30px 0;" id="resultMessage"></p>
-        
+        <div
+  id="aiFeedback"
+  style="
+    margin-top: 30px;
+    padding: 24px;
+    background: #f8fafc;
+    border: 2px solid #c7d2fe;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    color: #1e293b;
+    line-height: 1.6;
+    display: none;
+    text-align: left;
+  "
+></div>
+
         <a href="/dashboard" class="back-btn">
           ← Back to Dashboard
         </a>
@@ -271,16 +286,19 @@ function render() {
 
 function submit() {
   clearInterval(timer);
+
   const form = document.getElementById("quizForm");
   const data = new FormData(form);
+
   let correct = 0;
+
   quiz.forEach((q, i) => {
     if (data.get(`q${i}`) === q.answer) correct++;
   });
-  
+
   const percentage = (correct / quiz.length) * 100;
   document.getElementById("score").textContent = `${correct}/${quiz.length}`;
-  
+
   let message = "";
   if (percentage >= 80) {
     message = "🏆 Excellent! You've mastered this topic!";
@@ -291,14 +309,49 @@ function submit() {
   } else {
     message = "💪 Keep practicing! You'll get there!";
   }
-  
+
   document.getElementById("resultMessage").textContent = message;
+
+  // SHOW RESULT
   document.getElementById("result").classList.remove("hidden");
   document.getElementById("quizForm").classList.add("hidden");
+  const attempts = quiz.map((q, i) => {
+  const selected = data.get(`q${i}`) || "Not answered";
+  return {
+    question: q.question,
+    correct_answer: q.answer,
+    student_answer: selected,
+    is_correct: selected === q.answer
+  };
+});
+
+
+  // 🔥 CALL AI FEEDBACK API
+  fetch("/api/ai_feedback_microquiz", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+    score: correct,
+    total: quiz.length,
+    attempts: attempts
+  })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const fb = document.getElementById("aiFeedback");
+    fb.style.display = "block";
+    fb.innerHTML = `<strong>🤖 AI Feedback</strong><br><br>${data.feedback}`;
+  })
+  .catch(() => {
+    const fb = document.getElementById("aiFeedback");
+    fb.style.display = "block";
+    fb.textContent = "AI feedback is currently unavailable.";
+  });
+
   localStorage.removeItem("microQuiz");
-  
+
   // Scroll to result
-  document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
+  document.getElementById("result").scrollIntoView({ behavior: "smooth" });
 }
 
 render();
