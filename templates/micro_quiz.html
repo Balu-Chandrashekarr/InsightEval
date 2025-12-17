@@ -2,32 +2,226 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Micro-Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro-Quiz - InsightEval</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>.timer { font-size: 1.5rem; font-weight: bold; color: #dc2626; }</style>
+  <style>
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      color: #1e293b;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.05) 100%);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+      padding: 24px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .content-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .quiz-card {
+      background: white;
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+    }
+
+    .quiz-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
+    }
+
+    .timer-container {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+      display: inline-block;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .timer-low {
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .question-number {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .option-label {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .option-label:hover {
+      border-color: #3b82f6;
+      background: #eff6ff;
+      transform: translateX(4px);
+    }
+
+    .option-label input:checked + span {
+      font-weight: 600;
+      color: #2563eb;
+    }
+
+    .option-label input:checked {
+      accent-color: #3b82f6;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      padding: 18px 48px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 1.125rem;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+    }
+
+    .result-card {
+      background: white;
+      border: 2px solid rgba(59, 130, 246, 0.2);
+      border-radius: 24px;
+      padding: 60px 40px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(59, 130, 246, 0.15);
+    }
+
+    .score-display {
+      font-size: 5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .back-btn {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+      margin-top: 30px;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.5rem; }
+      .hero-section { padding: 20px; }
+      .content-wrapper { padding: 20px; }
+      .quiz-card { padding: 24px; }
+      .timer-container { font-size: 1.25rem; padding: 10px 20px; }
+      .score-display { font-size: 3.5rem; }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center p-4">
-<div class="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6">
-  <div class="flex justify-between mb-4">
-    <h2 class="text-2xl font-bold">AI Micro-Quiz</h2>
-    <div class="timer" id="timer">02:00</div>
+<body>
+  <div class="hero-section">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <h1>🎯 AI Micro-Quiz</h1>
+      <div class="timer-container" id="timer">02:00</div>
+    </div>
   </div>
 
-  <form id="quizForm" class="space-y-6">
-    <div id="questions"></div>
-    <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700">
-      Submit
-    </button>
-  </form>
+  <div class="content-wrapper">
+    <form id="quizForm">
+      <div id="questions"></div>
+      
+      <div style="text-align: center; margin-top: 50px;">
+        <button type="submit" class="submit-btn">
+          Submit Quiz
+        </button>
+      </div>
+    </form>
 
-  <div id="result" class="mt-6 hidden">
-    <h3 class="text-xl font-bold mb-2">Result</h3>
-    <p id="score" class="text-lg"></p>
-    <button onclick="location.href='/dashboard'" class="mt-4 bg-gray-300 px-4 py-2 rounded">
-      Back to Dashboard
-    </button>
+    <div id="result" class="hidden">
+      <div class="result-card">
+        <div style="margin-bottom: 30px;">
+          <div style="font-size: 1.5rem; color: #64748b; margin-bottom: 20px;">Your Score</div>
+          <div class="score-display" id="score"></div>
+        </div>
+        
+        <p style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin: 30px 0;" id="resultMessage"></p>
+        
+        <a href="/dashboard" class="back-btn">
+          ← Back to Dashboard
+        </a>
+      </div>
+    </div>
   </div>
-</div>
 
 <script>
 const quiz = JSON.parse(localStorage.getItem("microQuiz") || "[]");
@@ -39,7 +233,14 @@ function startTimer() {
     timeLeft--;
     const m = String(Math.floor(timeLeft/60)).padStart(2,'0');
     const s = String(timeLeft%60).padStart(2,'0');
-    document.getElementById("timer").textContent = `${m}:${s}`;
+    const timerEl = document.getElementById("timer");
+    timerEl.textContent = `${m}:${s}`;
+    
+    // Add pulse animation when time is low
+    if (timeLeft <= 30) {
+      timerEl.classList.add('timer-low');
+    }
+    
     if (timeLeft <= 0) submit();
   }, 1000);
 }
@@ -48,13 +249,20 @@ function render() {
   const container = document.getElementById("questions");
   quiz.forEach((q, i) => {
     const div = document.createElement("div");
-    div.className = "border-b pb-4";
+    div.className = "quiz-card";
     div.innerHTML = `
-      <p class="font-medium mb-2">${i+1}. ${q.question}</p>
-      ${q.options.map(o => `
-        <label class="block cursor-pointer">
-          <input type="radio" name="q${i}" value="${o}" class="mr-2"> ${o}
-        </label>`).join("")}
+      <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+        <div class="question-number">${i+1}</div>
+        <p style="font-size: 1.25rem; font-weight: 600; color: #1e293b; flex: 1; line-height: 1.6;">${q.question}</p>
+      </div>
+      <div style="margin-left: 68px;">
+        ${q.options.map((o, idx) => `
+          <label class="option-label">
+            <input type="radio" name="q${i}" value="${o}" style="margin-right: 12px; width: 20px; height: 20px;">
+            <span style="flex: 1;">${o}</span>
+          </label>
+        `).join("")}
+      </div>
     `;
     container.appendChild(div);
   });
@@ -69,10 +277,28 @@ function submit() {
   quiz.forEach((q, i) => {
     if (data.get(`q${i}`) === q.answer) correct++;
   });
-  document.getElementById("score").textContent = `Score: ${correct}/${quiz.length}`;
+  
+  const percentage = (correct / quiz.length) * 100;
+  document.getElementById("score").textContent = `${correct}/${quiz.length}`;
+  
+  let message = "";
+  if (percentage >= 80) {
+    message = "🏆 Excellent! You've mastered this topic!";
+  } else if (percentage >= 60) {
+    message = "✨ Great job! Keep up the good work!";
+  } else if (percentage >= 40) {
+    message = "👍 Good effort! Review and try again!";
+  } else {
+    message = "💪 Keep practicing! You'll get there!";
+  }
+  
+  document.getElementById("resultMessage").textContent = message;
   document.getElementById("result").classList.remove("hidden");
   document.getElementById("quizForm").classList.add("hidden");
   localStorage.removeItem("microQuiz");
+  
+  // Scroll to result
+  document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
 }
 
 render();

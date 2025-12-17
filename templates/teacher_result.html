@@ -3,215 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Test Results</title>
+    <title>Teacher Test Results - InsightEval</title>
     <style>
-        :root {
-            --primary: #4361ee;
-            --primary-light: #5e7bff;
-            --primary-dark: #3a52c7;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-600: #4b5563;
-            --gray-800: #1f2937;
-            --gray-900: #111827;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --radius: 12px;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
             margin: 0;
-            background: linear-gradient(to bottom right, #f8fafc, #e0e7ff);
-            color: var(--gray-800);
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: #1e293b;
             min-height: 100vh;
-            padding: 20px 0;
+            padding: 0;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 30px;
+        .hero-section {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 60px 40px;
             text-align: center;
         }
 
-        .header h1 {
-            margin: 0 0 20px 0;
-            font-size: 2.2rem;
-            font-weight: 700;
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 30px 0;
+            letter-spacing: -0.02em;
         }
 
-        .header-info {
+        .test-info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            max-width: 800px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1600px;
             margin: 0 auto;
-            font-size: 1.05rem;
         }
 
-        .header-info strong {
-            display: block;
-            font-size: 0.95rem;
-            opacity: 0.9;
-            margin-bottom: 4px;
+        .info-card {
+            background: white;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+            transition: all 0.3s ease;
         }
 
-        .content {
-            padding: 30px;
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
         }
 
-        .filters {
+        .info-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .content-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .controls-section {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 16px;
             justify-content: center;
+            margin-bottom: 40px;
         }
 
         .btn {
-            padding: 10px 20px;
-            background: var(--primary);
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 500;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
         }
 
         .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
         }
 
-        h2 {
-            margin: 0 0 20px 0;
-            color: var(--gray-900);
-            font-size: 1.6rem;
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
             text-align: center;
+        }
+
+        .table-container {
+            background: white;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
         }
 
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background: white;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
+            border-collapse: collapse;
         }
 
         th {
-            background: var(--gray-100);
-            color: var(--gray-800);
-            font-weight: 600;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             letter-spacing: 0.05em;
-            padding: 16px 12px;
+            padding: 20px 16px;
             text-align: left;
         }
 
         td {
-            padding: 16px 12px;
-            border-bottom: 1px solid var(--gray-200);
-            vertical-align: middle;
+            padding: 20px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 1rem;
         }
 
         tr:last-child td {
             border-bottom: none;
         }
 
-        tr:hover {
-            background-color: #f8faff;
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+            transform: scale(1.01);
         }
 
         .status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         .status-completed {
-            background: #d1fae5;
-            color: var(--success);
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .status-undergoing {
-            background: #fff4e5;
-            color: var(--warning);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
         }
 
         .marks {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .email {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .feedback {
+            max-width: 400px;
+            line-height: 1.5;
+            color: #64748b;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.8rem; }
-            .header-info { grid-template-columns: 1fr; text-align: center; }
-            .content { padding: 20px; }
+        @media (max-width: 1024px) {
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+            }
+            
+            thead tr { 
+                position: absolute; 
+                top: -9999px; 
+                left: -9999px; 
+            }
+            
+            tr { 
+                border: 1px solid rgba(59, 130, 246, 0.15);
+                border-radius: 16px; 
+                margin-bottom: 20px; 
+                padding: 20px;
+                background: white;
+                box-shadow: 0 4px 16px rgba(59, 130, 246, 0.08);
+            }
+            
+            td { 
+                border: none; 
+                position: relative; 
+                padding-left: 45%; 
+                text-align: right; 
+                padding-top: 12px; 
+                padding-bottom: 12px; 
+            }
+            
+            td:before { 
+                content: attr(data-label); 
+                position: absolute; 
+                left: 16px; 
+                width: 40%; 
+                padding-right: 10px; 
+                white-space: nowrap; 
+                font-weight: 700; 
+                color: #1e293b; 
+                text-align: left; 
+            }
+            
+            .status { 
+                display: inline-block; 
+            }
+            
+            th { 
+                display: none; 
+            }
 
-            table, thead, tbody, th, td, tr { display: block; }
-            thead tr { position: absolute; top: -9999px; left: -9999px; }
-            tr { border: 1px solid var(--gray-200); border-radius: 12px; margin-bottom: 16px; padding: 16px; background: #fafbff; box-shadow: var(--shadow-sm); }
-            td { border: none; position: relative; padding-left: 50%; text-align: right; padding-top: 12px; padding-bottom: 12px; }
-            td:before { content: attr(data-label); position: absolute; left: 16px; width: 45%; padding-right: 10px; white-space: nowrap; font-weight: 600; color: var(--gray-600); text-align: left; }
-            .status { display: inline-block; }
-            th { display: none; }
+            .feedback {
+                max-width: 100%;
+                text-align: right;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section {
+                padding: 40px 20px;
+            }
+
+            .content-wrapper {
+                padding: 40px 20px;
+            }
+
+            .test-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
-            .filters { flex-direction: column; align-items: center; }
-            .btn { width: 100%; max-width: 300px; }
+            .hero-section h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-       <div class="header">
-            <h1 id="test-title">Test Title</h1>
-            <div class="header-info">
-                <div>
-                    <strong>Test Code</strong>
-                    <span id="test-code">Loading...</span>
-                </div>
-                <div>
-                    <strong>Total Marks</strong>
-                    <span id="total-marks">Loading...</span>
-                </div>
+    <div class="hero-section">
+        <h1 id="test-title">Test Results Dashboard</h1>
+        <div class="test-info-grid">
+            <div class="info-card">
+                <div class="info-label">Test Code</div>
+                <div class="info-value" id="test-code">Loading...</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Total Marks</div>
+                <div class="info-value" id="total-marks">Loading...</div>
             </div>
         </div>
+    </div>
 
-        <div class="content">
-            <div class="filters">
-                <button class="btn" onclick="sortTableByMarks()">Sort by Highest Marks</button>
-                <button class="btn" onclick="sortTableByEmail()">Sort by Email ID</button>
-            </div>
+    <div class="content-wrapper">
+        <div class="controls-section">
+            <button class="btn" onclick="sortTableByMarks()">📊 Sort by Highest Marks</button>
+            <button class="btn" onclick="sortTableByEmail()">📧 Sort by Email ID</button>
+        </div>
 
-            <h2>Student Results</h2>
+        <h2 class="section-title">Student Results</h2>
+        
+        <div class="table-container">
             <table id="resultsTable">
                 <thead>
                     <tr>
@@ -223,27 +329,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td data-label="Name">Alice</td>
-                        <td data-label="AI Feedback">Good understanding of DSA concepts</td>
-                        <td data-label="Status"><span class="status status-completed">Completed</span></td>
-                        <td data-label="Marks" class="marks">18</td>
-                        <td data-label="Email">alice@gmail.com</td>
-                    </tr>
-                    <tr>
-                        <td data-label="Name">Bob</td>
-                        <td data-label="AI Feedback">Needs improvement in sorting algorithms</td>
-                        <td data-label="Status"><span class="status status-completed">Completed</span></td>
-                        <td data-label="Marks" class="marks">20</td>
-                        <td data-label="Email">bob@gmail.com</td>
-                    </tr>
-                    <tr>
-                        <td data-label="Name">Charlie</td>
-                        <td data-label="AI Feedback">Test ongoing</td>
-                        <td data-label="Status"><span class="status status-undergoing">Undergoing</span></td>
-                        <td data-label="Marks" class="marks">N/A</td>
-                        <td data-label="Email">charlie@gmail.com</td>
-                    </tr>
+                    <!-- Data will be populated by JavaScript -->
                 </tbody>
             </table>
         </div>
@@ -269,50 +355,58 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // 🧾 Fill test info
-        document.getElementById("test-title").textContent = data.test_info?.title || "Test Title";
+        // Fill test info
+        document.getElementById("test-title").textContent = data.test_info?.title || "Test Results Dashboard";
         document.getElementById("test-code").textContent = data.test_info?.code || "N/A";
         document.getElementById("total-marks").textContent = data.test_info?.total || 0;
 
-        // 👩‍🎓 Fill students table
+        // Fill students table
         const tbody = document.querySelector("#resultsTable tbody");
-        tbody.innerHTML = ""; // Clear static sample rows
+        tbody.innerHTML = "";
 
         data.students.forEach(student => {
             const tr = document.createElement("tr");
 
             // Email
             const emailTd = document.createElement("td");
+            emailTd.className = "email";
+            emailTd.setAttribute("data-label", "Email");
             emailTd.textContent = student.student_email;
             tr.appendChild(emailTd);
 
             // Name
             const nameTd = document.createElement("td");
+            nameTd.className = "name";
+            nameTd.setAttribute("data-label", "Name");
             nameTd.textContent = student.student_name;
             tr.appendChild(nameTd);
 
             // Status
             const statusTd = document.createElement("td");
+            statusTd.setAttribute("data-label", "Status");
             const statusSpan = document.createElement("span");
             statusSpan.classList.add("status");
             if (student.status.toLowerCase() === "completed") {
                 statusSpan.classList.add("status-completed");
-                statusSpan.textContent = "Completed";
+                statusSpan.textContent = "✓ Completed";
             } else {
                 statusSpan.classList.add("status-undergoing");
-                statusSpan.textContent = "Undergoing";
+                statusSpan.textContent = "⏳ Undergoing";
             }
             statusTd.appendChild(statusSpan);
             tr.appendChild(statusTd);
 
             // Feedback
             const feedbackTd = document.createElement("td");
+            feedbackTd.className = "feedback";
+            feedbackTd.setAttribute("data-label", "AI Feedback");
             feedbackTd.textContent = student.feedback;
             tr.appendChild(feedbackTd);
 
             // Marks
             const marksTd = document.createElement("td");
-            marksTd.classList.add("marks");
+            marksTd.className = "marks";
+            marksTd.setAttribute("data-label", "Marks");
             marksTd.textContent = student.marks;
             tr.appendChild(marksTd);
 
@@ -325,7 +419,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// ✅ Sorting functions (same as before)
+// Sorting functions
 function sortTableByMarks() { sortTable(4, 'desc'); }
 function sortTableByEmail() { sortTable(0, 'asc'); }
 

@@ -7,92 +7,192 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
             margin: 0;
-            background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
-            color: #1f2937;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: #1e293b;
             min-height: 100vh;
+            padding: 0;
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-        .result-wrapper {
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 60px 40px;
+            margin-bottom: 0;
         }
-        .result-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 6px;
-            background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899);
+        
+        .container { 
+            max-width: 100%; 
+            margin: 0; 
+            padding: 0;
         }
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #1e40af;
-            margin-bottom: 20px;
+        
+        .content-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px 60px 40px;
+        }
+        
+        .result-header {
             text-align: center;
+            max-width: 1600px;
+            margin: 0 auto;
         }
-        .score-circle {
-            width: 180px; height: 180px;
-            border-radius: 50%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            margin: 30px auto;
+        
+        h1 {
+            font-size: 3.5rem;
             font-weight: 900;
-            color: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
         }
+        
+        .score-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .score-card {
+            background: white;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+        }
+        
+        .score-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.25);
+        }
+        
+        .score-circle {
+            width: 200px; 
+            height: 200px;
+            border-radius: 50%;
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-weight: 900;
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.2);
+            position: relative;
+        }
+        
+        .score-text {
+            color: rgb(0, 0, 0) !important; 
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            line-height: 1;
+        }
+        
         .back-btn, .micro-btn {
-            padding: 14px 32px;
-            border-radius: 12px;
+            padding: 16px 40px;
+            border-radius: 16px;
             font-weight: 700;
             text-decoration: none;
             transition: all 0.3s ease;
             margin: 10px;
             display: inline-block;
+            font-size: 16px;
+            border: 2px solid transparent;
         }
+        
         .back-btn {
-            background: linear-gradient(to right, #3b82f6, #2563eb);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
+            box-shadow: 0 10px 30px rgba(59, 131, 246, 0.3);
         }
-        .back-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(59,131,246,0.4); }
+        
+        .back-btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 40px rgba(59, 131, 246, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
         .micro-btn {
-            background: linear-gradient(to right, #8b5cf6, #7c3aed);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
         }
-        .micro-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(139,92,246,0.4); }
+        
+        .micro-btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
         .ai-section {
-            margin-top: 40px;
-            padding: 30px;
-            background: linear-gradient(135deg, #f0f9ff 0%, #fef3c7 100%);
-            border-radius: 16px;
-            border: 2px solid #dbeafe;
+            margin-top: 60px;
+            padding: 50px;
+            background: white;
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
         }
-        .loading { color: #6b7280; font-style: italic; text-align: center; padding: 20px; }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .loading { 
+            color: #64748b; 
+            font-style: italic; 
+            text-align: center; 
+            padding: 30px;
+            font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .hero-section { padding: 40px 20px; }
+            .content-wrapper { padding: 0 20px 40px 20px; }
+            .score-section { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="result-wrapper">
-            <h1 id="result-title">Test Result</h1>
+        <div class="hero-section">
+            <div class="result-header">
+                <h1 id="result-title">Test Result</h1>
+                <p class="text-xl text-slate-600 opacity-90" id="subtitle"></p>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
             <div id="main-content"></div>
 
-            <!-- AI Section (only for JSON-based assessments) -->
             <div id="ai-section" class="ai-section hidden">
-                <h3 class="text-2xl font-bold text-purple-800 mb-4">InsightEval AI-Powered Learning Boost</h3>
+                <h3 class="section-title">🤖 AI-Powered Learning Insights</h3>
                 <div id="feedback-loading" class="loading">Analyzing your performance with AI...</div>
-                <div id="feedback-text" class="mt-6 text-lg text-gray-800 leading-relaxed"></div>
-                <button id="start-micro" class="micro-btn hidden mt-6">
-                    Start Personalized Micro-Quiz (5 Questions)
-                </button>
+                <div id="feedback-text" class="mt-6 text-lg text-slate-700 leading-relaxed"></div>
+                <div class="text-center">
+                    <button id="start-micro" class="micro-btn hidden" style="margin-top: 50px;">
+                        Start Personalized Micro-Quiz
+                    </button>
+                </div>
             </div>
 
-            <div class="text-center mt-10">
-                <a href="/dashboard" class="back-btn">Back to Dashboard</a>
+            <div class="text-center mt-16">
+                <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
             </div>
         </div>
     </div>
@@ -103,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const resultId = params.get("id");
 
     if (!resultId) {
-        document.body.innerHTML = "<p class='text-center text-red-600 text-lg'>No result ID found.</p>";
+        document.body.innerHTML = "<p class='text-center text-red-600 text-lg mt-20'>No result ID found.</p>";
         return;
     }
 
@@ -129,133 +229,51 @@ document.addEventListener("DOMContentLoaded", async function () {
         const isClassroomTest = !!data.classroom && !!data.test;
 
         // 🎨 Visuals and tone setup
-        const bgColor = percentage >= 90 ? 'from-green-500 to-emerald-600' :
-                        percentage >= 70 ? 'from-blue-500 to-cyan-600' :
-                        percentage >= 50 ? 'from-yellow-500 to-orange-600' :
-                        'from-red-500 to-rose-600';
+        const bgColor = percentage >= 90 ? 'from-emerald-500 to-teal-500' :
+                        percentage >= 70 ? 'from-blue-600 to-blue-500' :
+                        percentage >= 50 ? 'from-amber-500 to-orange-500' :
+                        'from-rose-500 to-red-500';
 
-        const perf = percentage >= 90 ? { text: "Outstanding! You're a Top Performer!", color: "text-green-600" } :
-                     percentage >= 70 ? { text: "Excellent Work! You Passed with Flying Colors!", color: "text-blue-600" } :
-                     percentage >= 50 ? { text: "Good Effort! You Passed", color: "text-yellow-600" } :
-                     { text: "Keep Practicing – You'll Get There!", color: "text-red-600" };
+        const perf = percentage >= 90 ? { text: "🏆 Outstanding! You're a Top Performer!", color: "text-emerald-600" } :
+                     percentage >= 70 ? { text: "✨ Excellent Work! You Passed with Flying Colors!", color: "text-blue-600" } :
+                     percentage >= 50 ? { text: "👍 Good Effort! You Passed", color: "text-amber-600" } :
+                     { text: "💪 Keep Practicing – You'll Get There!", color: "text-rose-600" };
 
         document.getElementById('result-title').textContent = isClassroomTest 
             ? "Classroom Test Completed!" 
             : "Assessment Result";
 
+        document.getElementById('subtitle').textContent = isClassroomTest 
+            ? "This test was created by your instructor" 
+            : "Review your performance and insights below";
+
         // 🧩 Render the main result section
-        aiSection.innerHTML = `
-            <div class="text-center">
-                ${isClassroomTest ? '<p class="text-xl text-gray-700 mb-8 opacity-90 font-medium">This test was created by your instructor</p>' : ''}
-
-                <div class="score-circle bg-gradient-to-br ${bgColor} shadow-2xl rounded-full w-64 h-64 mx-auto flex flex-col items-center justify-center">
-                    <div class="text-8xl font-black text-white drop-shadow-2xl">${earnedMarks}</div>
-                    <div class="text-3xl text-white opacity-90">/ ${totalMarks}</div>
-                    <div class="text-sm text-white mt-2 opacity-80 font-medium">Total Marks</div>
-                </div>
-
-                <div class="text-9xl font-extrabold text-gray-800 mt-10 drop-shadow-2xl">${percentage.toFixed(1)}%</div>
-                <p class="text-4xl font-bold mt-6 ${perf.color} tracking-wide">${perf.text}</p>
-
-                <div class="mt-16 p-10 bg-gradient-to-b from-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 max-w-5xl mx-auto">
-                    <h3 class="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-                        Detailed Answer Review
-                    </h3>
-
-                    <div class="space-y-8">
-                        ${Object.entries(answers).map(([qKey, ans]) => {
-                            const qNum = qKey.replace('q', 'Question ');
-                            const rawType = ans.type || "mcq";
-                            const questionType = rawType.toString().toLowerCase().trim();
-
-                            const typeInfo = {
-                                mcq: { name: "Multiple Choice", color: "blue" },
-                                short_answer: { name: "Short Answer", color: "green" },
-                                coding: { name: "Coding", color: "purple" }
-                            };
-                            const t = typeInfo[questionType] || typeInfo.mcq;
-
-                            const marks = Number(ans.marks || ans.total_marks || 1);
-                            const markText = marks === 1 ? "1 mark" : `${marks} marks`;
-
-                            const userAnswer = ans.selected && !["Not answered", "Code submitted"].includes(ans.selected)
-                                ? ans.selected.trim()
-                                : null;
-
-                            const correctAnswerText = questionType === "coding"
-                                ? "Correct code execution and logic expected"
-                                : (ans.answer || "N/A");
-
-                            return `
-                            <div class="relative p-8 rounded-3xl border-4 transition-all hover:shadow-2xl ${
-                                ans.correct
-                                    ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-400'
-                                    : 'bg-gradient-to-r from-rose-50 to-pink-50 border-rose-400'
-                            }">
-                                <div class="flex flex-wrap justify-between items-start gap-6 mb-6">
-                                    <div class="flex items-center gap-6">
-                                        <div class="text-3xl font-black text-gray-800">${qNum}</div>
-                                        <span class="px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider text-white bg-${t.color}-600 shadow-lg">
-                                            ${t.name}
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center gap-6">
-                                        <span class="text-lg font-bold text-gray-700 bg-white px-6 py-3 rounded-full shadow-md border-2">
-                                            ${markText}
-                                        </span>
-                                        <span class="text-3xl font-bold ${ans.correct ? 'text-emerald-600' : 'text-rose-600'}">
-                                            ${ans.correct ? 'Correct' : 'Incorrect'}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                ${userAnswer ? `
-                                    <div class="mb-5">
-                                        <strong class="text-gray-700 text-lg">Your Answer:</strong>
-                                        <div class="mt-3 p-6 bg-white rounded-2xl font-medium text-gray-800 border-2 border-gray-200 whitespace-pre-wrap text-sm leading-relaxed shadow-inner">
-                                            ${userAnswer.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
-                                        </div>
-                                    </div>
-                                ` : `
-                                    <div class="mb-5 italic text-gray-500 text-lg">No answer submitted</div>
-                                `}
-
-                                ${!ans.correct ? `
-                                    <div class="p-6 bg-amber-50 border-2 border-amber-300 rounded-2xl">
-                                        <strong class="text-amber-800 text-lg">Correct Answer:</strong>
-                                        <div class="mt-3 font-semibold text-amber-900 whitespace-pre-wrap leading-relaxed">
-                                            ${correctAnswerText}
-                                        </div>
-                                    </div>
-                                ` : ''}
-                            </div>`;
-                        }).join('')}
+        mainContent.innerHTML = `
+            <div class="score-section">
+                <div class="score-card">
+                    <div class="score-circle bg-gradient-to-br ${bgColor}">
+                        <div class="text-7xl font-black score-text">${earnedMarks}</div>
+                        <div class="text-2xl score-text" style="opacity: 0.9;">/ ${totalMarks}</div>
                     </div>
+                    <div class="text-xl font-bold text-slate-700">Total Score</div>
                 </div>
 
-                <!-- 🧠 AI Feedback -->
-                <div class="mt-20 text-left bg-white shadow-2xl rounded-3xl p-10 border border-gray-200 max-w-4xl mx-auto">
-                    <h3 class="text-3xl font-bold mb-6 text-indigo-700">AI Feedback</h3>
-                    <p id="feedback-text" class="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap">
-                        ${feedback.replace(/\n/g, "\n\n")}
-                    </p>
-
-                    ${microQuiz?.questions?.length >= 5 ? `
-                        <div class="mt-10 text-center">
-                            <button id="start-micro" class="bg-indigo-600 hover:bg-indigo-700 text-white text-lg px-8 py-3 rounded-full font-semibold shadow-lg transition-all">
-                                Start Micro-Quiz
-                            </button>
-                        </div>
-                    ` : ''}
-                </div>
+                <div class="score-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div class="text-8xl font-black text-slate-800" style="line-height: 1;">${percentage.toFixed(1)}%</div>
+    <p class="text-2xl font-bold mt-6 ${perf.color}">${perf.text}</p>
+</div>
             </div>
         `;
 
+        // Show AI section with feedback
+        document.getElementById('feedback-loading').classList.add('hidden');
+        document.getElementById('feedback-text').textContent = feedback.replace(/\n/g, "\n\n");
         aiSection.classList.remove('hidden');
 
         // 🎯 Micro quiz button handler
         const microBtn = document.getElementById('start-micro');
-        if (microBtn && microQuiz?.questions?.length >= 5) {
+        if (microQuiz?.questions?.length >= 5) {
+            microBtn.classList.remove('hidden');
             microBtn.onclick = () => {
                 localStorage.setItem('microQuiz', JSON.stringify(microQuiz.questions));
                 location.href = '/micro_quiz';
@@ -264,7 +282,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     } catch (err) {
         console.error("❌ Error loading result:", err);
-        document.body.innerHTML = "<p class='text-center text-red-600 text-lg'>Error loading result data.</p>";
+        document.body.innerHTML = "<p class='text-center text-red-600 text-lg mt-20'>Error loading result data.</p>";
     }
 });
 </script>
