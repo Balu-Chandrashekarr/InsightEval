@@ -142,7 +142,7 @@
                 <span class="text-sm font-semibold text-gray-700">COURSES</span>
             </div>
             <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="post">
-                <i class="fas fa-plus-square text-xl hover:text-gray-700"></i>
+                <i class="fas fa-images text-xl hover:text-gray-700"></i>
                 <span class="text-sm font-semibold text-gray-700">POST</span>
             </div>
             <div class="nav-item flex items-center space-x-2 cursor-pointer p-2 rounded-lg w-full" data-section="profile">
@@ -459,12 +459,13 @@
                 </div>
 
                 <!--Search Profile Content -->
+                <!--Search Profile Content -->
                 <div id="searchprofile-content" class="content-section hidden">
                     <div class="container px-4 py-8">
                         <div class="flex flex-col md:flex-row gap-8">
                         
                         <!-- LEFT SIDE -->
-                        <div class="w-full md:w-2/5 bg-white p-8 rounded-2xl shadow-lg relative font-[Inter] text-gray-800">
+                        <div class="w-full md:w-2/5 bg-white p-8 rounded-2xl shadow-lg relative  text-gray-800">
 
                             <!-- Role Badge -->
                             <div id="view-role-badge" class="absolute top-5 right-5">
@@ -472,31 +473,34 @@
                             </div>
 
                             <!-- Profile Picture -->
-                            <div class="mb-10 text-center">
-                                <img
-                                    src="https://via.placeholder.com/128x128"
-                                    alt="Profile Picture"
-                                    class="w-32 h-32 mx-auto rounded-full border-4 border-indigo-200 object-cover shadow-sm"
-                                    id="sprofileViewPic"
-                                />
-                            </div>
+                                    <div class="mb-10 text-center">
+                                        <img
+                                            src="https://via.placeholder.com/128x128"
+                                            alt="Profile Picture"
+                                            class="w-32 h-32 mx-auto rounded-full border-4 border-indigo-200 object-cover shadow-sm"
+                                            id="sprofileViewPic"
+                                        />
+                                    </div>
 
                             <!-- Profile Details -->
-                            <div class="space-y-7 text-left px-2">
-                                <div>
-                                    <p class="text-gray-500 text-sm uppercase font-semibold tracking-widest">Name</p>
-                                    <p id="view-name" class="text-xl font-semibold text-gray-900 mt-1 break-words leading-snug">—</p>
+                            <form id="profileForm">
+                            <div class="space-y-7 text-left">
+                                <div id="view-role-badge" class="absolute top-5 right-5">
+                                <!-- Filled dynamically -->
                                 </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm uppercase font-semibold tracking-widest">User ID</p>
+                                <div class="mb-12">
+                                    <p id="view-name" class="text-xl font-semibold text-center mt-1 "></p>
+                                </div>
+                                <div class="mb-6 px-2">
+                                    <p class="block text-gray-700 font-semibold mb-2">ID</p>
                                     <p id="view-id" class="text-base font-semibold mt-1 break-words leading-snug">—</p>
                                 </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm uppercase font-semibold tracking-widest">Department</p>
+                                <div class="mb-6 px-2">
+                                    <p class="block text-gray-700 font-semibold mb-2">Department</p>
                                     <p id="view-department" class="text-base font-semibold mt-1 break-words leading-snug">—</p>
                                 </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm uppercase font-semibold tracking-widest">Bio</p>
+                                <div class="mb-6 px-2">
+                                    <p class="block text-gray-700 font-semibold mb-2">Bio</p>
                                     <p
                                         id="view-bio"
                                         class="text-gray-700 mt-1 font-semibold break-words whitespace-pre-line min-h-[7rem] text-[0.95rem]"
@@ -505,6 +509,7 @@
                                     </p>
                                 </div>
                             </div>
+                            </form>
 
                             <!-- Back Button -->
                             <div class="mt-10 text-center">
@@ -547,12 +552,22 @@
 
 
 
+
                 <!-- Post Content -->
                 <div id="post-content" class="content-section hidden">
                     <div class="bg-white rounded-lg shadow-sm p-4">
-                        <h2 class="text-xl font-semibold mb-4">Create a Post</h2>
-                        <textarea placeholder="What's on your mind?" class="w-full p-2 border rounded focus:outline-none" aria-label="Create a post"></textarea>
-                        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Post</button>
+                          <div id="posts-container"  style="max-width: 600px; width: 100%;  background: white; margin: 20px auto;">
+                            <!-- Post will be inserted here by JavaScript -->
+                         </div>
+
+                         <div style="display: flex; justify-content: center; margin: 10px 0; gap: 40px;">
+                            <button id="prev-btn" aria-label="Previous" style="background: none; border: none; font-size: 32px; cursor: pointer; padding: 12px; color: #0095f6; opacity: 0.8; transition: opacity 0.3s;">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button id="next-btn" aria-label="Next" style="background: none; border: none; font-size: 32px; cursor: pointer; padding: 12px; color: #0095f6; opacity: 0.8; transition: opacity 0.3s;">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                         </div>
                     </div>
                 </div>
 
@@ -638,111 +653,202 @@
     </div>
 
 <script>
-async function loadHomepage() {
-    try {
-        const resp = await fetch("/api/get_homepage_data");
-        const data = await resp.json();
+    async function loadHomepage() {
+        try {
+            const resp = await fetch("/api/get_homepage_data");
+            const data = await resp.json();
 
-        if (!data.success) {
-            console.error("Failed to fetch homepage data:", data.error);
-            return;
+            if (!data.success) {
+                console.error("Failed to fetch homepage data:", data.error);
+                return;
+            }
+
+            // 🧠 Thoughts
+            const thoughtsEl = document.querySelector(".thoughts p");
+            if (thoughtsEl) thoughtsEl.textContent = data.thoughts;
+
+            // 🧠 Notices
+            const carousel = document.getElementById("carousel");
+            if (carousel) {
+                carousel.innerHTML = ""; // Clear existing slides
+
+                data.notices.forEach((notice, idx) => {
+                    const slide = document.createElement("div");
+                    slide.className = "notice-slide" + (idx === 0 ? " active" : "");
+                    slide.innerHTML = `
+                        <div class="notice-content">
+                            <div class="notice-title">${notice.title}</div>
+                            <div class="notice-subtitle">${notice.subtitle}</div>
+                            <div class="notice-dashes"></div>
+                        </div>
+                    `;
+                    carousel.appendChild(slide);
+                });
+
+                // Initialize carousel after adding slides
+                currentIndex = 0;
+                updateDashes();
+                startAutoSlide();
+            }
+
+            // 🧠 Schedule
+            const scheduleTableBody = document.querySelector("#scheduleTable tbody");
+            if (scheduleTableBody) {
+                scheduleTableBody.innerHTML = ""; // Clear existing rows
+                data.schedule.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${item.time}</td>
+                        <td>${item.event}</td>
+                        <td>${item.venue}</td>
+                    `;
+                    scheduleTableBody.appendChild(row);
+                });
+            }
+
+        } catch (error) {
+            console.error("Error loading homepage data:", error);
         }
+    }
 
-        // 🧠 Thoughts
-        const thoughtsEl = document.querySelector(".thoughts p");
-        if (thoughtsEl) thoughtsEl.textContent = data.thoughts;
+    // 🔹 Carousel logic
+    let currentIndex = 0;
+    let autoSlideInterval;
+    const carousel = document.getElementById('carousel');
 
-        // 🧠 Notices
-        const carousel = document.getElementById("carousel");
-        if (carousel) {
-            carousel.innerHTML = ""; // Clear existing slides
+    function updateDashes() {
+        const total = carousel.children.length;
+        for (let i = 0; i < total; i++) {
+            const slide = carousel.children[i];
+            let dashContainer = slide.querySelector('.notice-dashes');
+            dashContainer.innerHTML = '';
+            for (let j = 0; j < total; j++) {
+                const dash = document.createElement('div');
+                dash.classList.add('dash');
+                if (j === currentIndex) dash.classList.add('active');
+                dashContainer.appendChild(dash);
+            }
+        }
+    }
 
-            data.notices.forEach((notice, idx) => {
-                const slide = document.createElement("div");
-                slide.className = "notice-slide" + (idx === 0 ? " active" : "");
-                slide.innerHTML = `
-                    <div class="notice-content">
-                        <div class="notice-title">${notice.title}</div>
-                        <div class="notice-subtitle">${notice.subtitle}</div>
-                        <div class="notice-dashes"></div>
+    function showSlide(index) {
+        const slides = carousel.children;
+        for (let i = 0; i < slides.length; i++) slides[i].classList.remove('active');
+        if (slides.length > 0) {
+            slides[index].classList.add('active');
+            currentIndex = index;
+        }
+        updateDashes();
+    }
+
+    function nextSlide() {
+        if (carousel.children.length === 0) return;
+        currentIndex = (currentIndex + 1) % carousel.children.length;
+        showSlide(currentIndex);
+    }
+
+    function startAutoSlide() {
+        clearInterval(autoSlideInterval);
+        if (carousel.children.length > 0) {
+            autoSlideInterval = setInterval(nextSlide, 5000);
+        }
+    }
+
+    //Post
+            const posts = [
+            {
+                username: "Sports Committee",
+                image: "/static/images/jocky.jpg",
+                caption: "InterCollege hockey tournament was lit! 🏆🔥"
+            },
+            {
+                username: "Dr Mohan Manghnani",
+                image: "/static/images/magnani.heic",
+                caption: "Empowering minds, shaping futures. #EducationForAll 📚✨"
+            },
+            {
+                username: "Dr Mohan Manghnani",
+                image: "/static/images/modinhce.jpg",
+                caption: "Wishing Hon'ble PM a very Happy Birthday! 🎉🇮🇳"
+            },
+            {
+                username: "Dr Manjunatha",
+                image: "/static/images/princii.jpg",
+                caption: "Happy Independence Day to all! 🇮🇳🎆"
+            }
+        ];
+
+        let currentIndx = 0;
+        const container = document.getElementById('posts-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        function renderPost(index) {
+            const post = posts[index];
+            container.innerHTML = `
+                <div style="border: 1px solid #dbdbdb; margin-bottom: 20px; background: white; border-radius: 10px; overflow: hidden;">
+                    <div style="display: flex; align-items: center; padding: 8px 10px;">
+                        <div style="font-weight: 600; font-size: 14px;">${post.username}</div>
                     </div>
-                `;
-                carousel.appendChild(slide);
-            });
+                    <img src="${post.image}" alt="Post image" style=" width: 100%;  max-width: 500px; max-height: 500px; object-fit: cover; display: block; margin: 0 auto; border-radius: 10px;">
+                    <div style="padding: 8px 16px; display: flex; justify-content: space-between;">
+                        <div>
+                            <i class="far fa-heart" onclick="toggleLike(this)" style="font-size: 24px; margin-right: 16px; cursor: pointer;"></i>
+                        </div>
+                    </div>
+                    <div style="padding: 0 16px 12px;">
+                        <strong style="font-weight: 600; margin-right: 6px;">${post.username}</strong> ${post.caption}
+                    </div>
+                </div>
+            `;
 
-            // Initialize carousel after adding slides
-            currentIndex = 0;
-            updateDashes();
-            startAutoSlide();
+            // Update like button color if needed (initial state)
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === posts.length - 1;
+            prevBtn.style.opacity = index === 0 ? '0.3' : '0.8';
+            nextBtn.style.opacity = index === posts.length - 1 ? '0.3' : '0.8';
         }
 
-        // 🧠 Schedule
-        const scheduleTableBody = document.querySelector("#scheduleTable tbody");
-        if (scheduleTableBody) {
-            scheduleTableBody.innerHTML = ""; // Clear existing rows
-            data.schedule.forEach(item => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${item.time}</td>
-                    <td>${item.event}</td>
-                    <td>${item.venue}</td>
-                `;
-                scheduleTableBody.appendChild(row);
-            });
+        function toggleLike(element) {
+            element.classList.toggle('fas');
+            element.classList.toggle('far');
+            if (element.classList.contains('fas')) {
+                element.style.color = '#ed4956';
+            } else {
+                element.style.color = '';
+            }
         }
 
-    } catch (error) {
-        console.error("Error loading homepage data:", error);
-    }
-}
+        prevBtn.addEventListener('click', () => {
+            if (currentIndx > 0) {
+                currentIndx--;
+                renderPost(currentIndx);
+            }
+        });
 
-// 🔹 Carousel logic
-let currentIndex = 0;
-let autoSlideInterval;
-const carousel = document.getElementById('carousel');
+        nextBtn.addEventListener('click', () => {
+            if (currentIndx < posts.length - 1) {
+                currentIndx++;
+                renderPost(currentIndx );
+            }
+        });
 
-function updateDashes() {
-    const total = carousel.children.length;
-    for (let i = 0; i < total; i++) {
-        const slide = carousel.children[i];
-        let dashContainer = slide.querySelector('.notice-dashes');
-        dashContainer.innerHTML = '';
-        for (let j = 0; j < total; j++) {
-            const dash = document.createElement('div');
-            dash.classList.add('dash');
-            if (j === currentIndex) dash.classList.add('active');
-            dashContainer.appendChild(dash);
-        }
-    }
-}
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevBtn.click();
+            if (e.key === 'ArrowRight') nextBtn.click();
+        });
 
-function showSlide(index) {
-    const slides = carousel.children;
-    for (let i = 0; i < slides.length; i++) slides[i].classList.remove('active');
-    if (slides.length > 0) {
-        slides[index].classList.add('active');
-        currentIndex = index;
-    }
-    updateDashes();
-}
+        // Initial setup
+        renderPost(0);
 
-function nextSlide() {
-    if (carousel.children.length === 0) return;
-    currentIndex = (currentIndex + 1) % carousel.children.length;
-    showSlide(currentIndex);
-}
 
-function startAutoSlide() {
-    clearInterval(autoSlideInterval);
-    if (carousel.children.length > 0) {
-        autoSlideInterval = setInterval(nextSlide, 5000);
-    }
-}
 
-// 🔹 Initialize on page load
-window.addEventListener("DOMContentLoaded", () => {
-    loadHomepage();
-});
+
+    // 🔹 Initialize on page load
+    window.addEventListener("DOMContentLoaded", () => {
+        loadHomepage();
+    });
 </script>
 <script>
 
@@ -1150,7 +1256,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                         card.innerHTML = `
                             <div class="flex justify-between items-center mb-2">
-                                <h3 class="font-bold text-blue-800 text-lg">${rem.remainder}</h3>
+                                <h3 class="font-bold text-blue-700 text-lg">${rem.remainder}</h3>
                                 <div class="flex flex-col text-right">
                                     <span class="text-sm ${dueTextColor}">
                                         Due in <span class="${dueClass}">${timeLeftLabel}</span>
