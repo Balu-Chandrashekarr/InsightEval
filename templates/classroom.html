@@ -55,7 +55,7 @@
             <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
                     <button class="close-modal-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
                     <h2 class="text-2xl font-bold mb-4 border-b pb-3">Alert Classroom</h2>
-                    <form id="add-classroom-form" class="space-y-4">
+                    <form id="alert-classroom-form" class="space-y-4">
                         <div>
                             <label for="new-remainder-name" class="block text-sm font-medium text-gray-700">Remainder</label>
                             <input type="text" id="new-remainder-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
@@ -168,6 +168,7 @@
                 </div>
             </div>
         </div>
+        <div id="toast"  class="hidden fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 backdrop-blur-sm"></div>
     </main>
         <script>
         //Global variables
@@ -206,6 +207,43 @@
             const dateStr = tomorrow.toISOString().slice(0, 16); 
             document.getElementById('new-due-time').value = dateStr; 
 
+            const form = document.getElementById("alert-classroom-form");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const remainder = document.getElementById("new-remainder-name").value.trim();
+                const dueTime = document.getElementById("new-due-time").value;
+
+                if (!remainder || !dueTime) {
+                    alert("Please fill in all fields.");
+                    return;
+                }
+
+                try {
+                    const resp = await fetch("/api/add_remainder", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            classroom_id: classroomId,  // your JS classroom ID variable
+                            remainder: remainder,
+                            due_time: dueTime
+                        })
+                    });
+
+                    const data = await resp.json();
+
+                    if (resp.ok && data.success) {
+                        showToast("Remainder alerted successfully!", "success");
+                        closeModal(addModal);
+                        form.reset();
+                    } else {
+                        showToast("Unable to add remainder.", "error");
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+
             const openModal = (modal) => {
                 if (modal) modal.classList.remove('hidden');
             };
@@ -214,7 +252,7 @@
             };
             leaveBtn.addEventListener('click', () => {
                 if(c_user.user_name === "You"){
-                    alert("❌ Owners cannot leave their own classroom!");
+                    showToast("Owners cannot leave their own classroom!", "error");
                     return;
                 }
                 if (confirm("Are you sure you want to leave this classroom?")) {    
@@ -229,6 +267,28 @@
                     closeModal(addModal);
                 });
             });
+
+            function showToast(message, type = "success") {
+                const toast = document.getElementById("toast");
+                toast.textContent = message;
+                toast.className = `fixed top-5 right-5 px-4 py-3 rounded-lg shadow-lg text-white font-semibold z-50 backdrop-blur-sm transition-all duration-500 transform translate-y-0 opacity-100 ${
+                    type === "success" ? "bg-green-500" : "bg-red-500"
+                }`;
+                toast.classList.remove("hidden");
+
+                // Slide in animation
+                toast.style.transform = "translateY(-10px)";
+                toast.style.opacity = "1";
+
+                // Remove after 3 seconds with smooth fade-out
+                setTimeout(() => {
+                    toast.style.opacity = "0";
+                    toast.style.transform = "translateY(-20px)";
+                    setTimeout(() => {
+                        toast.classList.add("hidden");
+                    }, 500);
+                }, 3000);
+            }
 
 
             async function removeMember(memberEmail) {
@@ -247,11 +307,11 @@
                     if (resp.ok && result.success) {
                         window.location.href = '/dashboard';
                     } else {
-                        alert('❌ Error: ' + (result.message || 'Unable to Leave Classrom at moment.'));
+                        showToast('Unable to Leave Classrom at moment.', 'error');
                     }
                 } catch (error) {
                     console.error('Error removing member:', error);
-                    alert('⚠️ Something went wrong while leaving classroom.');
+                    showToast('Error while leaving classroom.', 'error');
                 }
             }
           
@@ -295,7 +355,7 @@
 
             const neonGradient = randomNeon();
             document.getElementById('neon-bar').className = `absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b ${neonGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`;
-            document.getElementById('alert-btn').className = `fas fa-exclamation-triangle text-lg bg-gradient-to-r ${neonGradient} bg-clip-text text-transparent`;
+            document.getElementById('alert-btn').className = `fas fa-exclamation-triangle text-lg bg-gradient-to-r ${neonGradient} bg-clip-text hover:bg-blue-100 text-transparent`;
 
             // === TABS & RED BADGE ON REQUESTS ===
             const tabMembers = document.getElementById('tab-members');
@@ -389,7 +449,7 @@
 
                         } catch (err) {
                             console.error('Error:', err);
-                            alert('Error rejecting request');
+                            showToast('Error rejecting request', 'error');
                         }
                     }
 
@@ -413,6 +473,7 @@
                         item.style.opacity = '0';
                         setTimeout(() => item.remove(), 300);
                         joinRequests = joinRequests.filter(r => r.email !== email);
+                        showToast('Student accepted successfully!', 'success');
                         updateRequestsBadge();
                         await fetchMembers();
                     } else {
@@ -606,14 +667,14 @@
                     const result = await resp.json();
 
                     if (resp.ok && result.success) {
-                        alert('✅ ' + result.message);
+                        showToast('Member removed successfully!', 'success');
                         fetchMembers(); // Refresh list after successful removal
                     } else {
-                        alert('❌ Error: ' + (result.message || 'Unable to remove member.'));
+                        showToast('Error: ' + (result.message || 'Unable to remove member.'), 'error');
                     }
                 } catch (error) {
                     console.error('Error removing member:', error);
-                    alert('⚠️ Something went wrong while removing the member.');
+                    showToast('⚠️ Something went wrong while removing the member.', 'error');
                 }
             });
 
@@ -695,8 +756,8 @@
             statusColor = 'red';
         }
 
-        const startStr = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const endStr = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const startStr = formatMessageDate(testInfo.start_time);
+        const endStr = formatMessageDate(testInfo.end_time);
 
         const isTeacher = (classroom_details.userEmail === classroom_details.ownerEmail);
         const safeUserEmail = classroom_details.userEmail.replace('.', '_');
@@ -821,7 +882,7 @@
                 const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
                 // Format time as 12-hour (e.g., 03:25 PM)
-                const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' , hour12: true});
 
                 // Compare day difference
                 if (messageDate.getTime() === today.getTime()) {
@@ -835,7 +896,8 @@
                     day: '2-digit',
                     year: 'numeric',
                     hour: '2-digit',
-                    minute: '2-digit'
+                    minute: '2-digit',
+                    hour12: true
                 });
                 }
             } catch (e) {

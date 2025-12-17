@@ -549,6 +549,35 @@ def setup_profile():
 
 
 #DASHBOARD
+@app.route("/api/get_homepage_data", methods=["GET"])
+def get_homepage_data():
+    try:
+        # Reference to Firestore document
+        doc_ref = firestore_db.collection("homepage").document("content")
+        doc = doc_ref.get()
+
+        if not doc.exists:
+            return jsonify({"error": "Homepage content not found"}), 404
+
+        data = doc.to_dict()
+
+        # Extract fields safely
+        thoughts = data.get("thoughts", "No thought of the day found.")
+        notices = data.get("notices", [])
+        schedule = data.get("schedule", [])
+
+        return jsonify({
+            "success": True,
+            "thoughts": thoughts,
+            "notices": notices,
+            "schedule": schedule
+        }), 200
+
+    except Exception as e:
+        print("🔥 Error fetching homepage data:", e)
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.route('/dashboard')
 def dashboard():
     """Renders the main dashboard for any logged-in user."""
@@ -618,6 +647,7 @@ def get_profile_data():
 
     try:
         user_doc = firestore_db.collection("users").document(safe_email).get()
+      
         if user_doc.exists:
             user_data = user_doc.to_dict()
             classroom_ids = user_data.get('classroom', [])  # list of ids (may be empty)
@@ -632,7 +662,23 @@ def get_profile_data():
                         owner_email = owner_email.replace('.', '_')
                         owner_doc = firestore_db.collection("users").document(owner_email).get()
                         if owner_doc.exists:
-                            owner_name = owner_doc.to_dict().get('name', 'Unknown')    
+                            owner_name = owner_doc.to_dict().get('name', 'Unknown')
+                        remainders_ref = realtime_db.reference(f'classrooms/{cid}/remainder')
+                        remainders_data = remainders_ref.get() or {}
+
+                        remainders = [
+                            {
+                                'sender_name': owner_name,
+                                'classname': class_data.get('classroomName', ''),
+                                'remainder': rdata.get('remainder', ''),
+                                'due_time': rdata.get('due_time', '')
+                            }
+                            for rid, rdata in remainders_data.items()
+                            if isinstance(rdata, dict)
+                        ]      
+                        remainders.sort(
+                                     key=lambda x: datetime.fromisoformat(x['due_time']) if x['due_time'] else datetime.max
+                      )  
                         classrooms.append({
                             'id': cid,
                             'name': class_data.get('classroomName', ''),
@@ -641,6 +687,7 @@ def get_profile_data():
                             'noOfStudents': class_data.get('noOfStudents',0),
                             'subjectCode': class_data.get('subjectCode', ''),
                             'createdDate': class_data.get('createdDate', ''),
+                            'remainders': remainders
                         })
                     else:
                         # If realtime entry was removed, skip or you can mark as missing
@@ -959,6 +1006,33 @@ def join_classroom_by_code(code):
 
 
 #CLASSROOM
+@app.route("/api/add_remainder", methods=["POST"])
+def add_remainder():
+    data = request.get_json()
+    classroom_id = data.get("classroom_id")
+    remainder = data.get("remainder")
+    due_time = data.get("due_time")
+
+    if not classroom_id or not remainder or not due_time:
+        return jsonify({"error": "Missing data"}), 400
+
+    try:
+        ref_path = f"classrooms/{classroom_id}/remainder"
+        ref = db.reference(ref_path)
+
+        # Push a new remainder
+        ref.push({
+            "remainder": remainder,
+            "due_time": due_time
+        })
+
+        return jsonify({"success": True, "message": "Remainder added successfully."}), 200
+
+    except Exception as e:
+        print("🔥 Error adding remainder:", e)
+        return jsonify({"error": str(e)}), 500
+    
+
 @app.route('/update_test_status', methods=['POST'])
 def update_test_status():
     try:

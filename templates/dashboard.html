@@ -28,65 +28,89 @@
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .stories { display: flex; overflow-x: auto; padding: 15px 10px; background: white; border-bottom: 1px solid #dbdbdb; scrollbar-width: none; }
-        .stories::-webkit-scrollbar { display: none; }
-        .story { text-align: center; margin: 0 8px; flex-shrink: 0; }
-        .story-img { width: 66px; height: 66px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4); }
-        .story-img img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid white; object-fit: cover; }
-        .story p { font-size: 12px; margin-top: 6px; color: #262626; }
+        
+.thoughts {
+      padding: 20px;
+      border-bottom: 2px solid #e6e6e6;
+      color: #333;
+      text-align: left;
+    }
 
-        /* Notice Carousel */
-        .notice-carousel {
-        position: relative; margin: 15px; height: 110px; border-radius: 16px; overflow: hidden;
-        box-shadow: 0 8px 25px rgba(102,126,234,0.4);
-        }
-        .notice-slide {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 20px;
-        color: white; opacity: 0; transition: opacity 0.8s ease-in-out;
-        background: linear-gradient(120deg, #4f46e5 0%, #8b5cf6 100%);
-        display: flex; flex-direction: column; justify-content: space-between;
-        }
-        .notice-slide.active { opacity: 1; z-index: 1; }
+    .thoughts h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: #222;
+    }
 
-        .notice-content { position: relative; z-index: 2; }
-        .notice-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
-        .notice-subtitle { font-size: 14px; opacity: 0.9; }
+    .thoughts p {
+      font-size: 15px;
+      margin: 10px;
+        font-style: italic;
+        line-height: 1.7;
+        color: #444;
+        white-space: pre-line;
+        font-family: 'Merriweather', 'Georgia', serif;
+    }
 
-        .delete-notice {
-        position: absolute; top: 12px; right: 12px; z-index: 10;
-        background: rgba(255,255,255,0.25); width: 36px; height: 36px;
-        border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; font-size: 18px; color: white; backdrop-filter: blur(10px);
-        }
-        .delete-notice:hover { background: rgba(255,255,255,0.4); transform: scale(1.1); }
 
-        /* Dash Indicators Inside Card */
-        .dash-indicators {
-        display: flex; justify-content: center; gap: 8px; padding-bottom: 10px;
-        }
-        .dash {
-        width: 20px; height: 4px; background: rgba(255,255,255,0.4);
-        border-radius: 2px; transition: all 0.3s;
-        }
-        .dash.active {
-        width: 32px; background: white;
-        }
+    /* 🌈 Notice Carousel */
+    .notice-carousel { 
+      position: relative; 
+      margin: 15px; 
+      height: 150px; 
+      border-radius: 16px; 
+      overflow: hidden; 
+      box-shadow: 0 8px 25px rgba(102,126,234,0.4); 
+    }
 
-        .add-notice { margin: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .add-notice input { flex: 1; min-width: 120px; padding: 12px; border: 1px solid #dbdbdb; border-radius: 8px; font-size: 14px; }
-        .add-notice button { padding: 12px 20px; background: #0095f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .notice-slide {
+      position: absolute; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      padding: 20px; 
+      color: white; 
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out; 
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center;
+    }
 
-        .schedule { margin: 15px; }
-        .schedule h2 { margin-bottom: 15px; font-size: 18px; color: #262626; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid #efefef; }
-        th { color: #8e8e8e; font-weight: 600; text-transform: uppercase; font-size: 12px; }
-        .delete-row { color: #ed4956; cursor: pointer; width: 40px; text-align: center; }
-        .delete-row i { font-size: 18px; }
+    .notice-slide.active { opacity: 1; z-index: 1; }
 
-        .add-row { margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap; }
-        .add-row input { flex: 1; min-width: 80px; padding: 10px; border: 1px solid #dbdbdb; border-radius: 8px; font-size: 13px; }
-        .add-row button { padding: 10px 16px; background: #ed4956; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    .notice-content { position: relative; z-index: 2; }
+    .notice-title { font-size: 30px; font-weight: 700; margin-bottom: 6px; color: #000;}
+    .notice-subtitle { font-size: 18px; opacity: 0.9; color: #262626;}
+
+    /* Dashes inside notice cards */
+    .notice-dashes {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      gap: 6px;
+    }
+
+    .dash {
+      width: 20px;
+      height: 3px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .dash.active {
+      background: #fff;
+      transform: scale(1.2);
+    }
+
+    /* Schedule Table */
+    .schedule { margin: 15px; }
+    .schedule h2 { margin-bottom: 15px; font-size: 18px; color: #262626; display: flex; align-items: center; gap: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid #efefef; }
+    th { color: #8e8e8e; font-weight: 600; text-transform: uppercase; font-size: 12px; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -157,55 +181,32 @@
                 <!-- Home Content -->
                 <div id="home-content" class="content-section">
                     <div class="bg-white rounded-lg shadow-sm p-4">
-                    <div class="stories">
-                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt=""></div><p>Your Story</p></div>
-                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt=""></div><p>emma_watson</p></div>
-                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/men/45.jpg" alt=""></div><p>johndoe</p></div>
-                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/women/65.jpg" alt=""></div><p>sarah_21</p></div>
-                        <div class="story"><div class="story-img"><img src="https://randomuser.me/api/portraits/men/86.jpg" alt=""></div><p>mike_travel</p></div>
-                    </div>
-
+                    
                     <!-- Notice Carousel with Dash Indicators Inside -->
-                    <div class="notice-carousel" id="carousel">
-                        <div class="notice-slide active">
-                        <div class="delete-notice" onclick="deleteNotice(this)"><i class="fas fa-trash"></i></div>
-                        <div class="notice-content">
-                            <div class="notice-title">Welcome Back!</div>
-                            <div class="notice-subtitle">Don't miss today's important events and updates!</div>
+                    
+                        <div class="thoughts">
+                            <h2>Thought of the Day</h2>
+                            <p>
+                            </p>
                         </div>
-                        <div class="dash-indicators" id="dashes">
-                            <!-- Dashes will be injected by JavaScript -->
-                        </div>
-                        </div>
-                    </div>
 
-                    <div class="add-notice">
-                        <input type="text" id="noticeTitle" placeholder="Notice Title">
-                        <input type="text" id="noticeSubtitle" placeholder="Subtitle (optional)">
-                        <button onclick="addNotice()">Add Notice</button>
-                    </div>
-
-                    <!-- Schedule Table -->
-                    <div class="schedule">
-                        <h2>Today's Schedule</h2>
-                        <table id="scheduleTable">
-                        <thead>
-                            <tr><th>Time</th><th>Event</th><th>Venue</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>10:00 AM</td><td>Team Meeting</td><td>Conference Room A</td><td class="delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></td></tr>
-                            <tr><td>02:30 PM</td><td>Lunch with Client</td><td>Cafe Deluxe</td><td class="delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></td></tr>
-                            <tr><td>05:00 PM</td><td>Yoga Session</td><td>Fitness Center</td><td class="delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></td></tr>
-                        </tbody>
-                        </table>
-
-                        <div class="add-row">
-                        <input type="text" id="newTime" placeholder="Time">
-                        <input type="text" id="newEvent" placeholder="Event">
-                        <input type="text" id="newVenue" placeholder="Venue">
-                        <button onclick="addScheduleRow()">+ Add</button>
+                        <!-- 🌈 Notice Carousel -->
+                        <div class="notice-carousel" id="carousel">
+    
                         </div>
-                    </div>
+
+                        <!-- 📅 Schedule Table -->
+                        <div class="schedule">
+                            <h2><i class="fas fa-calendar-alt text-indigo-600"></i> Today's Schedule</h2>
+                            <table id="scheduleTable">
+                            <thead>
+                                <tr><th>Time</th><th>Event</th><th>Venue</th></tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -217,14 +218,7 @@
                             <div class="w-1/2 bg-white rounded-lg shadow-lg p-6 h-[600px] flex flex-col">
                                 <h2 class="mt-2.5 text-lg font-semibold mb-4">To Remember</h2>
                                 <div id="teacherReminders" class="space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-                                    <div class="p-4 bg-blue-100 rounded-md">Complete homework by Friday</div>
-                                    <div class="p-4 bg-blue-100 rounded-md">Prepare for quiz on Monday</div>
-                                    <div class="p-4 bg-blue-100 rounded-md">Submit project proposal by Wednesday</div>
-                                    <div class="p-4 bg-blue-100 rounded-md">Attend guest lecture on Thursday</div>
-                                    <div class="p-4 bg-blue-100 rounded-md">Complete homework by Friday</div>
-                                    <div class="p-4 bg-blue-100 rounded-md">Prepare for quiz on Monday</div>
-                                    <div class="p-4 bg-blue-100 rounded-md">Submit project proposal by Wednesday</div>
-                                    <div class="p-4 bg-blue-100 rounded-md">Attend guest lecture on Thursday</div>
+                                    <!-- Teacher reminders will be appended here -->
                                 </div>
                             </div>
                             <div class="w-1/2 bg-white rounded-lg shadow-lg p-6 h-[600px] flex flex-col">
@@ -234,7 +228,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <input id="studentInput" type="text" placeholder="Add your reminder..." class="w-full p-2 border rounded-md" aria-label="Add a reminder">
-                                    <button onclick="addStudentReminder()" class="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Add Remainder</button>
+                                    <button onclick="addStudentReminder()" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Add Remainder</button>
                                 </div>
                             </div>
                         </div>
@@ -287,35 +281,35 @@
                         <h1 class="text-2xl font-semibold text-center mb-4">Courses</h1>
                         <div class="course-container flex flex-wrap justify-center gap-4">
                             <a href="{{ url_for('course', course_name='dsa') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer"  data-course="DSA">
                                     <h2 class="mt-2.5 text-lg font-semibold">DSA</h2>
                                     <p class="text-sm">Date: September 25, 2025</p>
                                     <div class="stars text-xl text-yellow-400">★★★</div>
                                 </div>
                             </a>
                             <a href="{{ url_for('course', course_name='oops') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer"  data-course="OOPS">
                                     <h2 class="mt-2.5 text-lg font-semibold">OOPS</h2>
                                     <p class="text-sm">Date: September 25, 2025</p>
                                     <div class="stars text-xl text-yellow-400">★★★</div>
                                 </div>
                             </a>
                             <a href="{{ url_for('course', course_name='dbms') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer" data-course="DBMS" >
                                     <h2 class="mt-2.5 text-lg font-semibold">DBMS</h2>
                                     <p class="text-sm">Date: September 25, 2025</p>
                                     <div class="stars text-xl text-yellow-400">★★★</div>
                                 </div>
                             </a>
                             <a href="{{ url_for('course', course_name='os') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer" data-course="OS">
                                     <h2 class="mt-2.5 text-lg font-semibold">OS</h2>
                                     <p class="text-sm">Date: September 25, 2025</p>
                                     <div class="stars text-xl text-yellow-400">★★★</div>
                                 </div>
                             </a>
                             <a href="{{ url_for('course', course_name='dmml') }}" class="block w-48 h-36">
-                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer">
+                                <div class="course unlocked w-48 h-36 border border-gray-300 rounded-lg m-2.5 p-2.5 text-center relative cursor-pointer" data-course="DMML">
                                     <h2 class="mt-2.5 text-lg font-semibold">DMML</h2>
                                     <p class="text-sm">Date: September 25, 2025</p>
                                     <div class="stars text-xl text-yellow-400">★★★</div>
@@ -323,7 +317,7 @@
                             </a>
                         </div>
                         <footer class="text-center mt-5 text-xs text-gray-500">
-                            <p>InsightEval adopts a hierarchical learning approach, allowing you to progress to the next course only after completing the previous one.</p>
+                            <p>Learning is a journey, not a race — every step forward is progress.</p>
                         </footer>
                     </div>
                 </div>
@@ -540,117 +534,114 @@
     </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-    let currentIndex = 0;
-    let autoSlideInterval;
-    const carousel = document.getElementById('carousel');
-    const dashesContainer = document.getElementById('dashes');
+async function loadHomepage() {
+    try {
+        const resp = await fetch("/api/get_homepage_data");
+        const data = await resp.json();
 
-    function updateDashes() {
-        dashesContainer.innerHTML = '';
-        for (let i = 0; i < carousel.children.length; i++) {
-        const dash = document.createElement('div');
-        dash.classList.add('dash');
-        if (i === currentIndex) dash.classList.add('active');
-        dashesContainer.appendChild(dash);
+        if (!data.success) {
+            console.error("Failed to fetch homepage data:", data.error);
+            return;
+        }
+
+        // 🧠 Thoughts
+        const thoughtsEl = document.querySelector(".thoughts p");
+        if (thoughtsEl) thoughtsEl.textContent = data.thoughts;
+
+        // 🧠 Notices
+        const carousel = document.getElementById("carousel");
+        if (carousel) {
+            carousel.innerHTML = ""; // Clear existing slides
+
+            data.notices.forEach((notice, idx) => {
+                const slide = document.createElement("div");
+                slide.className = "notice-slide" + (idx === 0 ? " active" : "");
+                slide.innerHTML = `
+                    <div class="notice-content">
+                        <div class="notice-title">${notice.title}</div>
+                        <div class="notice-subtitle">${notice.subtitle}</div>
+                        <div class="notice-dashes"></div>
+                    </div>
+                `;
+                carousel.appendChild(slide);
+            });
+
+            // Initialize carousel after adding slides
+            currentIndex = 0;
+            updateDashes();
+            startAutoSlide();
+        }
+
+        // 🧠 Schedule
+        const scheduleTableBody = document.querySelector("#scheduleTable tbody");
+        if (scheduleTableBody) {
+            scheduleTableBody.innerHTML = ""; // Clear existing rows
+            data.schedule.forEach(item => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.time}</td>
+                    <td>${item.event}</td>
+                    <td>${item.venue}</td>
+                `;
+                scheduleTableBody.appendChild(row);
+            });
+        }
+
+    } catch (error) {
+        console.error("Error loading homepage data:", error);
+    }
+}
+
+// 🔹 Carousel logic
+let currentIndex = 0;
+let autoSlideInterval;
+const carousel = document.getElementById('carousel');
+
+function updateDashes() {
+    const total = carousel.children.length;
+    for (let i = 0; i < total; i++) {
+        const slide = carousel.children[i];
+        let dashContainer = slide.querySelector('.notice-dashes');
+        dashContainer.innerHTML = '';
+        for (let j = 0; j < total; j++) {
+            const dash = document.createElement('div');
+            dash.classList.add('dash');
+            if (j === currentIndex) dash.classList.add('active');
+            dashContainer.appendChild(dash);
         }
     }
+}
 
-    function showSlide(index) {
-        const slides = carousel.children;
-        for (let i = 0; i < slides.length; i++) {
-        slides[i].classList.remove('active');
-        }
-        if (slides.length > 0) {
+function showSlide(index) {
+    const slides = carousel.children;
+    for (let i = 0; i < slides.length; i++) slides[i].classList.remove('active');
+    if (slides.length > 0) {
         slides[index].classList.add('active');
         currentIndex = index;
-        }
-        updateDashes();
     }
-
-    function nextSlide() {
-        if (carousel.children.length === 0) return;
-        currentIndex = (currentIndex + 1) % carousel.children.length;
-        showSlide(currentIndex);
-    }
-
-    function startAutoSlide() {
-        clearInterval(autoSlideInterval);
-        if (carousel.children.length > 1) {
-        autoSlideInterval = setInterval(nextSlide, 5000);
-        }
-    }
-
-    window.addNotice = function() {
-        const title = document.getElementById('noticeTitle').value.trim();
-        const subtitle = document.getElementById('noticeSubtitle').value.trim() || "New update!";
-
-        if (!title) return alert("Please enter a title!");
-
-        const newSlide = document.createElement('div');
-        newSlide.className = 'notice-slide';
-        newSlide.innerHTML = `
-        <div class="delete-notice" onclick="deleteNotice(this)"><i class="fas fa-trash"></i></div>
-        <div class="notice-content">
-            <div class="notice-title">${title}</div>
-            <div class="notice-subtitle">${subtitle}</div>
-        </div>
-        <div class="dash-indicators"></div>
-        `;
-
-        carousel.appendChild(newSlide);
-
-        document.getElementById('noticeTitle').value = '';
-        document.getElementById('noticeSubtitle').value = '';
-
-        showSlide(carousel.children.length - 1);
-        startAutoSlide();
-    }
-
-    window.deleteNotice = function(btn) {
-        const slide = btn.parentElement;
-        const index = Array.from(carousel.children).indexOf(slide);
-        slide.remove();
-
-        if (carousel.children.length === 0) {
-        currentIndex = 0;
-        dashesContainer.innerHTML = '';
-        } else {
-        if (index <= currentIndex && currentIndex > 0) currentIndex--;
-        if (currentIndex >= carousel.children.length) currentIndex = 0;
-        showSlide(currentIndex);
-        }
-        startAutoSlide();
-    }
-
-    window.addScheduleRow = function() {
-        const time = document.getElementById('newTime').value.trim();
-        const event = document.getElementById('newEvent').value.trim();
-        const venue = document.getElementById('newVenue').value.trim();
-
-        if (!time || !event || !venue) return alert("Fill all fields!");
-
-        const tbody = document.querySelector('#scheduleTable tbody');
-        const row = tbody.insertRow();
-        row.innerHTML = `<td>${time}</td><td>${event}</td><td>${venue}</td><td class="delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></td>`;
-
-        document.getElementById('newTime').value = '';
-        document.getElementById('newEvent').value = '';
-        document.getElementById('newVenue').value = '';
-    }
-
-    window.deleteRow = function(icon) {
-        icon.parentElement.remove();
-    }
-
-    // Initialize
     updateDashes();
-    startAutoSlide();
-    });
-</script>
-    
+}
 
+function nextSlide() {
+    if (carousel.children.length === 0) return;
+    currentIndex = (currentIndex + 1) % carousel.children.length;
+    showSlide(currentIndex);
+}
+
+function startAutoSlide() {
+    clearInterval(autoSlideInterval);
+    if (carousel.children.length > 0) {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+    }
+}
+
+// 🔹 Initialize on page load
+window.addEventListener("DOMContentLoaded", () => {
+    loadHomepage();
+});
+</script>
 <script>
+
 //Global Variables
             window.currentUser = {};
             window.classroomsContainer = document.getElementById('classrooms');
@@ -954,7 +945,8 @@
                         document.getElementById('department').value = data.department || '';
                         document.getElementById('bio').value = data.bio || '';
                         window.currentUser = {user_email: data.email || '',
-                                                classrooms: data.classrooms || []
+                                                classrooms: data.classrooms || [],
+                                                courses: data.courses || {}
                                                 };
                         if (saveButton) saveButton.classList.add('hidden');
                     }
@@ -982,6 +974,102 @@
                 }
                 // 🟢 call loadClassrooms() initially
                 loadClassrooms();
+            
+
+                async function loadRemainders() {
+    
+                    const classrooms = window.currentUser.classrooms || [];
+                    const teacherReminders = document.getElementById('teacherReminders');
+                    teacherReminders.innerHTML = ''; // clear old content
+
+                    // Collect all remainders across classrooms
+                    let allRemainders = [];
+                    classrooms.forEach(c => {
+                        if (c.remainders && c.remainders.length > 0) {
+                            allRemainders.push(...c.remainders);
+                        }
+                    });
+
+                    // Sort remainders by due_time
+                    allRemainders.sort((a, b) => new Date(a.due_time) - new Date(b.due_time));
+
+                    // Generate cards dynamically
+                    allRemainders.forEach(rem => {
+                        const card = document.createElement('div');
+                        card.className = "p-4 bg-blue-100 rounded-md shadow-sm border border-blue-200 hover:shadow-md transition";
+                        let dueFormatted = "No due date";
+                        let dueClass = "text-gray-600 font-semibold";
+                        let timeLeftLabel = "";
+                        let dueTextColor = "text-gray-800 font-semibold"; // static black "Due in"
+
+                        if (rem.due_time) {
+                            const dueDate = new Date(rem.due_time);
+                            const now = new Date();
+                            const diffMs = dueDate - now;
+                            const diffMinutes = diffMs / (1000 * 60);
+                            const diffHours = diffMinutes / 60;
+                            const diffDays = diffHours / 24;
+
+                            // Format full date (DD/MM/YY HH:MM AM/PM)
+                            dueFormatted = dueDate.toLocaleString('en-GB', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                            }).replace(',', '');
+
+                            if (diffMs <= 0) {
+                                dueClass = "text-red-600 font-bold";
+                                timeLeftLabel = "Overdue ⚠️";
+                            } 
+                            else if (diffHours < 24) {
+                                const hoursLeft = Math.floor(diffHours);
+                                const minsLeft = Math.floor(diffMinutes % 60);
+                                dueClass = "text-red-600 font-bold";
+                                timeLeftLabel = `${hoursLeft}h ${minsLeft}m`;
+                            } 
+                            else if (diffDays <= 3) {
+                                dueClass = "text-orange-500 font-bold";
+                                timeLeftLabel = `${Math.ceil(diffDays)} days`;
+                            } 
+                            else if (diffDays <= 5) {
+                                dueClass = "text-yellow-500 font-bold";
+                                timeLeftLabel = `${Math.ceil(diffDays)} days`;
+                            } 
+                            else {
+                                dueClass = "text-green-600 font-semibold";
+                                timeLeftLabel = `${Math.ceil(diffDays)} days`;
+                            }
+                        }
+
+                        card.innerHTML = `
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-bold text-blue-800 text-lg">${rem.remainder}</h3>
+                                <div class="flex flex-col text-right">
+                                    <span class="text-sm ${dueTextColor}">
+                                        Due in <span class="${dueClass}">${timeLeftLabel}</span>
+                                    </span>
+                                    <span class="text-xs text-gray-500">${dueFormatted}</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-700 mt-2">
+                                <span>📘 ${rem.classname}</span>
+                                <span>👤 ${rem.sender_name}</span>
+                            </div>
+                        `;
+
+                        teacherReminders.appendChild(card);
+                    });
+
+                    if (allRemainders.length === 0) {
+                        teacherReminders.innerHTML = `<p class="text-gray-500 italic text-center">No remainders available</p>`;
+                    }
+                }
+
+                loadRemainders();
+
                 // expose globally so delete code can use it
                 window.loadClassrooms = loadClassrooms;
             });
@@ -1401,10 +1489,10 @@
             const reminderText = input.value.trim();
             if (reminderText) {
                 const reminderDiv = document.createElement('div');
-                reminderDiv.className = 'p-4 bg-green-100 rounded-md flex justify-between items-center';
+                reminderDiv.className = 'p-4 bg-blue-100 rounded-md flex justify-between items-center';
                 reminderDiv.innerHTML = `
                     <span>${reminderText}</span>
-                    <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">Delete</button>
+                    <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                 `;
                 document.getElementById('studentReminders').appendChild(reminderDiv);
                 input.value = '';
