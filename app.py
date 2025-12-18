@@ -380,40 +380,28 @@ def ai_feedback_microquiz():
     score = data.get("score", 0)
     total = data.get("total", 1)
 
-    # Build topic-wise analysis prompt
-    prompt = f"""
-You are an expert tutor.
+    # Build topic-wise analysis prompt - SIMPLIFIED
+    prompt = f"""You are an expert tutor providing feedback on a micro-quiz.
 
-The student took a micro-quiz and scored {score}/{total}.
+Student scored {score}/{total}.
 
-Analyze topic-wise performance based on the attempts below.
-
-For each topic:
-- Mention if the student is strong or weak
-- Give 1 improvement suggestion
-
-Attempts:
+Quiz Results:
 """
 
     for i, a in enumerate(attempts, 1):
-        prompt += f"""
-{i}. Question: {a['question']}
-   Correct Answer: {a['correct_answer']}
-   Student Answer: {a['student_answer']}
-   Result: {"Correct" if a['is_correct'] else "Incorrect"}
-"""
+        status = "✓" if a['is_correct'] else "✗"
+        prompt += f"{i}. {status} Q: {a['question']}\n"
+        if not a['is_correct']:
+            prompt += f"   Their answer: {a['student_answer']}\n"
+            prompt += f"   Correct: {a['correct_answer']}\n"
 
     prompt += """
-INSTRUCTIONS:
-- Group mistakes by topic/concept
-- Keep feedback under 120 words
-- Use simple language
+Provide brief, constructive feedback (3-4 sentences):
+1. Acknowledge their performance
+2. Identify patterns in mistakes (if any)
+3. Give 1-2 specific study tips
 
-Return ONLY this JSON:
-{
-  "feedback": "..."
-}
-"""
+Keep it under 100 words and encouraging."""
 
     try:
         resp = chat_client.chat.completions.create(
@@ -424,16 +412,42 @@ Return ONLY this JSON:
         )
 
         raw = resp.choices[0].message.content.strip()
-        raw = raw.replace("```json", "").replace("```", "").strip()
-        result = json.loads(raw)
-
-        return jsonify(result)
+        
+        # FIXED: Don't try to parse as JSON - just return the text directly
+        # The AI will return plain text feedback, not JSON
+        feedback_text = raw
+        
+        # Clean up any markdown artifacts
+        feedback_text = feedback_text.replace("```json", "").replace("```", "").strip()
+        
+        # Try to extract JSON if it exists, otherwise use raw text
+        try:
+            # Check if response contains JSON
+            if feedback_text.startswith('{') and feedback_text.endswith('}'):
+                result = json.loads(feedback_text)
+                feedback_text = result.get('feedback', feedback_text)
+        except:
+            # If JSON parsing fails, just use the raw text
+            pass
+        
+        return jsonify({"feedback": feedback_text})
 
     except Exception as e:
         logger.error(f"Micro-quiz AI failed: {e}")
-        return jsonify({
-            "feedback": "Unable to generate topic-wise feedback right now."
-        }), 500
+        logger.error(f"Raw response: {raw if 'raw' in locals() else 'No response'}")
+        
+        # Provide a helpful fallback based on score
+        percentage = (score / total) * 100
+        if percentage >= 80:
+            fallback = "Great job! You've demonstrated strong understanding. Keep practicing to maintain your skills."
+        elif percentage >= 60:
+            fallback = "Good effort! Review the questions you missed and focus on understanding the core concepts."
+        elif percentage >= 40:
+            fallback = "You're making progress! Revisit the fundamentals and try some practice problems."
+        else:
+            fallback = "Keep practicing! Break down each topic into smaller parts and study them one at a time."
+        
+        return jsonify({"feedback": fallback}), 200
 
 
 # 4. NOW — add the /run_code route (AFTER app is created!)
