@@ -57,6 +57,7 @@ config = {
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 global_results = {}
+global_answered = {}
 
 # ✅ Initialize Firebase Admin SDK (server SDK)
 if not firebase_admin._apps:
@@ -146,6 +147,10 @@ def ai_feedback_quiz():
     data = request.get_json(silent=True) or {}
     course = data.get("course", "general").upper()
     answered = data.get("answered", [])
+    global global_answered
+    global_answered[course] = answered
+
+
 
     if not answered:
         return jsonify({"error": "No answers provided"}), 400
@@ -1524,6 +1529,22 @@ def get_result(result_id):
     if not result_data:
         return jsonify({"error": "Result not found"}), 404
     return jsonify(result_data)
+
+@app.route("/api/retry_ai_feedback", methods=["POST"])
+def retry_ai_feedback():
+    data = request.get_json() or {}
+    course = data.get("course", "GENERAL").upper()
+
+    global global_answered
+
+    # Get the previously stored answers for this course
+    answered_data = global_answered.get(course, [])
+
+    # Send it back to the frontend
+    return jsonify({
+        "course": course,
+        "answered": answered_data
+    })
 
 #STUDENT_RESULT
 @app.route("/api/get_student_result", methods=["GET"])

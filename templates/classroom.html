@@ -693,6 +693,18 @@
     </script>
     <script type="module">
         //functions
+    const classroomFeed = document.getElementById('classroom-feed');    
+    const materialUpload = document.getElementById('material-upload');
+    materialUpload.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const newPost = createPostCard('material', `Shared a new file: ${file.name}`, classroom_details.userEmail, new Date().toLocaleString(), file);
+                    classroomFeed.insertAdjacentHTML('beforeend', newPost);
+                    classroomFeed.scrollTop = classroomFeed.scrollHeight;
+                }
+            });
+
+
     function createPostCard(type, content, sender = "Unknown", pDate, file) {
     let created = formatMessageDate(pDate);
 
@@ -926,7 +938,6 @@
 
         const classroomId = window.location.pathname.split('/').pop();
         const activitiesRef = ref(db, `classrooms/${classroomId}/activities`);
-        const classroomFeed = document.getElementById('classroom-feed');
 
 
         // ✅ Listen for new activities in real-time

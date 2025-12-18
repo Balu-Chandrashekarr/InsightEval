@@ -189,6 +189,10 @@
                         Start Personalized Micro-Quiz
                     </button>
                 </div>
+                <button id="retry-ai-btn" class="micro-btn" 
+                style="opacity: 0; transition: opacity 0.3s;" onclick="retryAiFeedback()">
+                    Retry AI Feedback
+                </button>
             </div>
 
             <div class="text-center mt-16">
@@ -213,10 +217,103 @@ document.addEventListener("DOMContentLoaded", async function () {
     try {
         // 🧠 Fetch saved result data from backend
         const response = await fetch(`/api/get_result/${resultId}`);
+        console.log("reached here111");
         if (!response.ok) throw new Error("Failed to load result data");
 
         const data = await response.json();
         console.log("✅ Result data loaded:", data);
+        console.log("Reached here");
+        renderResult(data);
+
+    } catch (err) {
+        console.error("❌ Error loading result:", err);
+        document.body.innerHTML = "<p class='text-center text-red-600 text-lg mt-20'>Error loading hlo hlo result data.</p>";
+    }
+
+});
+    async function retryAiFeedback() {
+        // 🔹 For now, just a placeholder alert
+
+            try {
+            // Call backend to get stored answers
+            const RetryResponse = await fetch("/api/retry_ai_feedback", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ course: window.course }) // use global course
+            });
+
+            if (!RetryResponse.ok) throw new Error("Failed to fetch retry data");
+
+            
+
+            const retryData = await RetryResponse.json();
+            const answered = retryData.answered || [];
+            console.log("✅ Retrieved answered data:", answered);
+
+            // 2️⃣ Send retrieved answers for AI grading
+            const aiResponse = await fetch("/api/ai_feedback_quiz", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    course: window.course || "general",
+                    answered: answered
+                })
+            });
+
+            if (!aiResponse.ok) throw new Error("Failed to grade answers");
+
+            const aiResult = await aiResponse.json();
+            console.log("✅ AI grading result:", aiResult);
+            const correctedAnswers = aiResult.answers || [];
+            const finalScore = aiResult.score || 0;
+            const finalTotal = aiResult.total_marks || totalMarks;
+            const percentage = finalTotal > 0 ? (finalScore / finalTotal) * 100 : 0;
+            const answersForUrl = {};
+            correctedAnswers.forEach((ans, i) => {
+                answersForUrl[`q${i + 1}`] = ans;
+            });
+            const feedback = aiResult.feedback || "No feedback provided.";
+            const micro_quiz = aiResult.micro_quiz || [];
+
+            const resultData = {
+                score: finalScore || 0,
+                total: finalTotal || 0,
+                percentage: percentage.toFixed(1) || "0.0",
+                answers: answersForUrl || {},
+                answered: correctedAnswers || [],
+                course: window.course || "general",
+                classroom: window.classroomId || "",
+                test: window.testRef || "",
+                feedback : feedback|| "No feedback provided.",
+                micro_quiz: micro_quiz|| [],
+                ai_graded: true
+           };
+
+           renderResult(resultData);
+
+            // Optionally, you can now call your AI again using this data
+            // or call renderResult() if your backend returns full result data
+            // renderResult(data);
+
+        } catch (err) {
+            console.error(err);
+            alert("Failed to retry AI feedback.");
+        } 
+
+
+            
+    }
+    function renderResult(data) {
+        const mainContent = document.getElementById('main-content');
+        const aiSection = document.getElementById('ai-section');
+        console.log("error in render");
+
+        // 🧠 Store course globally so it can be reused elsewhere
+        window.course = data.course || "GENERAL";
+        window.classroomId = data.classroom || "";
+        window.testRef = data.test || "";
+
+        console.log("Error in render1");
 
         // Extract data from backend response
         const earnedMarks = data.score || 0;
@@ -228,23 +325,28 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const isClassroomTest = !!data.classroom && !!data.test;
 
+        console.log("Error in data section");
+
         // 🎨 Visuals and tone setup
-        const bgColor = percentage >= 90 ? 'from-emerald-500 to-teal-500' :
-                        percentage >= 70 ? 'from-blue-600 to-blue-500' :
-                        percentage >= 50 ? 'from-amber-500 to-orange-500' :
-                        'from-rose-500 to-red-500';
+        const bgColor =
+            percentage >= 90 ? 'from-emerald-500 to-teal-500' :
+            percentage >= 70 ? 'from-blue-600 to-blue-500' :
+            percentage >= 50 ? 'from-amber-500 to-orange-500' :
+            'from-rose-500 to-red-500';
 
-        const perf = percentage >= 90 ? { text: "🏆 Outstanding! You're a Top Performer!", color: "text-emerald-600" } :
-                     percentage >= 70 ? { text: "✨ Excellent Work! You Passed with Flying Colors!", color: "text-blue-600" } :
-                     percentage >= 50 ? { text: "👍 Good Effort! You Passed", color: "text-amber-600" } :
-                     { text: "💪 Keep Practicing – You'll Get There!", color: "text-rose-600" };
+        const perf =
+            percentage >= 90 ? { text: "🏆 Outstanding! You're a Top Performer!", color: "text-emerald-600" } :
+            percentage >= 70 ? { text: "✨ Excellent Work! You Passed with Flying Colors!", color: "text-blue-600" } :
+            percentage >= 50 ? { text: "👍 Good Effort! You Passed", color: "text-amber-600" } :
+            { text: "💪 Keep Practicing – You'll Get There!", color: "text-rose-600" };
 
+        // 🧩 Update page content
         document.getElementById('result-title').textContent = isClassroomTest 
-            ? "Classroom Test Completed!" 
+            ? "Classroom Test Completed!"
             : "Assessment Result";
 
         document.getElementById('subtitle').textContent = isClassroomTest 
-            ? "This test was created by your instructor" 
+            ? "This test was created by your instructor"
             : "Review your performance and insights below";
 
         // 🧩 Render the main result section
@@ -259,13 +361,13 @@ document.addEventListener("DOMContentLoaded", async function () {
                 </div>
 
                 <div class="score-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <div class="text-8xl font-black text-slate-800" style="line-height: 1;">${percentage.toFixed(1)}%</div>
-    <p class="text-2xl font-bold mt-6 ${perf.color}">${perf.text}</p>
-</div>
+                    <div class="text-8xl font-black text-slate-800" style="line-height: 1;">${percentage.toFixed(1)}%</div>
+                    <p class="text-2xl font-bold mt-6 ${perf.color}">${perf.text}</p>
+                </div>
             </div>
         `;
 
-        // Show AI section with feedback
+        // 🧠 Show AI section with feedback
         document.getElementById('feedback-loading').classList.add('hidden');
         document.getElementById('feedback-text').textContent = feedback.replace(/\n/g, "\n\n");
         aiSection.classList.remove('hidden');
@@ -279,12 +381,9 @@ document.addEventListener("DOMContentLoaded", async function () {
                 location.href = '/micro_quiz';
             };
         }
-
-    } catch (err) {
-        console.error("❌ Error loading result:", err);
-        document.body.innerHTML = "<p class='text-center text-red-600 text-lg mt-20'>Error loading result data.</p>";
     }
-});
+
+
 </script>
 
 </body>
